@@ -5,9 +5,11 @@ export default function PagesListPage() {
   const pages = [
     "Dashboard",
     "Debtor Profile",
+    "Dialer",
     "Call Logs",
     "Tasks",
     "Messaging",
+    "Pages List",
   ];
 
   return (
