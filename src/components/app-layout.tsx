@@ -15,6 +15,10 @@ import {
   CreditCard,
   PhoneForwarded,
   BarChart3,
+  Users2,
+  FileBarChart,
+  AudioLines,
+  UserCog,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -28,6 +32,8 @@ import {
   SidebarMenuButton,
   SidebarInset,
   SidebarTrigger,
+  SidebarGroup,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,15 +47,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const navItems = [
+const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Debtor Profile" },
   { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/pages-list", icon: FileText, label: "Pages List" },
+];
+
+const supervisorNavItems = [
+    { href: "/analytics", icon: BarChart3, label: "Analytics" },
+    { href: "/team-management", icon: Users2, label: "Team Management" },
+    { href: "/reports", icon: FileBarChart, label: "Reports" },
+    { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
+    { href: "/user-management", icon: UserCog, label: "User Management" },
 ];
 
 const pageTitles: { [key: string]: string } = {
@@ -60,6 +72,10 @@ const pageTitles: { [key: string]: string } = {
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",
   "/analytics": "Analytics Overview",
+  "/team-management": "Team Management",
+  "/reports": "Reports & Analytics",
+  "/call-monitoring": "Call Monitoring",
+  "/user-management": "User Management",
   "/pages-list": "Pages List",
 };
 
@@ -76,21 +92,58 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu>
-            {navItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
-                  <SidebarMenuButton
-                    isActive={pathname === item.href}
-                    tooltip={item.label}
-                  >
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
+          <SidebarGroup>
+            <SidebarGroupLabel>Agent</SidebarGroupLabel>
+            <SidebarMenu>
+                {agentNavItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                    <Link href={item.href} legacyBehavior passHref>
+                    <SidebarMenuButton
+                        isActive={pathname === item.href}
+                        tooltip={item.label}
+                    >
+                        <item.icon />
+                        <span>{item.label}</span>
+                    </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarGroup>
+             <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
+             <SidebarMenu>
+                {supervisorNavItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href} legacyBehavior passHref>
+                        <SidebarMenuButton
+                            isActive={pathname === item.href}
+                            tooltip={item.label}
+                        >
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+             </SidebarMenu>
+          </SidebarGroup>
+           <SidebarGroup>
+             <SidebarGroupLabel>Development</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                    <Link href="/pages-list" legacyBehavior passHref>
+                    <SidebarMenuButton
+                        isActive={pathname === "/pages-list"}
+                        tooltip="Pages List"
+                    >
+                        <FileText />
+                        <span>Pages List</span>
+                    </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+              </SidebarMenu>
+           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

@@ -10,6 +10,10 @@ export default function PagesListPage() {
     "Tasks",
     "Messaging",
     "Analytics",
+    "Team Management",
+    "Reports",
+    "Call Monitoring",
+    "User Management",
     "Pages List",
   ];
 

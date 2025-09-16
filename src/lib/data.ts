@@ -1,5 +1,5 @@
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData } from './types';
-import { Phone, CheckCircle, Target, Banknote, Calendar, MessageSquare, Users, AudioWaveform } from 'lucide-react';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User } from './types';
+import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
   { title: 'Calls Made', value: '1,204', change: '+20.1%', changeType: 'increase', icon: Phone },
@@ -74,4 +74,16 @@ export const collectionFunnelData: CollectionFunnelData[] = [
     { name: 'Promise to Pay', value: 150 },
     { name: 'Payment Plan', value: 80 },
     { name: 'Paid in Full', value: 250 },
+];
+
+export const teamMembers: TeamMember[] = [
+    { id: 'tm1', name: 'Alice Johnson', email: 'alice@collectpro.com', status: 'Online', accountsAssigned: 25, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+    { id: 'tm2', name: 'Bob Williams', email: 'bob@collectpro.com', status: 'On Call', accountsAssigned: 30, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
+    { id: 'tm3', name: 'Charlie Brown', email: 'charlie@collectpro.com', status: 'Offline', accountsAssigned: 22, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+];
+
+export const users: User[] = [
+    { id: 'u1', name: 'Admin Supervisor', role: 'Supervisor', createdAt: '2024-01-15' },
+    { id: 'u2', name: 'Alice Johnson', role: 'Agent', createdAt: '2024-02-20' },
+    { id: 'u3', name: 'Bob Williams', role: 'Agent', createdAt: '2024-02-22' },
 ];

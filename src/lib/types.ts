@@ -73,3 +73,19 @@ export type CollectionFunnelData = {
     name: string;
     value: number;
 };
+
+export type TeamMember = {
+    id: string;
+    name: string;
+    email: string;
+    status: 'Online' | 'Offline' | 'On Call';
+    accountsAssigned: number;
+    avatarUrl: string;
+};
+
+export type User = {
+    id: string;
+    name: string;
+    role: 'Agent' | 'Supervisor';
+    createdAt: string;
+};
