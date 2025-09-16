@@ -97,7 +97,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarMenu>
                 {agentNavItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                    <Link href={item.href} legacyBehavior passHref>
+                    <Link href={item.href}>
                     <SidebarMenuButton
                         isActive={pathname === item.href}
                         tooltip={item.label}
@@ -115,7 +115,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
              <SidebarMenu>
                 {supervisorNavItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
-                        <Link href={item.href} legacyBehavior passHref>
+                        <Link href={item.href}>
                         <SidebarMenuButton
                             isActive={pathname === item.href}
                             tooltip={item.label}
@@ -132,7 +132,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
              <SidebarGroupLabel>Development</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuItem>
-                    <Link href="/pages-list" legacyBehavior passHref>
+                    <Link href="/pages-list">
                     <SidebarMenuButton
                         isActive={pathname === "/pages-list"}
                         tooltip="Pages List"
