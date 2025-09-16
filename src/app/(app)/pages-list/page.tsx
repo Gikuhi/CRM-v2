@@ -9,6 +9,7 @@ export default function PagesListPage() {
     "Call Logs",
     "Tasks",
     "Messaging",
+    "Analytics",
     "Pages List",
   ];
 

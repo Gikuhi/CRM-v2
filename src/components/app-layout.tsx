@@ -14,6 +14,7 @@ import {
   FileText,
   CreditCard,
   PhoneForwarded,
+  BarChart3,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -47,6 +48,7 @@ const navItems = [
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
+  { href: "/analytics", icon: BarChart3, label: "Analytics" },
   { href: "/pages-list", icon: FileText, label: "Pages List" },
 ];
 
@@ -57,6 +59,7 @@ const pageTitles: { [key: string]: string } = {
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",
+  "/analytics": "Analytics Overview",
   "/pages-list": "Pages List",
 };
 

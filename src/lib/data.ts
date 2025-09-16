@@ -1,4 +1,4 @@
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData } from './types';
 import { Phone, CheckCircle, Target, Banknote, Calendar, MessageSquare, Users, AudioWaveform } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -61,4 +61,17 @@ export const dialerLeads: DialerLead[] = [
   { id: 'd2', name: 'Michael Brown', phone: '555-0102', amountDue: 1500.25, lastContact: '2024-07-15' },
   { id: 'd3', name: 'Jessica Green', phone: '555-0103', amountDue: 320.50, lastContact: '2024-07-22' },
   { id: 'd4', name: 'Chris Taylor', phone: '555-0104', amountDue: 2100.00, lastContact: '2024-07-18' },
+];
+
+export const agentPerformance: AgentPerformance[] = [
+    { id: 'ap1', rank: 1, name: 'Alice Johnson', collections: 15234, callsMade: 412, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+    { id: 'ap2', rank: 2, name: 'Bob Williams', collections: 12890, callsMade: 388, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
+    { id: 'ap3', rank: 3, name: 'Charlie Brown', collections: 11500, callsMade: 450, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+];
+
+export const collectionFunnelData: CollectionFunnelData[] = [
+    { name: 'Initial Contact', value: 400 },
+    { name: 'Promise to Pay', value: 150 },
+    { name: 'Payment Plan', value: 80 },
+    { name: 'Paid in Full', value: 250 },
 ];

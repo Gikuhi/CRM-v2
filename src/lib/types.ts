@@ -59,3 +59,17 @@ export type DialerLead = {
   amountDue: number;
   lastContact: string;
 };
+
+export type AgentPerformance = {
+    id: string;
+    rank: number;
+    name: string;
+    collections: number;
+    callsMade: number;
+    avatarUrl: string;
+};
+
+export type CollectionFunnelData = {
+    name: string;
+    value: number;
+};
