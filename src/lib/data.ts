@@ -1,4 +1,4 @@
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead } from './types';
 import { Phone, CheckCircle, Target, Banknote, Calendar, MessageSquare, Users, AudioWaveform } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -54,4 +54,11 @@ export const templates = [
   { id: 'tpl1', title: 'First Contact - SMS', content: 'Hi [Debtor Name], this is [Agent Name] from CollectPro regarding your outstanding balance. Please contact us at [Phone Number] at your earliest convenience.' },
   { id: 'tpl2', title: 'Payment Promise Reminder - Email', content: 'Dear [Debtor Name],\n\nThis is a friendly reminder about the payment of [Amount] you promised on [Promise Date]. Please let us know if you need any assistance.\n\nBest,\n[Agent Name]' },
   { id: 'tpl3', title: 'Final Notice - SMS', content: 'URGENT: This is the final notice from CollectPro regarding your account. Failure to contact us at [Phone Number] within 24 hours may result in further action.' },
+];
+
+export const dialerLeads: DialerLead[] = [
+  { id: 'd1', name: 'Emily White', phone: '555-0101', amountDue: 750.00, lastContact: '2024-07-20' },
+  { id: 'd2', name: 'Michael Brown', phone: '555-0102', amountDue: 1500.25, lastContact: '2024-07-15' },
+  { id: 'd3', name: 'Jessica Green', phone: '555-0103', amountDue: 320.50, lastContact: '2024-07-22' },
+  { id: 'd4', name: 'Chris Taylor', phone: '555-0104', amountDue: 2100.00, lastContact: '2024-07-18' },
 ];

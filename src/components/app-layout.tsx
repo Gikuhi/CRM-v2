@@ -13,6 +13,7 @@ import {
   MessageSquare,
   FileText,
   CreditCard,
+  PhoneForwarded,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -42,6 +43,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Debtor Profile" },
+  { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
@@ -51,6 +53,7 @@ const navItems = [
 const pageTitles: { [key: string]: string } = {
   "/dashboard": "Dashboard",
   "/debtor-profile": "Debtor Profile Enhancement",
+  "/dialer": "Dialer",
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",

@@ -51,3 +51,11 @@ export type Conversation = {
   avatar: string;
   lastMessage: string;
 };
+
+export type DialerLead = {
+  id: string;
+  name: string;
+  phone: string;
+  amountDue: number;
+  lastContact: string;
+};
