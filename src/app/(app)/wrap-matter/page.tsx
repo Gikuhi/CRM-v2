@@ -17,34 +17,6 @@ const StatItem = ({ label, value }: { label: string, value: string }) => (
 export default function WrapMatterPage() {
     return (
         <div className="p-4 md:p-6 bg-background text-foreground space-y-4">
-            {/* Header */}
-            <Card className="bg-card/80">
-                <CardContent className="p-4 flex flex-wrap justify-between items-center gap-4">
-                    <div className="flex items-center gap-4">
-                        <FileText className="h-6 w-6 text-accent"/>
-                        <div>
-                            <p className="font-bold">1LEN12073</p>
-                            <p className="text-sm">Bal Ksh 7,606.00</p>
-                        </div>
-                    </div>
-                    <div className="flex-grow flex justify-center items-center gap-4 md:gap-8">
-                        <StatItem label="Idle" value="00:00" />
-                        <StatItem label="Current Call" value="00:00" />
-                        <StatItem label="Last Call" value="00:00" />
-                        <StatItem label="Wrap Time" value="00:00" />
-                        <StatItem label="Commission" value="Ksh. 00,000" />
-                    </div>
-                     <div className="flex items-center gap-2 p-2 rounded-lg bg-destructive/80 text-destructive-foreground">
-                        <div className="text-right">
-                           <p className="text-sm font-bold">Status: Red</p>
-                        </div>
-                        <Avatar className="h-10 w-10 border-2 border-destructive-foreground">
-                            <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                            <AvatarFallback>AG</AvatarFallback>
-                        </Avatar>
-                    </div>
-                </CardContent>
-            </Card>
 
             {/* Main Content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
