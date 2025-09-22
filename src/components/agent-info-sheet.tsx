@@ -63,12 +63,12 @@ export function AgentInfoSheet() {
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Info className="h-5 w-5" />
-          <span className="sr-only">Show IT Info</span>
+          <span className="sr-only">Show Agent Info</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>IT Info</SheetTitle>
+          <SheetTitle>Agent Info</SheetTitle>
         </SheetHeader>
         <div className="py-4 space-y-6">
             <div className="grid grid-cols-2 gap-4">
