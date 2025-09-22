@@ -21,6 +21,7 @@ import {
   UserCog,
   PhoneIncoming,
   HandCoins,
+  FileStack,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -55,6 +56,7 @@ const agentNavItems = [
   { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
   { href: "/incoming-call", icon: PhoneIncoming, label: "Incoming Call" },
   { href: "/ptp-capture", icon: HandCoins, label: "PTP Capture" },
+  { href: "/wrap-matter", icon: FileStack, label: "Wrap Matter" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
@@ -74,6 +76,7 @@ const pageTitles: { [key: string]: string } = {
   "/dialer": "Dialer",
   "/incoming-call": "Incoming Call",
   "/ptp-capture": "Promise to Pay Capture",
+  "/wrap-matter": "Wrap Matter",
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",
