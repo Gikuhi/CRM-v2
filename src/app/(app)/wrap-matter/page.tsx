@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, ArrowRight, Flag, MessageCircle, User, FileText } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const StatItem = ({ label, value }: { label: string, value: string }) => (
     <div className="text-center">
@@ -43,18 +44,22 @@ export default function WrapMatterPage() {
                              <Button className="bg-secondary hover:bg-secondary/80">Marquis Apology Installment</Button>
                              <Button className="bg-secondary hover:bg-secondary/80">Pay from Home Assist</Button>
                            </div>
-                           <Button variant="outline">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back
-                            </Button>
+                           <Link href="/dashboard">
+                                <Button variant="outline">
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                    Back
+                                </Button>
+                           </Link>
                         </CardContent>
                     </Card>
 
                      <div className="flex justify-end items-center gap-4 my-2">
-                        <Button variant="outline" size="sm">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back
-                        </Button>
+                        <Link href="/dashboard">
+                            <Button variant="outline" size="sm">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back
+                            </Button>
+                        </Link>
                         <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
                             Wrap Matter
                             <ArrowRight className="ml-2 h-4 w-4" />
@@ -90,7 +95,9 @@ export default function WrapMatterPage() {
                     <Card>
                          <CardContent className="p-4 space-y-2">
                              <Button variant="outline" className="w-full">Manage Contacts</Button>
-                             <Button variant="outline" className="w-full">Back to Matter</Button>
+                             <Link href="/matter-dashboard" className="w-full">
+                                <Button variant="outline" className="w-full">Back to Matter</Button>
+                             </Link>
                          </CardContent>
                     </Card>
                 </div>
