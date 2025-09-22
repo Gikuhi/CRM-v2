@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -57,7 +58,9 @@ export default function IncomingCallPage() {
                         <h3 className="font-semibold text-accent mb-3">Matter Information</h3>
                         <div className="flex gap-4 mb-3">
                         <Button className="bg-primary hover:bg-primary/90 flex-1">Urgently Update Employer</Button>
-                        <Button className="bg-primary hover:bg-primary/90 flex-1">PTP Captured Info</Button>
+                        <Link href="/ptp-capture" className="flex-1">
+                          <Button className="bg-primary hover:bg-primary/90 w-full">PTP Captured Info</Button>
+                        </Link>
                         </div>
                         <div className="text-sm space-y-1 text-muted-foreground">
                         <p>Your account has been with us since November 2024</p>

@@ -20,6 +20,7 @@ import {
   AudioLines,
   UserCog,
   PhoneIncoming,
+  HandCoins,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -53,6 +54,7 @@ const agentNavItems = [
   { href: "/debtor-profile", icon: Users, label: "Debtor Profile" },
   { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
   { href: "/incoming-call", icon: PhoneIncoming, label: "Incoming Call" },
+  { href: "/ptp-capture", icon: HandCoins, label: "PTP Capture" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
@@ -71,6 +73,7 @@ const pageTitles: { [key: string]: string } = {
   "/debtor-profile": "Debtor Profile Enhancement",
   "/dialer": "Dialer",
   "/incoming-call": "Incoming Call",
+  "/ptp-capture": "Promise to Pay Capture",
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",

@@ -89,3 +89,24 @@ export type User = {
     role: 'Agent' | 'Supervisor';
     createdAt: string;
 };
+
+export type PtpOffer = {
+    id: number;
+    frequency: string;
+    noPayments: number;
+    settlementBal: string | number;
+    initialAmount: string | number;
+    amount: string | number;
+    capitalDiscount: number;
+    interestDiscount: number;
+    feeDiscount: number;
+    discountAmount: string | number;
+    initialPaymentMethod: string;
+    monthlyInstallment: string | number;
+    totalInterest: number;
+    totalCost: string | number;
+    totalPayment: string | number;
+    totalSaving: string | number;
+    paymentMethod: string;
+    action: 'Use as PTP' | 'Request Auth' | 'Validating';
+}

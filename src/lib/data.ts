@@ -1,4 +1,4 @@
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -86,4 +86,12 @@ export const users: User[] = [
     { id: 'u1', name: 'Admin Supervisor', role: 'Supervisor', createdAt: '2024-01-15' },
     { id: 'u2', name: 'Alice Johnson', role: 'Agent', createdAt: '2024-02-20' },
     { id: 'u3', name: 'Bob Williams', role: 'Agent', createdAt: '2024-02-22' },
+];
+
+export const ptpOffers: PtpOffer[] = [
+  { id: 1, frequency: 'Once Off', noPayments: 1, settlementBal: 'Ksh 25,360.00', initialAmount: 'Ksh 0.00', amount: 'Ksh 22,360.00', capitalDiscount: 10, interestDiscount: 10, feeDiscount: 10, discountAmount: 'Ksh 22,360.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 22,360.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 22,360.00', totalSaving: 'Ksh 2,360.00', paymentMethod: 'Direct Deposit', action: 'Use as PTP' },
+  { id: 2, frequency: 'Once Off', noPayments: 1, settlementBal: 'Ksh 25,360.00', initialAmount: 'Ksh 0.00', amount: 'Ksh 22,360.00', capitalDiscount: 10, interestDiscount: 10, feeDiscount: 10, discountAmount: 'Ksh 22,360.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 22,360.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 22,360.00', totalSaving: 'Ksh 2,360.00', paymentMethod: 'Direct Deposit', action: 'Request Auth' },
+  { id: 3, frequency: 'Monthly', noPayments: 3, settlementBal: 'Ksh 25,360.00', initialAmount: 'Ksh 0.00', amount: 'Ksh 7,614.00', capitalDiscount: 10, interestDiscount: 10, feeDiscount: 10, discountAmount: 'Ksh 22,360.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 7,614.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 22,360.00', totalSaving: 'Ksh 2,360.00', paymentMethod: 'Direct Deposit', action: 'Request Auth' },
+  { id: 4, frequency: 'Monthly', noPayments: 27, settlementBal: 'Ksh 25,360.00', initialAmount: 0, amount: 947.7, capitalDiscount: 0, interestDiscount: 0, feeDiscount: 0, discountAmount: 'Ksh 0.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 947.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 25,360.00', totalSaving: 'Ksh 0.00', paymentMethod: 'Direct Deposit', action: 'Validating' },
+  { id: 5, frequency: 'Monthly', noPayments: 27, settlementBal: 'Ksh 25,360.00', initialAmount: 0, amount: 'Ksh 640.00', capitalDiscount: 0, interestDiscount: 0, feeDiscount: 0, discountAmount: 'Ksh 0.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 947.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 25,360.00', totalSaving: 'Ksh 0.00', paymentMethod: 'Direct Deposit', action: 'Validating' }
 ];
