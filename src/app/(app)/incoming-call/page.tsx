@@ -38,7 +38,12 @@ export default function IncomingCallPage() {
                         <span className="text-accent font-bold ml-2">Ksh XX XXX</span>
                     </p>
                     </div>
-                    <Button className="bg-accent text-accent-foreground hover:bg-accent/90">ACTIVATE</Button>
+                    <div className="flex gap-2">
+                        <Link href="/matter-dashboard">
+                            <Button variant="outline">Matter</Button>
+                        </Link>
+                        <Button className="bg-accent text-accent-foreground hover:bg-accent/90">ACTIVATE</Button>
+                    </div>
                 </div>
 
                 <div className="relative my-4">

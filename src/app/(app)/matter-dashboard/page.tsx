@@ -46,7 +46,9 @@ export default function MatterDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">Matter Dashboard</h1>
         <div className="flex gap-2">
-          <Button>PTP Assist</Button>
+          <Link href="/ptp-capture">
+            <Button>PTP Assist</Button>
+          </Link>
           <Button variant="secondary">Query</Button>
           <Button variant="secondary">**RPC**</Button>
         </div>
