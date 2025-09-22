@@ -1,3 +1,7 @@
+
+"use client";
+
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,6 +21,43 @@ const InfoRow = ({ label, value, valueColor }: { label: string; value: string, v
 );
 
 export function AgentInfoSheet() {
+  const [timers, setTimers] = React.useState({
+    inboundPaused: 24,
+    currentCall: 0,
+    lastCall: 193, // 3m 13s
+    wrapTime: 0,
+    idleTime: 125, // 2m 5s
+  });
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setTimers(prev => ({
+        ...prev,
+        inboundPaused: prev.inboundPaused + 1,
+        // Example logic: if not in a call, idle time increases
+        idleTime: prev.currentCall === 0 ? prev.idleTime + 1 : prev.idleTime,
+        // Example logic: if in a call, current call time increases
+        currentCall: prev.currentCall > 0 ? prev.currentCall + 1 : 0,
+      }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  };
+    
+  const formatTimeShort = (seconds: number) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -71,11 +112,12 @@ export function AgentInfoSheet() {
             <div>
                 <h3 className="font-semibold text-sm">Agent Status</h3>
                 <div className="mt-2 p-3 bg-muted rounded-md space-y-3">
-                    <InfoRow label="INBOUND PAUSED" value="(00:00:24)" valueColor="text-accent"/>
-                    <div className="grid grid-cols-3 gap-2">
-                        <InfoRow label="Current Call" value="00:00" />
-                        <InfoRow label="Last Call" value="03:13" />
-                        <InfoRow label="Wrap Time" value="00:00" />
+                    <InfoRow label="INBOUND PAUSED" value={`(${formatTime(timers.inboundPaused)})`} valueColor="text-accent"/>
+                    <div className="grid grid-cols-2 gap-4">
+                       <InfoRow label="Idle Time" value={formatTimeShort(timers.idleTime)} />
+                       <InfoRow label="Current Call" value={formatTimeShort(timers.currentCall)} />
+                       <InfoRow label="Last Call" value={formatTimeShort(timers.lastCall)} />
+                       <InfoRow label="Wrap Time" value={formatTimeShort(timers.wrapTime)} />
                     </div>
                     <InfoRow label="Available For Calls" value="No" valueColor="text-accent"/>
                 </div>
