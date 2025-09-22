@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, ArrowRight, Flag, MessageCircle, User, FileText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const StatItem = ({ label, value }: { label: string, value: string }) => (
     <div className="text-center">
@@ -16,6 +19,8 @@ const StatItem = ({ label, value }: { label: string, value: string }) => (
 );
 
 export default function WrapMatterPage() {
+    const router = useRouter();
+
     return (
         <div className="p-4 md:p-6 bg-background text-foreground space-y-4">
 
@@ -44,22 +49,18 @@ export default function WrapMatterPage() {
                              <Button className="bg-secondary hover:bg-secondary/80">Marquis Apology Installment</Button>
                              <Button className="bg-secondary hover:bg-secondary/80">Pay from Home Assist</Button>
                            </div>
-                           <Link href="/dashboard">
-                                <Button variant="outline">
-                                    <ArrowLeft className="mr-2 h-4 w-4" />
-                                    Back
-                                </Button>
-                           </Link>
+                           <Button variant="outline" onClick={() => router.back()}>
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back
+                            </Button>
                         </CardContent>
                     </Card>
 
                      <div className="flex justify-end items-center gap-4 my-2">
-                        <Link href="/dashboard">
-                            <Button variant="outline" size="sm">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back
-                            </Button>
-                        </Link>
+                        <Button variant="outline" size="sm" onClick={() => router.back()}>
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back
+                        </Button>
                         <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
                             Wrap Matter
                             <ArrowRight className="ml-2 h-4 w-4" />
