@@ -19,6 +19,7 @@ import {
   FileBarChart,
   AudioLines,
   UserCog,
+  PhoneIncoming,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -51,6 +52,7 @@ const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Debtor Profile" },
   { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
+  { href: "/incoming-call", icon: PhoneIncoming, label: "Incoming Call" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
@@ -68,6 +70,7 @@ const pageTitles: { [key: string]: string } = {
   "/dashboard": "Dashboard",
   "/debtor-profile": "Debtor Profile Enhancement",
   "/dialer": "Dialer",
+  "/incoming-call": "Incoming Call",
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
   "/messaging": "Secure Messaging",
