@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -51,6 +52,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AgentInfoSheet } from "./agent-info-sheet";
+import { AgentStatusMenu } from "./agent-status-menu";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -183,6 +185,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 />
               </div>
             </form>
+            <AgentStatusMenu />
             <AgentInfoSheet />
             <Button variant="ghost" size="icon" className="rounded-full">
               <Bell className="h-5 w-5" />
