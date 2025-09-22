@@ -49,10 +49,6 @@ export default function WrapMatterPage() {
                              <Button className="bg-secondary hover:bg-secondary/80">Marquis Apology Installment</Button>
                              <Button className="bg-secondary hover:bg-secondary/80">Pay from Home Assist</Button>
                            </div>
-                           <Button variant="outline" onClick={() => router.back()}>
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back
-                            </Button>
                         </CardContent>
                     </Card>
 
