@@ -49,6 +49,9 @@ export default function MatterDashboardPage() {
           <Link href="/ptp-capture">
             <Button>PTP Assist</Button>
           </Link>
+          <Link href="/wrap-matter">
+            <Button>Wrap Matter</Button>
+          </Link>
           <Button variant="secondary">Query</Button>
           <Button variant="secondary">**RPC**</Button>
         </div>
