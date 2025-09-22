@@ -98,10 +98,6 @@ export default function IncomingCallPage() {
                         </div>
                     </div>
                 </div>
-
-                <div className="mt-4 p-2 rounded-lg bg-muted/50 text-center text-sm">
-                    <p>Norman Pi was last updated on : <span className="font-semibold">2025-07-09 at 7:34</span></p>
-                </div>
                 </CardContent>
             </Card>
         )}
