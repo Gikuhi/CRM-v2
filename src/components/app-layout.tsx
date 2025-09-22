@@ -81,6 +81,11 @@ const pageTitles: { [key: string]: string } = {
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <SidebarProvider>
@@ -148,7 +153,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
-          <SidebarTrigger />
+          {isClient && <SidebarTrigger />}
           <div className="flex-1">
             <h1 className="text-lg font-semibold md:text-2xl">
               {pageTitles[pathname] || "CollectPro"}
