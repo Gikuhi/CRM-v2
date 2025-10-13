@@ -24,6 +24,7 @@ import {
   HandCoins,
   FileStack,
   Info,
+  Settings,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -73,6 +74,7 @@ const supervisorNavItems = [
     { href: "/reports", icon: FileBarChart, label: "Reports" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
     { href: "/user-management", icon: UserCog, label: "User Management" },
+    { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 const pageTitles: { [key: string]: string } = {
@@ -91,6 +93,7 @@ const pageTitles: { [key: string]: string } = {
   "/reports": "Reports & Analytics",
   "/call-monitoring": "Call Monitoring",
   "/user-management": "User Management",
+  "/settings": "Settings",
   "/pages-list": "Pages List",
 };
 
@@ -203,7 +206,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/settings">Settings</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Logout</DropdownMenuItem>
