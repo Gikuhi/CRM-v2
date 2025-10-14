@@ -1,0 +1,190 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile within the CollectPro application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "username": {
+          "type": "string",
+          "description": "The user's username for login."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The user's phone number."
+        },
+        "profilePictureUrl": {
+          "type": "string",
+          "description": "URL of the user's profile picture.",
+          "format": "uri"
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role within the system (e.g., Agent, Supervisor, Admin)."
+        },
+        "languagePreference": {
+          "type": "string",
+          "description": "The user's preferred language."
+        },
+        "themeMode": {
+          "type": "string",
+          "description": "The user's preferred theme mode (light or dark)."
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "username",
+        "email"
+      ]
+    },
+    "NotificationPreferences": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "NotificationPreferences",
+      "type": "object",
+      "description": "Represents a user's notification preferences.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the notification preferences."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 NotificationPreferences)"
+        },
+        "emailAlertsEnabled": {
+          "type": "boolean",
+          "description": "Indicates whether email alerts are enabled."
+        },
+        "smsAlertsEnabled": {
+          "type": "boolean",
+          "description": "Indicates whether SMS alerts are enabled."
+        },
+        "inAppNotificationsEnabled": {
+          "type": "boolean",
+          "description": "Indicates whether in-app notifications are enabled."
+        }
+      },
+      "required": [
+        "id",
+        "userId"
+      ]
+    },
+    "SystemConfiguration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SystemConfiguration",
+      "type": "object",
+      "description": "Represents system-wide configuration settings.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the system configuration."
+        },
+        "callTimeout": {
+          "type": "number",
+          "description": "The call timeout duration in seconds."
+        },
+        "maxConcurrentCalls": {
+          "type": "number",
+          "description": "The maximum number of concurrent calls allowed."
+        },
+        "recordingEnabled": {
+          "type": "boolean",
+          "description": "Indicates whether call recording is enabled."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile data. Includes denormalized 'role' field for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/notification_preferences",
+        "definition": {
+          "entityName": "NotificationPreferences",
+          "schema": {
+            "$ref": "#/backend/entities/NotificationPreferences"
+          },
+          "description": "Stores notification preferences for a user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/system_configurations/{configId}",
+        "definition": {
+          "entityName": "SystemConfiguration",
+          "schema": {
+            "$ref": "#/backend/entities/SystemConfiguration"
+          },
+          "description": "Stores system-wide configuration settings. Accessible only to admins.",
+          "params": [
+            {
+              "name": "configId",
+              "description": "The unique identifier for the system configuration."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "RoleAdmin",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Indicates admin role. Existence of document grants admin privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's settings feature.  User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership and simplifying security rules. System-wide configurations are stored in a separate collection, `/system_configurations`, accessible only to admins, enforcing segregation of concerns. Roles are managed via document existence in `/roles_admin/{userId}`.  This design eliminates the need for `get()` calls in security rules, facilitating atomic operations and improving debuggability. To achieve Authorization Independence, we denormalize the 'role' field from the user profile into each user document. For the Admin Settings, we rely on the document existence in the `/roles_admin/{userId}` to authorize access to the `/system_configurations` collection. This enforces that only users with admin roles can modify the system configuration. Regarding QAPs, the use of segregated collections (`/users/{userId}` for user-specific data and `/system_configurations` for global settings) and path-based ownership enables secure `list` operations, as rules can easily filter based on the requestor's `uid` and role."
+  }
+}

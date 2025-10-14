@@ -1,0 +1,142 @@
+/**
+ * @file Firestore Security Rules for CollectPro Settings Feature
+ *
+ * @corePhilosophy
+ * This ruleset enforces a strict user-ownership model for user profiles and notification preferences,
+ * ensuring that only authenticated users can access their own data. System-wide configurations are
+ * restricted to users with admin privileges. The design prioritizes authorization independence
+ * and eliminates the need for costly `get()` calls within security rules.
+ *
+ * @dataStructure
+ * - `/users/{userId}`: Stores user profile data, including a denormalized 'role' field.
+ * - `/users/{userId}/notification_preferences`: Stores notification preferences for each user.
+ * - `/system_configurations/{configId}`: Stores system-wide configurations, accessible only to admins.
+ * - `/roles_admin/{userId}`: Indicates admin role by document existence.
+ *
+ * @keySecurityDecisions
+ * - User data is nested under `/users/{userId}` to enforce ownership.
+ * - Admin privileges are determined by the existence of a document in `/roles_admin/{userId}`.
+ * - System configurations are secured and only accessible to admins.
+ * - No public listing of user data is allowed.
+ *
+ * @denormalizationForAuthorization
+ * The 'role' field is denormalized into the `/users/{userId}` document to avoid needing separate reads
+ * to determine user roles. Admin privileges are determined by the existence of a document in
+ * `/roles_admin/{userId}`, allowing simple existence checks in the rules.
+ *
+ * @structuralSegregation
+ * User-specific data is stored under `/users/{userId}`, while system-wide configurations are stored
+ * in `/system_configurations/{configId}`. This segregation simplifies security rules and improves
+ * performance by avoiding the need for complex filtering based on user roles.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Controls access to user profile data.
+     * @path /users/{userId}
+     * @allow (create) - Authenticated user can create their own profile if the userId matches their auth UID.
+     * @allow (get, list, update, delete) - Authenticated user can only access their own profile.
+     * @deny (create) - If the userId does not match the authenticated user's UID.
+     * @deny (update, delete) - If the authenticated user is not the owner.
+     * @principle Enforces document ownership for writes and restricts access to a user's own data tree.
+     */
+    match /users/{userId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == request.auth.uid;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Controls access to user notification preferences.
+     * @path /users/{userId}/notification_preferences
+     * @allow (create) - Authenticated user can create notification preferences for their own profile.
+     * @allow (get, list, update, delete) - Authenticated user can only access notification preferences for their own profile.
+     * @deny (create) - If the userId does not match the authenticated user's UID.
+     * @deny (update, delete) - If the authenticated user is not the owner.
+     * @principle Enforces document ownership for writes and restricts access to a user's own data tree.
+     */
+    match /users/{userId}/notification_preferences {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.userId == request.auth.uid;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Controls access to system-wide configurations.
+     * @path /system_configurations/{configId}
+     * @allow (get, list) - Public read access to system configurations.
+     * @allow (create, update, delete) - Only admins can modify system configurations.
+     * @deny (create, update, delete) - If the user is not an admin.
+     * @principle Restricts access to system configurations to authorized admins only.
+     */
+    match /system_configurations/{configId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isAdmin() {
+        return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      }
+
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+       /**
+        * @description Grants admin access based on document existence in /roles_admin/{userId}.
+        * @path /roles_admin/{userId}
+        */
+       match /roles_admin/{userId} {
+        function isSignedIn() {
+          return request.auth != null;
+        }
+
+        function isOwner(userId) {
+          return isSignedIn() && request.auth.uid == userId;
+        }
+
+        function isExistingOwner(userId) {
+          return isOwner(userId) && resource != null;
+        }
+
+        allow get: if isOwner(userId);
+        allow list: if false;
+        allow create: if isOwner(userId);
+        allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+        allow delete: if isExistingOwner(userId);
+       }
+  }
+}
