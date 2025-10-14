@@ -110,3 +110,30 @@ export type PtpOffer = {
     paymentMethod: string;
     action: 'Use as PTP' | 'Request Auth' | 'Validating';
 }
+
+export type UserProfile = {
+  id: string;
+  fullName: string;
+  username: string;
+  email: string;
+  phoneNumber?: string;
+  profilePictureUrl?: string;
+  role: 'Agent' | 'Supervisor' | 'Admin';
+  languagePreference: string;
+  themeMode: 'light' | 'dark';
+};
+
+export type NotificationPreferences = {
+  id: string;
+  userId: string;
+  emailAlertsEnabled: boolean;
+  smsAlertsEnabled: boolean;
+  inAppNotificationsEnabled: boolean;
+};
+
+export type SystemConfiguration = {
+    id: string;
+    callTimeout: number;
+    maxConcurrentCalls: number;
+    recordingEnabled: boolean;
+}
