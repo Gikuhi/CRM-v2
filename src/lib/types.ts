@@ -1,3 +1,4 @@
+
 export type Stat = {
   title: string;
   value: string;
@@ -137,3 +138,15 @@ export type SystemConfiguration = {
     maxConcurrentCalls: number;
     recordingEnabled: boolean;
 }
+
+export type AdminCallStats = {
+    period: string;
+    callsMade: number;
+    callsAnswered: number;
+    callsCancelled: number;
+};
+
+export type AdminCollectionsStat = {
+    period: string;
+    amount: number;
+};

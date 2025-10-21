@@ -25,6 +25,7 @@ import {
   FileStack,
   Info,
   Settings,
+  LayoutGrid,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -69,6 +70,7 @@ const agentNavItems = [
 ];
 
 const supervisorNavItems = [
+    { href: "/admin-dashboard", icon: LayoutGrid, label: "Admin Dashboard" },
     { href: "/analytics", icon: BarChart3, label: "Analytics" },
     { href: "/team-management", icon: Users2, label: "Team Management" },
     { href: "/reports", icon: FileBarChart, label: "Reports" },
@@ -94,6 +96,7 @@ const pageTitles: { [key: string]: string } = {
   "/call-monitoring": "Call Monitoring",
   "/user-management": "User Management",
   "/settings": "Settings",
+  "/admin-dashboard": "Admin Dashboard",
   "/pages-list": "Pages List",
 };
 

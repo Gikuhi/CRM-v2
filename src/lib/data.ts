@@ -1,4 +1,5 @@
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer } from './types';
+
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -94,4 +95,18 @@ export const ptpOffers: PtpOffer[] = [
   { id: 3, frequency: 'Monthly', noPayments: 3, settlementBal: 'Ksh 25,360.00', initialAmount: 'Ksh 0.00', amount: 'Ksh 7,614.00', capitalDiscount: 10, interestDiscount: 10, feeDiscount: 10, discountAmount: 'Ksh 22,360.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 7,614.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 22,360.00', totalSaving: 'Ksh 2,360.00', paymentMethod: 'Direct Deposit', action: 'Request Auth' },
   { id: 4, frequency: 'Monthly', noPayments: 27, settlementBal: 'Ksh 25,360.00', initialAmount: 0, amount: 947.7, capitalDiscount: 0, interestDiscount: 0, feeDiscount: 0, discountAmount: 'Ksh 0.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 947.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 25,360.00', totalSaving: 'Ksh 0.00', paymentMethod: 'Direct Deposit', action: 'Validating' },
   { id: 5, frequency: 'Monthly', noPayments: 27, settlementBal: 'Ksh 25,360.00', initialAmount: 0, amount: 'Ksh 640.00', capitalDiscount: 0, interestDiscount: 0, feeDiscount: 0, discountAmount: 'Ksh 0.00', initialPaymentMethod: 'Direct Deposit', monthlyInstallment: 'Ksh 947.00', totalInterest: 0, totalCost: 'Ksh 0.00', totalPayment: 'Ksh 25,360.00', totalSaving: 'Ksh 0.00', paymentMethod: 'Direct Deposit', action: 'Validating' }
+];
+
+export const adminCallStats: AdminCallStats[] = [
+    { period: "Today", callsMade: 320, callsAnswered: 280, callsCancelled: 40 },
+    { period: "Yesterday", callsMade: 450, callsAnswered: 400, callsCancelled: 50 },
+    { period: "Last Week", callsMade: 2100, callsAnswered: 1850, callsCancelled: 250 },
+    { period: "Last Month", callsMade: 8500, callsAnswered: 7800, callsCancelled: 700 },
+];
+
+export const adminCollectionsData: AdminCollectionsStat[] = [
+    { period: 'Today', amount: 5231 },
+    { period: 'Yesterday', amount: 7890 },
+    { period: 'Last Week', amount: 45231 },
+    { period: 'Last Month', amount: 189500 },
 ];
