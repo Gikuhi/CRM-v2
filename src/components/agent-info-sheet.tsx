@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -89,21 +88,21 @@ export function AgentInfoSheet() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
                     <h3 className="font-semibold text-sm">Agent Info</h3>
-                    <InfoRow label="Employee" value="Peris Zubeda Wanyangi (12502)" valueColor="text-accent" />
-                    <InfoRow label="Teamleader" value="Andrew Simiyu Mayaka" valueColor="text-accent" />
+                    <InfoRow label="Employee" value="Peris Zubeda Wanyangi (12502)" valueColor="text-primary" />
+                    <InfoRow label="Teamleader" value="Andrew Simiyu Mayaka" valueColor="text-primary" />
                     <InfoRow label="Matter" value="'Not on matter'" />
-                    <InfoRow label="Extension" value="22502@thirsty-ken,nimblegroup.co.za" valueColor="text-accent" />
+                    <InfoRow label="Extension" value="22502@thirsty-ken,nimblegroup.co.za" valueColor="text-primary" />
                     <InfoRow label="Version" value="Web:1.0.22902 Electron:2.0.2.3" />
-                    <InfoRow label="Current Page" value="self-assessment(00:00:24)" valueColor="text-accent" />
+                    <InfoRow label="Current Page" value="self-assessment(00:00:24)" valueColor="text-primary" />
                 </div>
                  <div className="space-y-3">
                     <h3 className="font-semibold text-sm">Inbound Calls</h3>
-                    <InfoRow label="Inbound Calls Are Currently" value="Paused By User" valueColor="text-accent" />
+                    <InfoRow label="Inbound Calls Are Currently" value="Paused By User" valueColor="text-primary" />
                     <Separator className="my-2"/>
                     <h3 className="font-semibold text-sm">Phone Status</h3>
-                     <InfoRow label="registered" value="(01:40:17)" valueColor="text-accent" />
+                     <InfoRow label="registered" value="(01:40:17)" valueColor="text-primary" />
                     <h3 className="font-semibold text-sm">Call Status</h3>
-                     <InfoRow label="Terminated" value="(00:02:57)" valueColor="text-accent" />
+                     <InfoRow label="Terminated" value="(00:02:57)" valueColor="text-primary" />
                 </div>
             </div>
 
@@ -112,14 +111,14 @@ export function AgentInfoSheet() {
             <div>
                 <h3 className="font-semibold text-sm">Agent Status</h3>
                 <div className="mt-2 p-3 bg-muted rounded-md space-y-3">
-                    <InfoRow label="INBOUND PAUSED" value={`(${formatTime(timers.inboundPaused)})`} valueColor="text-accent"/>
+                    <InfoRow label="INBOUND PAUSED" value={`(${formatTime(timers.inboundPaused)})`} valueColor="text-primary"/>
                     <div className="grid grid-cols-2 gap-4">
                        <InfoRow label="Idle Time" value={formatTimeShort(timers.idleTime)} />
                        <InfoRow label="Current Call" value={formatTimeShort(timers.currentCall)} />
                        <InfoRow label="Last Call" value={formatTimeShort(timers.lastCall)} />
                        <InfoRow label="Wrap Time" value={formatTimeShort(timers.wrapTime)} />
                     </div>
-                    <InfoRow label="Available For Calls" value="No" valueColor="text-accent"/>
+                    <InfoRow label="Available For Calls" value="No" valueColor="text-primary"/>
                 </div>
             </div>
 

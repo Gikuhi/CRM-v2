@@ -22,8 +22,8 @@ export function DashboardStats() {
                   className={cn(
                     "flex items-center",
                     stat.changeType === "increase"
-                      ? "text-green-400"
-                      : "text-red-400"
+                      ? "text-accent-success"
+                      : "text-accent-danger"
                   )}
                 >
                   {stat.changeType === "increase" ? (

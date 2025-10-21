@@ -34,9 +34,9 @@ export function DebtorQueue() {
                 <TableCell className="hidden sm:table-cell">
                   <Badge 
                     className={cn({
-                      'bg-red-500/20 text-red-400 border-red-500/20': debtor.status === 'High Risk',
-                      'bg-green-500/20 text-green-400 border-green-500/20': debtor.status === 'Promise',
-                      'bg-yellow-500/20 text-yellow-400 border-yellow-500/20': debtor.status === 'Pending',
+                      'bg-accent-danger/20 text-accent-danger border-accent-danger/20': debtor.status === 'High Risk',
+                      'bg-accent-success/20 text-accent-success border-accent-success/20': debtor.status === 'Promise',
+                      'bg-accent-warning/20 text-accent-warning border-accent-warning/20': debtor.status === 'Pending',
                     })}
                     variant="outline"
                   >

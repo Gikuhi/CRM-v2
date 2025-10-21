@@ -47,6 +47,9 @@ export default {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+          success: '#10B981',
+          warning: '#F59E0B',
+          danger: '#DC2626',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

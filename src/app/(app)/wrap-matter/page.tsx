@@ -57,7 +57,7 @@ export default function WrapMatterPage() {
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back
                         </Button>
-                        <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                             Wrap Matter
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
@@ -82,7 +82,7 @@ export default function WrapMatterPage() {
                             <CardContent className="p-4 space-y-2">
                                 <h3 className="font-semibold">Add Automated Actions</h3>
                                 <p className="text-xs text-muted-foreground">Add and initiate actions on the matter.</p>
-                                 <Button variant="outline" className="w-full justify-start text-accent border-accent bg-accent/10">Add Action</Button>
+                                 <Button variant="outline" className="w-full justify-start text-primary border-primary bg-primary/10">Add Action</Button>
                             </CardContent>
                         </Card>
                     </div>
@@ -105,7 +105,7 @@ export default function WrapMatterPage() {
                 <CardContent className="p-4">
                     <h3 className="font-semibold text-lg">Linked Accounts</h3>
                     <p className="text-sm text-muted-foreground">You must first wrap the current matter to settle a linked account. This will open a new matter.</p>
-                    <p className="my-2">Outstanding Amount <span className="text-accent font-bold">Ksh 0.00</span></p>
+                    <p className="my-2">Outstanding Amount <span className="text-primary font-bold">Ksh 0.00</span></p>
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader className="bg-primary/90">
@@ -133,7 +133,7 @@ export default function WrapMatterPage() {
                                     <TableCell>Ksh 0.00</TableCell>
                                     <TableCell>-</TableCell>
                                     <TableCell>-</TableCell>
-                                    <TableCell><Button variant="ghost" size="icon" className="text-accent">👁️</Button></TableCell>
+                                    <TableCell><Button variant="ghost" size="icon" className="text-primary">👁️</Button></TableCell>
                                 </TableRow>
                                 <TableRow className="bg-muted/50">
                                      <TableCell colSpan={3}></TableCell>

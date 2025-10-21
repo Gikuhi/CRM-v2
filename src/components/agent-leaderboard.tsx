@@ -29,7 +29,7 @@ export function AgentLeaderboard() {
               <TableRow key={agent.id}>
                 <TableCell className="font-bold text-lg text-muted-foreground">
                     <div className="flex items-center gap-2">
-                        {index === 0 && <Crown className="h-5 w-5 text-yellow-400" />}
+                        {index === 0 && <Crown className="h-5 w-5 text-accent-warning" />}
                         <span>{agent.rank}</span>
                     </div>
                 </TableCell>

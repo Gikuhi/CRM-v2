@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import * as React from "react";
@@ -200,7 +198,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuItem>
                 ))}
              </SidebarMenu>
-          </SidebarGroup>
+           </SidebarGroup>
            <SidebarGroup>
              <SidebarGroupLabel>Development</SidebarGroupLabel>
               <SidebarMenu>
