@@ -27,6 +27,8 @@ import {
   Info,
   Settings,
   LayoutGrid,
+  CalendarClock,
+  ShieldCheck,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -71,13 +73,22 @@ const agentNavItems = [
 ];
 
 const supervisorNavItems = [
-    { href: "/admin-dashboard", icon: LayoutGrid, label: "Admin Dashboard" },
     { href: "/analytics", icon: BarChart3, label: "Analytics" },
     { href: "/team-management", icon: Users2, label: "Team Management" },
     { href: "/reports", icon: FileBarChart, label: "Reports" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
     { href: "/user-management", icon: UserCog, label: "User Management" },
     { href: "/settings", icon: Settings, label: "Settings" },
+];
+
+const teamManagerNavItems = [
+    { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
+    { href: "/team-management", icon: Users2, label: "Agent Management" },
+    { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
+    { href: "/analytics", icon: BarChart3, label: "Performance Analytics" },
+    { href: "/tasks", icon: CalendarClock, label: "Schedule Management" },
+    { href: "/reports", icon: ShieldCheck, label: "Quality Assurance" },
+    { href: "/messaging", icon: MessageSquare, label: "Communication Hub" },
 ];
 
 const pageTitles: { [key: string]: string } = {
@@ -90,9 +101,9 @@ const pageTitles: { [key: string]: string } = {
   "/matter-dashboard": "Matter Dashboard",
   "/call-logs": "Call Logs",
   "/tasks": "Task Management",
-  "/messaging": "Secure Messaging",
-  "/analytics": "Analytics Overview",
-  "/team-management": "Team Management",
+  "/messaging": "Communication Hub",
+  "/analytics": "Performance Analytics",
+  "/team-management": "Agent Management",
   "/reports": "Reports & Analytics",
   "/call-monitoring": "Call Monitoring",
   "/user-management": "User Management",
@@ -150,6 +161,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                         <Link href={item.href}>
                         <SidebarMenuButton
                             isActive={pathname === item.href}
+                            tooltip={item.label}
+                        >
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+             </SidebarMenu>
+          </SidebarGroup>
+           <SidebarGroup>
+             <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
+             <SidebarMenu>
+                {teamManagerNavItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
