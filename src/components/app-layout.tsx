@@ -29,6 +29,9 @@ import {
   LayoutGrid,
   CalendarClock,
   ShieldCheck,
+  Building,
+  Activity,
+  UserCheck,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -73,12 +76,14 @@ const agentNavItems = [
 ];
 
 const supervisorNavItems = [
-    { href: "/analytics", icon: BarChart3, label: "Analytics" },
-    { href: "/team-management", icon: Users2, label: "Team Management" },
-    { href: "/reports", icon: FileBarChart, label: "Reports" },
-    { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
-    { href: "/user-management", icon: UserCog, label: "User Management" },
-    { href: "/settings", icon: Settings, label: "Settings" },
+    { href: "/admin/dashboard", icon: LayoutGrid, label: "System Overview" },
+    { href: "/admin/user-management", icon: UserCog, label: "User Management" },
+    { href: "/admin/analytics", icon: BarChart3, label: "Cross-Team Analytics" },
+    { href: "/admin/call-monitoring", icon: AudioLines, label: "System-Wide Monitoring" },
+    { href: "/admin/reports", icon: FileBarChart, label: "Reporting Center" },
+    { href: "/admin/audit-logs", icon: Activity, label: "Audit Logs" },
+    { href: "/admin/roles", icon: UserCheck, label: "Role Management" },
+    { href: "/settings", icon: Settings, label: "System Settings" },
 ];
 
 const teamManagerNavItems = [
@@ -108,8 +113,15 @@ const pageTitles: { [key: string]: string } = {
   "/call-monitoring": "Call Monitoring",
   "/user-management": "User Management",
   "/settings": "Settings",
-  "/admin-dashboard": "Admin Dashboard",
+  "/admin-dashboard": "Team Manager Dashboard",
   "/pages-list": "Pages List",
+  "/admin/dashboard": "System Overview Dashboard",
+  "/admin/user-management": "User Management",
+  "/admin/analytics": "Cross-Team Analytics",
+  "/admin/call-monitoring": "System-Wide Call Monitoring",
+  "/admin/reports": "Comprehensive Reporting Center",
+  "/admin/audit-logs": "User Activity & Audit Logs",
+  "/admin/roles": "Role & Permission Management"
 };
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -154,13 +166,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarGroup>
           <SidebarGroup>
-             <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
+             <SidebarGroupLabel>Admin Portal</SidebarGroupLabel>
              <SidebarMenu>
                 {supervisorNavItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname === item.href}
+                            isActive={pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
