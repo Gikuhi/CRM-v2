@@ -21,8 +21,9 @@ export default function LoginPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  // Pre-fill with default credentials for development
+  const [email, setEmail] = React.useState('admin@collectpro.com');
+  const [password, setPassword] = React.useState('password123');
 
   useEffect(() => {
     if (!isUserLoading && user) {
@@ -53,7 +54,7 @@ export default function LoginPage() {
             </div>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email or username below to login to your account
+            Enter your email or username below to login. For development, default credentials are provided.
           </CardDescription>
         </CardHeader>
         <CardContent>
