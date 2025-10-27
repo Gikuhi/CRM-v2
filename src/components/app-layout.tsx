@@ -84,16 +84,6 @@ const agentNavItems = [
   { href: "/messaging", icon: MessageSquare, label: "Messaging" },
 ];
 
-const supervisorNavItems = [
-    { href: "/admin/dashboard", icon: LayoutGrid, label: "System Overview" },
-    { href: "/admin/user-management", icon: UserCog, label: "User Management" },
-    { href: "/admin/analytics", icon: BarChart3, label: "Cross-Team Analytics" },
-    { href: "/admin/call-monitoring", icon: AudioLines, label: "System-Wide Monitoring" },
-    { href: "/admin/reports", icon: FileBarChart, label: "Reporting Center" },
-    { href: "/admin/audit-logs", icon: Activity, label: "Audit Logs" },
-    { href: "/admin/roles", icon: UserCheck, label: "Role Management" },
-];
-
 const adminNavItems = [
     { href: "/admin/dashboard", icon: LayoutGrid, label: "Dashboard" },
     { href: "/admin/user-management", icon: BookUser, label: "Users & Roles" },
@@ -150,7 +140,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isClient, setIsClient] = React.useState(false);
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
   const userProfileRef = useMemoFirebase(
@@ -162,6 +152,29 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // If loading or no user, show a simplified layout or nothing
+  if (isUserLoading) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <div>Loading...</div>
+        </div>
+    )
+  }
+
+  // Redirect to login if not authenticated and not on login page
+  if (!user && pathname !== '/login') {
+    if (typeof window !== 'undefined') {
+        router.replace('/login');
+    }
+    return null;
+  }
+
+  // If on login page, render children directly without layout
+  if (pathname === '/login') {
+    return <>{children}</>;
+  }
+
 
   const handleLogout = () => {
     router.push("/login");
