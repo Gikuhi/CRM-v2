@@ -151,34 +151,23 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (isUserLoading || isProfileLoading) {
-      return; // Wait until user and profile data are loaded
+      return; 
     }
 
-    if (!user && pathname !== '/login') {
+    if (!user) {
       router.replace('/login');
     }
-  }, [user, isUserLoading, isProfileLoading, pathname, router]);
+  }, [user, isUserLoading, isProfileLoading, router]);
 
   const isLoading = isUserLoading || isProfileLoading;
 
-  if (isLoading && pathname !== '/login') {
+  if (isLoading || !user) {
     return (
         <div className="flex items-center justify-center h-screen">
             <div>Loading...</div>
         </div>
     )
   }
-
-  // If on login page, render children directly without layout
-  if (pathname === '/login') {
-    return <>{children}</>;
-  }
-
-  // If loading, or no user and not on login, don't render the main layout yet
-  if (!user) {
-    return null; 
-  }
-
 
   const handleLogout = () => {
     router.push("/login");
@@ -240,7 +229,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 </SidebarMenu>
                             </SidebarGroup>
                             <SidebarGroup>
-                                <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
+                                <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
                                 <SidebarMenu>
                                     {teamManagerNavItems.map((item) => (
                                         <SidebarMenuItem key={item.href}>
