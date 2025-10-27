@@ -1,4 +1,5 @@
 
+
 export type Stat = {
   title: string;
   value: string;
@@ -87,7 +88,7 @@ export type TeamMember = {
 export type User = {
     id: string;
     name: string;
-    role: 'Agent' | 'Supervisor';
+    role: 'Agent' | 'Supervisor' | 'Admin';
     createdAt: string;
 };
 

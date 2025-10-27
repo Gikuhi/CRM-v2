@@ -1,5 +1,6 @@
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat } from './types';
+
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -84,9 +85,16 @@ export const teamMembers: TeamMember[] = [
 ];
 
 export const users: User[] = [
-    { id: 'u1', name: 'Admin Supervisor', role: 'Supervisor', createdAt: '2024-01-15' },
-    { id: 'u2', name: 'Alice Johnson', role: 'Agent', createdAt: '2024-02-20' },
-    { id: 'u3', name: 'Bob Williams', role: 'Agent', createdAt: '2024-02-22' },
+    { id: 'u1', name: 'Admin User', role: 'Admin', createdAt: '2024-01-10' },
+    { id: 'u2', name: 'Supervisor One', role: 'Supervisor', createdAt: '2024-01-15' },
+    { id: 'u3', name: 'Supervisor Two', role: 'Supervisor', createdAt: '2024-01-18' },
+    { id: 'u4', name: 'Supervisor Three', role: 'Supervisor', createdAt: '2024-01-20' },
+    { id: 'u5', name: 'Agent One', role: 'Agent', createdAt: '2024-02-20' },
+    { id: 'u6', name: 'Agent Two', role: 'Agent', createdAt: '2024-02-22' },
+    { id: 'u7', name: 'Agent Three', role: 'Agent', createdAt: '2024-03-01' },
+    { id: 'u8', name: 'Agent Four', role: 'Agent', createdAt: '2024-03-05' },
+    { id: 'u9', name: 'Agent Five', role: 'Agent', createdAt: '2024-03-10' },
+    { id: 'u10', name: 'Agent Six', role: 'Agent', createdAt: '2024-03-12' },
 ];
 
 export const ptpOffers: PtpOffer[] = [

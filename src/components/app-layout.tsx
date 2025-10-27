@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -22,7 +23,6 @@ import {
   PhoneIncoming,
   HandCoins,
   FileStack,
-  Info,
   Settings,
   LayoutGrid,
   CalendarClock,
@@ -30,6 +30,11 @@ import {
   Building,
   Activity,
   UserCheck,
+  LifeBuoy,
+  BookUser,
+  GitBranch,
+  ShieldAlert,
+  Settings2,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -59,6 +64,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AgentInfoSheet } from "./agent-info-sheet";
 import { AgentStatusMenu } from "./agent-status-menu";
+import { useUser } from "@/firebase";
+import { useDoc } from "@/firebase/firestore/use-doc";
+import { doc } from "firebase/firestore";
+import { useFirestore, useMemoFirebase } from "@/firebase/provider";
+import type { UserProfile } from "@/lib/types";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -81,8 +91,17 @@ const supervisorNavItems = [
     { href: "/admin/reports", icon: FileBarChart, label: "Reporting Center" },
     { href: "/admin/audit-logs", icon: Activity, label: "Audit Logs" },
     { href: "/admin/roles", icon: UserCheck, label: "Role Management" },
-    { href: "/settings", icon: Settings, label: "System Settings" },
 ];
+
+const adminNavItems = [
+    { href: "/admin/dashboard", icon: LayoutGrid, label: "Dashboard" },
+    { href: "/admin/user-management", icon: BookUser, label: "Users & Roles" },
+    { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
+    { href: "/admin/queues", icon: GitBranch, label: "Queues & Routing" },
+    { href: "/admin/reports", icon: FileBarChart, label: "Reports & Analytics" },
+    { href: "/admin/compliance", icon: ShieldAlert, label: "Compliance & QA" },
+    { href: "/admin/system-settings", icon: Settings2, label: "System Settings" },
+]
 
 const teamManagerNavItems = [
     { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
@@ -113,19 +132,31 @@ const pageTitles: { [key: string]: string } = {
   "/settings": "Settings",
   "/admin-dashboard": "Team Manager Dashboard",
   "/pages-list": "Pages List",
-  "/admin/dashboard": "System Overview Dashboard",
-  "/admin/user-management": "User Management",
+  "/admin/dashboard": "Admin Dashboard",
+  "/admin/user-management": "User & Role Management",
   "/admin/analytics": "Cross-Team Analytics",
   "/admin/call-monitoring": "System-Wide Call Monitoring",
-  "/admin/reports": "Comprehensive Reporting Center",
+  "/admin/reports": "Reporting Center",
   "/admin/audit-logs": "User Activity & Audit Logs",
-  "/admin/roles": "Role & Permission Management"
+  "/admin/roles": "Role & Permission Management",
+  "/admin/campaigns": "Campaign Management",
+  "/admin/queues": "Queue & Routing Control",
+  "/admin/compliance": "Compliance & QA",
+  "/admin/system-settings": "System Settings",
 };
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isClient, setIsClient] = React.useState(false);
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userProfileRef = useMemoFirebase(
+    () => (user ? doc(firestore, `users/${user.uid}`) : null),
+    [firestore, user]
+  );
+  const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
   React.useEffect(() => {
     setIsClient(true);
@@ -134,6 +165,90 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const handleLogout = () => {
     router.push("/login");
   };
+
+  const renderSidebarMenu = (role: UserProfile['role'] | undefined) => {
+    if (role === 'Admin') {
+        return (
+             <SidebarGroup>
+                <SidebarGroupLabel>Admin</SidebarGroupLabel>
+                <SidebarMenu>
+                    {adminNavItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={item.label}
+                        >
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+        )
+    }
+
+    return (
+        <>
+            <SidebarGroup>
+                <SidebarGroupLabel>Agent</SidebarGroupLabel>
+                <SidebarMenu>
+                    {agentNavItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname === item.href}
+                            tooltip={item.label}
+                        >
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+             <SidebarGroup>
+                <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
+                <SidebarMenu>
+                    {supervisorNavItems.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href}>
+                            <SidebarMenuButton
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                            >
+                                <item.icon />
+                                <span>{item.label}</span>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+             <SidebarGroup>
+                <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
+                <SidebarMenu>
+                    {teamManagerNavItems.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href}>
+                            <SidebarMenuButton
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                            >
+                                <item.icon />
+                                <span>{item.label}</span>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+        </>
+    )
+  }
 
   return (
     <SidebarProvider>
@@ -145,60 +260,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Agent</SidebarGroupLabel>
-            <SidebarMenu>
-                {agentNavItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                    <Link href={item.href}>
-                    <SidebarMenuButton
-                        isActive={pathname === item.href}
-                        tooltip={item.label}
-                    >
-                        <item.icon />
-                        <span>{item.label}</span>
-                    </SidebarMenuButton>
-                    </Link>
-                </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroup>
-          <SidebarGroup>
-             <SidebarGroupLabel>Admin Portal</SidebarGroupLabel>
-             <SidebarMenu>
-                {supervisorNavItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
-                            tooltip={item.label}
-                        >
-                            <item.icon />
-                            <span>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-             </SidebarMenu>
-          </SidebarGroup>
-           <SidebarGroup>
-             <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
-             <SidebarMenu>
-                {teamManagerNavItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
-                            tooltip={item.label}
-                        >
-                            <item.icon />
-                            <span>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-             </SidebarMenu>
-           </SidebarGroup>
+           {renderSidebarMenu(userProfile?.role)}
            <SidebarGroup>
              <SidebarGroupLabel>Development</SidebarGroupLabel>
               <SidebarMenu>
@@ -210,6 +272,17 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     >
                         <FileText />
                         <span>Pages List</span>
+                    </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="/settings">
+                    <SidebarMenuButton
+                        isActive={pathname === "/settings"}
+                        tooltip="Settings"
+                    >
+                        <Settings />
+                        <span>Settings</span>
                     </SidebarMenuButton>
                     </Link>
                 </SidebarMenuItem>
@@ -246,8 +319,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                    <AvatarFallback>AG</AvatarFallback>
+                    <AvatarImage src={userProfile?.profilePictureUrl} />
+                    <AvatarFallback>{userProfile?.fullName?.split(' ').map(n => n[0]).join('') || 'U'}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
