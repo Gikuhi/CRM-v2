@@ -70,6 +70,7 @@ import { useDoc } from "@/firebase/firestore/use-doc";
 import { doc } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase/provider";
 import type { UserProfile } from "@/lib/types";
+import { Skeleton } from "./ui/skeleton";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -147,14 +148,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     () => (user ? doc(firestore, `users/${user.uid}`) : null),
     [firestore, user]
   );
-  const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
 
   React.useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // If loading or no user, show a simplified layout or nothing
-  if (isUserLoading) {
+  const isLoading = isUserLoading || isProfileLoading;
+
+  if (isLoading) {
     return (
         <div className="flex items-center justify-center h-screen">
             <div>Loading...</div>
@@ -185,51 +187,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <>
-            {isSupervisorOrAdmin && (
-                 <SidebarGroup>
-                    <SidebarGroupLabel>Admin</SidebarGroupLabel>
-                    <SidebarMenu>
-                        {adminNavItems.map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                            <Link href={item.href}>
-                            <SidebarMenuButton
-                                isActive={pathname.startsWith(item.href)}
-                                tooltip={item.label}
-                            >
-                                <item.icon />
-                                <span>{item.label}</span>
-                            </SidebarMenuButton>
-                            </Link>
-                        </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
-                </SidebarGroup>
-            )}
-
-            {role !== 'Admin' && (
+            {isLoading ? (
+                 <div className="space-y-4 p-2">
+                    <Skeleton className="h-6 w-24 mb-2" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                 </div>
+            ) : (
                 <>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Agent</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {agentNavItems.map((item) => (
-                            <SidebarMenuItem key={item.href}>
-                                <Link href={item.href}>
-                                <SidebarMenuButton
-                                    isActive={pathname === item.href}
-                                    tooltip={item.label}
-                                >
-                                    <item.icon />
-                                    <span>{item.label}</span>
-                                </SidebarMenuButton>
-                                </Link>
-                            </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroup>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {teamManagerNavItems.map((item) => (
+                    {isSupervisorOrAdmin && (
+                        <SidebarGroup>
+                            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+                            <SidebarMenu>
+                                {adminNavItems.map((item) => (
                                 <SidebarMenuItem key={item.href}>
                                     <Link href={item.href}>
                                     <SidebarMenuButton
@@ -241,12 +212,53 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                     </SidebarMenuButton>
                                     </Link>
                                 </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroup>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroup>
+                    )}
+
+                    {role !== 'Admin' && (
+                        <>
+                            <SidebarGroup>
+                                <SidebarGroupLabel>Agent</SidebarGroupLabel>
+                                <SidebarMenu>
+                                    {agentNavItems.map((item) => (
+                                    <SidebarMenuItem key={item.href}>
+                                        <Link href={item.href}>
+                                        <SidebarMenuButton
+                                            isActive={pathname === item.href}
+                                            tooltip={item.label}
+                                        >
+                                            <item.icon />
+                                            <span>{item.label}</span>
+                                        </SidebarMenuButton>
+                                        </Link>
+                                    </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroup>
+                            <SidebarGroup>
+                                <SidebarGroupLabel>Team Manager</SidebarGroupLabel>
+                                <SidebarMenu>
+                                    {teamManagerNavItems.map((item) => (
+                                        <SidebarMenuItem key={item.href}>
+                                            <Link href={item.href}>
+                                            <SidebarMenuButton
+                                                isActive={pathname.startsWith(item.href)}
+                                                tooltip={item.label}
+                                            >
+                                                <item.icon />
+                                                <span>{item.label}</span>
+                                            </SidebarMenuButton>
+                                            </Link>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroup>
+                        </>
+                    )}
                 </>
             )}
-            
         </>
     )
   }
