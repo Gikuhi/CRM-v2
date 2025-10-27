@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, Flag, MessageCircle, User, FileText } from "luci
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { placeholderImages } from "@/lib/placeholder-images";
 
 const StatItem = ({ label, value }: { label: string, value: string }) => (
     <div className="text-center">
@@ -20,6 +21,7 @@ const StatItem = ({ label, value }: { label: string, value: string }) => (
 
 export default function WrapMatterPage() {
     const router = useRouter();
+    const debtorAvatar = placeholderImages.find(p => p.id === 'debtor-avatar');
 
     return (
         <div className="p-4 md:p-6 bg-background text-foreground space-y-4">
@@ -31,7 +33,7 @@ export default function WrapMatterPage() {
                         <CardContent className="p-4 flex items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <Avatar className="h-20 w-20">
-                                     <Image src="https://picsum.photos/seed/1/200/200" alt="Debtor Avatar" width={80} height={80} data-ai-hint="man portrait" />
+                                     {debtorAvatar && <Image src={debtorAvatar.imageUrl} alt={debtorAvatar.description} width={80} height={80} data-ai-hint={debtorAvatar.imageHint} />}
                                 </Avatar>
                                 <div>
                                     <h2 className="text-xl font-bold">Joyce Wanjohi Maina</h2>
