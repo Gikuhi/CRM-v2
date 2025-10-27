@@ -140,7 +140,6 @@ const pageTitles: { [key: string]: string } = {
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isClient, setIsClient] = React.useState(false);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
@@ -151,12 +150,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
 
   React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (isUserLoading || isProfileLoading) {
+      return; // Wait until user and profile data are loaded
+    }
+
+    if (!user && pathname !== '/login') {
+      router.replace('/login');
+    }
+  }, [user, isUserLoading, isProfileLoading, pathname, router]);
 
   const isLoading = isUserLoading || isProfileLoading;
 
-  if (isLoading) {
+  if (isLoading && pathname !== '/login') {
     return (
         <div className="flex items-center justify-center h-screen">
             <div>Loading...</div>
@@ -164,17 +169,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     )
   }
 
-  // Redirect to login if not authenticated and not on login page
-  if (!user && pathname !== '/login') {
-    if (typeof window !== 'undefined') {
-        router.replace('/login');
-    }
-    return null;
-  }
-
   // If on login page, render children directly without layout
   if (pathname === '/login') {
     return <>{children}</>;
+  }
+
+  // If loading, or no user and not on login, don't render the main layout yet
+  if (!user) {
+    return null; 
   }
 
 
@@ -305,7 +307,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
-          {isClient && <SidebarTrigger />}
+          <SidebarTrigger />
           <div className="flex-1">
             <h1 className="text-lg font-semibold md:text-2xl">
               {pageTitles[pathname] || "CollectPro"}
