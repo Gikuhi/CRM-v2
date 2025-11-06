@@ -1,10 +1,11 @@
+
 "use client";
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, PlusCircle } from "lucide-react";
+import { Eye, PlusCircle, Phone } from "lucide-react";
 import { dialerLeads } from "@/lib/data";
 import {
   Dialog,
@@ -18,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
+import { Input } from "@/components/ui/input";
 
 export default function DebtorProfilePage() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -35,7 +37,7 @@ export default function DebtorProfilePage() {
               <TableRow>
                 <TableHead>Debtor</TableHead>
                 <TableHead className="hidden md:table-cell">Amount Due</TableHead>
-                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="hidden sm:table-cell">Last Contact</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -50,10 +52,14 @@ export default function DebtorProfilePage() {
                   <TableCell className="hidden sm:table-cell">
                     <Badge variant="outline">{lead.lastContact}</Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-2">
                     <Button size="sm" variant="outline" onClick={() => setIsModalOpen(true)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View
+                    </Button>
+                     <Button size="sm">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -91,6 +97,7 @@ export default function DebtorProfilePage() {
                         <SelectItem value="no-answer">No Answer</SelectItem>
                         <SelectItem value="call-later">Call Later</SelectItem>
                         <SelectItem value="payment-promised">Payment Promised</SelectItem>
+                        <SelectItem value="wrong-number">Wrong Number</SelectItem>
                     </SelectContent>
                 </Select>
              </div>

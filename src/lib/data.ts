@@ -4,10 +4,10 @@ import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Mess
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
-  { title: 'Calls Made', value: '1,204', change: '+20.1%', changeType: 'increase', icon: Phone },
-  { title: 'Payment Promises', value: '89', change: '+15.2%', changeType: 'increase', icon: CheckCircle },
-  { title: 'Collections', value: '$45,231', change: '+12.5%', changeType: 'increase', icon: Banknote },
-  { title: 'Call Success Ratio', value: '7.4%', change: '-1.2%', changeType: 'decrease', icon: Target },
+  { title: 'Calls Made', value: '68', change: '+5 vs yesterday', changeType: 'increase', icon: Phone },
+  { title: 'Payment Promises', value: '7', change: '-2 vs yesterday', changeType: 'decrease', icon: CheckCircle },
+  { title: 'Collections', value: '$2,350', change: '+$300 vs yesterday', changeType: 'increase', icon: Banknote },
+  { title: 'Call Success Ratio', value: '12.4%', change: '+0.8%', changeType: 'increase', icon: Target },
 ];
 
 export const debtorQueue: Debtor[] = [
@@ -26,11 +26,11 @@ export const performanceData: PerformanceMetric[] = [
 ];
 
 export const callLogs: CallLog[] = [
-    { id: 'cl1', debtorName: 'Jane Doe', date: '2024-07-30 10:15 AM', duration: '5m 32s', outcome: 'Payment Promised', agent: 'Alice' },
-    { id: 'cl2', debtorName: 'John Smith', date: '2024-07-30 09:45 AM', duration: '2m 10s', outcome: 'No Answer', agent: 'Bob' },
-    { id: 'cl3', debtorName: 'Sam Wilson', date: '2024-07-29 03:20 PM', duration: '12m 05s', outcome: 'Collected', agent: 'Alice' },
-    { id: 'cl4', debtorName: 'Maria Garcia', date: '2024-07-29 11:00 AM', duration: '8m 45s', outcome: 'Follow-up Required', agent: 'Charlie' },
-    { id: 'cl5', debtorName: 'Peter Jones', date: '2024-07-28 04:55 PM', duration: '1m 30s', outcome: 'No Answer', agent: 'Bob' },
+    { id: 'cl1', debtorName: 'Jane Doe', date: '2024-07-30 10:15 AM', duration: '5m 32s', outcome: 'Payment Promised', agent: 'Peris Wanyangi' },
+    { id: 'cl2', debtorName: 'John Smith', date: '2024-07-30 09:45 AM', duration: '2m 10s', outcome: 'No Answer', agent: 'Peris Wanyangi' },
+    { id: 'cl3', debtorName: 'Sam Wilson', date: '2024-07-29 03:20 PM', duration: '12m 05s', outcome: 'Collected', agent: 'Peris Wanyangi' },
+    { id: 'cl4', debtorName: 'Maria Garcia', date: '2024-07-29 11:00 AM', duration: '8m 45s', outcome: 'Follow-up Required', agent: 'Peris Wanyangi' },
+    { id: 'cl5', debtorName: 'Peter Jones', date: '2024-07-28 04:55 PM', duration: '1m 30s', outcome: 'No Answer', agent: 'Peris Wanyangi' },
 ];
 
 export const tasks: Task[] = [
@@ -41,15 +41,15 @@ export const tasks: Task[] = [
 ];
 
 export const conversations: Conversation[] = [
-    { id: 'c1', name: 'Alice Johnson', avatar: 'AJ', lastMessage: 'Can you check on the Smith account?' },
-    { id: 'c2', name: 'Bob Williams', avatar: 'BW', lastMessage: 'All clear, payment processed.' },
-    { id: 'c3', name: 'Charlie Brown', avatar: 'CB', lastMessage: 'I need the files for the Garcia case.' },
+    { id: 'c1', name: 'Andrew Mayaka (Supervisor)', avatar: 'AM', lastMessage: 'Great work on the Q3 campaign numbers!' },
+    { id: 'c2', name: 'System Announcements', avatar: 'SA', lastMessage: 'Reminder: System maintenance this Friday at 10 PM.' },
+    { id: 'c3', name: 'Grace Akinyi', avatar: 'GA', lastMessage: 'Can you help me with the Jones account?' },
 ];
 
 export const messages: Message[] = [
-    { id: 'm1', sender: 'Alice Johnson', content: 'Hey, can you check on the Smith account status? I have a follow-up scheduled.', timestamp: '10:30 AM', isCurrentUser: false },
-    { id: 'm2', sender: 'You', content: 'Sure, let me pull up the file. One moment.', timestamp: '10:31 AM', isCurrentUser: true },
-    { id: 'm3', sender: 'Alice Johnson', content: 'Thanks!', timestamp: '10:31 AM', isCurrentUser: false },
+    { id: 'm1', sender: 'Andrew Mayaka', content: 'Hey, great work on the Q3 campaign numbers! Your success rate is up by 5%.', timestamp: '10:30 AM', isCurrentUser: false },
+    { id: 'm2', sender: 'You', content: 'Thanks, Andrew! The new script is working wonders.', timestamp: '10:31 AM', isCurrentUser: true },
+    { id: 'm3', sender: 'Andrew Mayaka', content: 'Glad to hear it. Keep it up.', timestamp: '10:31 AM', isCurrentUser: false },
 ];
 
 export const templates = [
@@ -63,12 +63,20 @@ export const dialerLeads: DialerLead[] = [
   { id: 'd2', name: 'Michael Brown', phone: '555-0102', amountDue: 1500.25, lastContact: '2024-07-15' },
   { id: 'd3', name: 'Jessica Green', phone: '555-0103', amountDue: 320.50, lastContact: '2024-07-22' },
   { id: 'd4', name: 'Chris Taylor', phone: '555-0104', amountDue: 2100.00, lastContact: '2024-07-18' },
+  { id: 'd5', name: 'Sarah Miller', phone: '555-0105', amountDue: 540.00, lastContact: '2024-07-25' },
+  { id: 'd6', name: 'James Wilson', phone: '555-0106', amountDue: 980.75, lastContact: '2024-07-19' },
+  { id: 'd7', name: 'Patricia Martinez', phone: '555-0107', amountDue: 120.00, lastContact: '2024-07-28' },
+  { id: 'd8', name: 'Robert Anderson', phone: '555-0108', amountDue: 3050.00, lastContact: '2024-07-10' },
+  { id: 'd9', name: 'Linda Thomas', phone: '555-0109', amountDue: 400.00, lastContact: '2024-07-29' },
+  { id: 'd10', name: 'Daniel Jackson', phone: '555-0110', amountDue: 175.50, lastContact: '2024-07-27' },
 ];
 
 export const agentPerformance: AgentPerformance[] = [
-    { id: 'ap1', rank: 1, name: 'Alice Johnson', collections: 15234, callsMade: 412, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
-    { id: 'ap2', rank: 2, name: 'Bob Williams', collections: 12890, callsMade: 388, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
-    { id: 'ap3', rank: 3, name: 'Charlie Brown', collections: 11500, callsMade: 450, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+    { id: 'ap1', rank: 1, name: 'Peris Wanyangi', collections: 5200, callsMade: 150, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+    { id: 'ap2', rank: 2, name: 'John Okoro', collections: 4800, callsMade: 120, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
+    { id: 'ap3', rank: 3, name: 'Grace Akinyi', collections: 6100, callsMade: 180, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+    { id: 'ap4', rank: 4, name: 'Samuel Mwangi', collections: 4500, callsMade: 140, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026705d' },
+    { id: 'ap5', rank: 5, name: 'Fatuma Ali', collections: 4200, callsMade: 130, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026706d' },
 ];
 
 export const collectionFunnelData: CollectionFunnelData[] = [
@@ -79,22 +87,22 @@ export const collectionFunnelData: CollectionFunnelData[] = [
 ];
 
 export const teamMembers: TeamMember[] = [
-    { id: 'tm1', name: 'Alice Johnson', email: 'alice@collectpro.com', status: 'Online', accountsAssigned: 25, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
-    { id: 'tm2', name: 'Bob Williams', email: 'bob@collectpro.com', status: 'On Call', accountsAssigned: 30, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
-    { id: 'tm3', name: 'Charlie Brown', email: 'charlie@collectpro.com', status: 'Offline', accountsAssigned: 22, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+    { id: 'tm1', name: 'Peris Wanyangi', email: 'peris.w@example.com', status: 'Online', accountsAssigned: 25, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+    { id: 'tm2', name: 'John Okoro', email: 'john.o@example.com', status: 'On Call', accountsAssigned: 30, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
+    { id: 'tm3', name: 'Grace Akinyi', email: 'grace.a@example.com', status: 'Offline', accountsAssigned: 22, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
+    { id: 'tm4', name: 'Samuel Mwangi', email: 'samuel.m@example.com', status: 'Online', accountsAssigned: 28, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026705d' },
+    { id: 'tm5', name: 'Fatuma Ali', email: 'fatuma.a@example.com', status: 'Break', accountsAssigned: 18, avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026706d' },
 ];
 
 export const users: User[] = [
-    { id: 'u1', name: 'Admin User', role: 'Admin', createdAt: '2024-01-10' },
-    { id: 'u2', name: 'Supervisor One', role: 'Supervisor', createdAt: '2024-01-15' },
-    { id: 'u3', name: 'Supervisor Two', role: 'Supervisor', createdAt: '2024-01-18' },
-    { id: 'u4', name: 'Supervisor Three', role: 'Supervisor', createdAt: '2024-01-20' },
-    { id: 'u5', name: 'Agent One', role: 'Agent', createdAt: '2024-02-20' },
-    { id: 'u6', name: 'Agent Two', role: 'Agent', createdAt: '2024-02-22' },
-    { id: 'u7', name: 'Agent Three', role: 'Agent', createdAt: '2024-03-01' },
-    { id: 'u8', name: 'Agent Four', role: 'Agent', createdAt: '2024-03-05' },
-    { id: 'u9', name: 'Agent Five', role: 'Agent', createdAt: '2024-03-10' },
-    { id: 'u10', name: 'Agent Six', role: 'Agent', createdAt: '2024-03-12' },
+    { id: 'u1', name: 'Super Admin', role: 'Super Admin', createdAt: '2024-01-05' },
+    { id: 'u2', name: 'Andrew Mayaka', role: 'Admin', createdAt: '2024-01-10' },
+    { id: 'u3', name: 'Beatrice Njeri', role: 'Supervisor', createdAt: '2024-01-15' },
+    { id: 'u4', name: 'Peris Wanyangi', role: 'Agent', createdAt: '2024-02-20' },
+    { id: 'u5', name: 'John Okoro', role: 'Agent', createdAt: '2024-02-22' },
+    { id: 'u6', name: 'Grace Akinyi', role: 'Agent', createdAt: '2024-03-01' },
+    { id: 'u7', name: 'Samuel Mwangi', role: 'Agent', createdAt: '2024-03-05' },
+    { id: 'u8', name: 'Fatuma Ali', role: 'Agent', createdAt: '2024-03-10' },
 ];
 
 export const ptpOffers: PtpOffer[] = [
