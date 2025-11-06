@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -7,11 +8,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { dialerLeads } from "@/lib/data";
-import type { DialerLead } from "@/lib/types";
-import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot } from "lucide-react";
+import { dialerLeads, dispositionCategories } from "@/lib/data";
+import type { CallDisposition, DialerLead } from "@/lib/types";
+import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot, Save, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth, useFirestore } from "@/firebase";
+import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { collection, serverTimestamp } from "firebase/firestore";
 
-type CallStatus = "idle" | "dialing" | "active" | "ended";
+type CallStatus = "idle" | "dialing" | "active" | "wrap-up" | "ended";
 
 export default function DialerPage() {
   const [callStatus, setCallStatus] = React.useState<CallStatus>("idle");
@@ -19,39 +25,89 @@ export default function DialerPage() {
   const [isMuted, setIsMuted] = React.useState(false);
   const [isRecording, setIsRecording] = React.useState(false);
   const [callNotes, setCallNotes] = React.useState("");
+  const [disposition, setDisposition] = React.useState<string>("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleStartDialing = () => {
-    // Simulate auto-dialer fetching the next lead
-    setCallStatus("dialing");
-    const nextLead = dialerLeads.find(lead => lead.id !== currentLead?.id) ?? dialerLeads[0];
-    setCurrentLead(nextLead);
-
-    // Simulate connection time
-    setTimeout(() => {
-      setCallStatus("active");
-      setIsRecording(true);
-      setCallNotes(""); // Reset notes for new call
-    }, 2000);
-  };
-
-  const handleManualCall = (lead: DialerLead) => {
+  const { toast } = useToast();
+  const firestore = useFirestore();
+  const { user } = useAuth();
+  
+  const startCall = (lead: DialerLead) => {
     setCallStatus("dialing");
     setCurrentLead(lead);
+
     setTimeout(() => {
       setCallStatus("active");
       setIsRecording(true);
       setCallNotes("");
+      setDisposition("");
     }, 1500);
   }
 
+  const handleStartAutoDialing = () => {
+    const nextLead = dialerLeads.find(lead => lead.id !== currentLead?.id) ?? dialerLeads[0];
+    startCall(nextLead);
+  };
+
+  const handleManualCall = (lead: DialerLead) => {
+    startCall(lead);
+  }
+
   const handleEndCall = () => {
-    setCallStatus("ended");
+    setCallStatus("wrap-up");
     setIsRecording(false);
-    // Simulate saving notes
-    console.log("Call ended. Notes:", callNotes);
+  };
+
+  const handleDispositionSubmit = async () => {
+    if (!disposition) {
+        toast({
+            variant: "destructive",
+            title: "Validation Error",
+            description: "Please select a call disposition.",
+        });
+        return;
+    }
+    if (disposition === "Other" && !callNotes) {
+        toast({
+            variant: "destructive",
+            title: "Validation Error",
+            description: "Notes are required when 'Other' is selected.",
+        });
+        return;
+    }
+
+    setIsSubmitting(true);
+
+    const dispositionData: Omit<CallDisposition, 'call_id' | 'timestamp'> = {
+        agent_id: user?.uid ?? 'unknown_agent',
+        lead_id: currentLead?.id ?? 'unknown_lead',
+        disposition_type: disposition,
+        disposition_notes: callNotes,
+        call_duration: "3m 45s", // Mock duration
+        campaign_id: "q3-push", // Mock campaign
+        outcome_score: Math.floor(Math.random() * 5) + 1, // Mock score
+    };
+    
+    // Non-blocking write to Firestore
+    const dispositionsRef = collection(firestore, 'call_dispositions');
+    addDocumentNonBlocking(dispositionsRef, { ...dispositionData, timestamp: serverTimestamp() });
+
+    console.log("Saving disposition:", dispositionData);
+    
     setTimeout(() => {
-      setCallStatus("idle");
-      setCurrentLead(null);
+        toast({
+            title: "Disposition Saved",
+            description: `Outcome for ${currentLead?.name} logged successfully.`,
+        });
+
+        setIsSubmitting(false);
+        setCallStatus("ended");
+
+        setTimeout(() => {
+            setCallStatus("idle");
+            setCurrentLead(null);
+            // In a real app, you would fetch the next lead here for auto-dialing.
+        }, 1000);
     }, 1000);
   };
   
@@ -67,7 +123,7 @@ export default function DialerPage() {
                 <p className="text-muted-foreground">Current Status</p>
                 <p className="text-2xl font-bold capitalize">{callStatus}</p>
             </div>
-            {callStatus === 'active' && currentLead && (
+            {(callStatus === 'active' || callStatus === 'wrap-up') && currentLead && (
                  <div className="text-center p-4 rounded-lg bg-muted w-full">
                     <p className="font-semibold text-lg">{currentLead.name}</p>
                     <p className="text-muted-foreground">{currentLead.phone}</p>
@@ -75,7 +131,7 @@ export default function DialerPage() {
             )}
            <Button 
                 size="lg" 
-                onClick={handleStartDialing} 
+                onClick={handleStartAutoDialing} 
                 disabled={callStatus !== 'idle'}
                 className="w-full"
             >
@@ -122,6 +178,7 @@ export default function DialerPage() {
         </CardContent>
       </Card>
 
+      {/* In-Call Dialog */}
       <Dialog open={callStatus === 'active'} onOpenChange={(open) => !open && handleEndCall()}>
         <DialogContent className="sm:max-w-lg" onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>
@@ -150,19 +207,60 @@ export default function DialerPage() {
                     <Button variant="outline" size="icon" onClick={() => setIsMuted(!isMuted)}>
                         {isMuted ? <MicOff /> : <Mic />}
                     </Button>
-                    <Button variant="outline" size="icon">
-                        <Pause />
-                    </Button>
-                     <Button variant="outline" size="icon">
-                        <ArrowRightLeft />
-                    </Button>
+                    <Button variant="outline" size="icon"><Pause /></Button>
+                    <Button variant="outline" size="icon"><ArrowRightLeft /></Button>
                 </div>
             </div>
           </div>
           <DialogFooter>
             <Button variant="destructive" onClick={handleEndCall} className="w-full">
               <PhoneOff className="mr-2 h-4 w-4" />
-              End Call
+              End Call & Wrap Up
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Wrap-Up Dialog */}
+      <Dialog open={callStatus === 'wrap-up'} onOpenChange={(open) => !open && setCallStatus("idle")}>
+        <DialogContent className="sm:max-w-lg" onInteractOutside={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle>Call Wrap-Up: {currentLead?.name}</DialogTitle>
+            <DialogDescription>
+              Select the call outcome and add any final notes.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+                <Label htmlFor="disposition">Call Disposition</Label>
+                <Select value={disposition} onValueChange={setDisposition}>
+                    <SelectTrigger id="disposition">
+                        <SelectValue placeholder="Select call outcome..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {dispositionCategories.map(cat => (
+                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="wrap-up-notes">Final Notes</Label>
+                <Textarea 
+                    id="wrap-up-notes" 
+                    placeholder="Add final notes here..." 
+                    rows={4}
+                    value={callNotes}
+                    onChange={(e) => setCallNotes(e.target.value)}
+                />
+                 {disposition === 'Other' && <p className="text-xs text-destructive">Notes are required for 'Other' disposition.</p>}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setCallStatus("idle")}>Cancel</Button>
+            <Button onClick={handleDispositionSubmit} disabled={isSubmitting || !disposition}>
+                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4"/>}
+                Submit Disposition
             </Button>
           </DialogFooter>
         </DialogContent>

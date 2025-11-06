@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "UserProfile": {
@@ -110,6 +111,59 @@
       "required": [
         "id"
       ]
+    },
+    "CallDisposition": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CallDisposition",
+      "type": "object",
+      "description": "Represents the outcome of a single call.",
+      "properties": {
+        "call_id": {
+          "type": "string",
+          "description": "Unique identifier for the call."
+        },
+        "agent_id": {
+          "type": "string",
+          "description": "The ID of the agent who handled the call."
+        },
+        "lead_id": {
+          "type": "string",
+          "description": "The ID of the lead that was called."
+        },
+        "disposition_type": {
+          "type": "string",
+          "description": "The selected outcome category for the call."
+        },
+        "disposition_notes": {
+          "type": "string",
+          "description": "Optional notes from the agent about the call."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the disposition was logged."
+        },
+        "call_duration": {
+          "type": "string",
+          "description": "The duration of the call."
+        },
+        "campaign_id": {
+          "type": "string",
+          "description": "The ID of the campaign this call was part of."
+        },
+        "outcome_score": {
+          "type": "number",
+          "description": "A numeric score representing the call outcome for analytics."
+        }
+      },
+      "required": [
+        "call_id",
+        "agent_id",
+        "lead_id",
+        "disposition_type",
+        "timestamp",
+        "campaign_id"
+      ]
     }
   },
   "auth": {
@@ -183,8 +237,24 @@
             }
           ]
         }
+      },
+      {
+        "path": "/call_dispositions/{dispositionId}",
+        "definition": {
+          "entityName": "CallDisposition",
+          "schema": {
+            "$ref": "#/backend/entities/CallDisposition"
+          },
+          "description": "Stores the outcome and notes for each call made by an agent.",
+          "params": [
+            {
+              "name": "dispositionId",
+              "description": "The unique identifier for the call disposition log."
+            }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's settings feature.  User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership and simplifying security rules. System-wide configurations are stored in a separate collection, `/system_configurations`, accessible only to admins, enforcing segregation of concerns. Roles are managed via document existence in `/roles_admin/{userId}`.  This design eliminates the need for `get()` calls in security rules, facilitating atomic operations and improving debuggability. To achieve Authorization Independence, we denormalize the 'role' field from the user profile into each user document. For the Admin Settings, we rely on the document existence in the `/roles_admin/{userId}` to authorize access to the `/system_configurations` collection. This enforces that only users with admin roles can modify the system configuration. Regarding QAPs, the use of segregated collections (`/users/{userId}` for user-specific data and `/system_configurations` for global settings) and path-based ownership enables secure `list` operations, as rules can easily filter based on the requestor's `uid` and role."
+    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's features. User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership. System-wide configurations are in a separate `/system_configurations` collection, accessible only to admins. Roles are managed via document existence in `/roles_admin/{userId}`. A new `call_dispositions` collection is added to log call outcomes; security rules will enforce that agents can only create dispositions for their own calls."
   }
 }

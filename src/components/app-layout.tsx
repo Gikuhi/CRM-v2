@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import * as React from "react";
@@ -15,34 +14,26 @@ import {
   MessageSquare,
   FileText,
   CreditCard,
-  PhoneForwarded,
   BarChart3,
   Users2,
   FileBarChart,
   AudioLines,
-  UserCog,
-  PhoneIncoming,
-  HandCoins,
-  FileStack,
   Settings,
   LayoutGrid,
   CalendarClock,
-  ShieldCheck,
   Building,
   Activity,
-  UserCheck,
-  LifeBuoy,
-  BookUser,
-  GitBranch,
-  ShieldAlert,
-  Settings2,
-  Shield,
   HeartPulse,
   Banknote,
   FileSearch,
   SlidersHorizontal,
   HelpCircle,
   TrendingUp,
+  Save,
+  BookUser,
+  LifeBuoy,
+  Settings2,
+  Shield,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -82,7 +73,9 @@ import { Skeleton } from "./ui/skeleton";
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Leads" },
+  { href: "/dialer", icon: Phone, label: "Dialer" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
+  { href: "/call-wraps", icon: Save, label: "Call Wraps" },
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
   { href: "/analytics", icon: TrendingUp, label: "My Stats" },
   { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
@@ -132,6 +125,7 @@ const pageTitles: { [key: string]: string } = {
   "/wrap-matter": "Wrap Matter",
   "/matter-dashboard": "Matter Dashboard",
   "/call-logs": "Call Logs",
+  "/call-wraps": "Call Wrap History",
   "/tasks": "Follow-up Tasks",
   "/messaging": "Communication Hub",
   "/analytics": "My Stats",

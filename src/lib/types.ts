@@ -1,5 +1,7 @@
 
 
+import { Timestamp } from "firebase/firestore";
+
 export type Stat = {
   title: string;
   value: string;
@@ -80,7 +82,7 @@ export type TeamMember = {
     id: string;
     name: string;
     email: string;
-    status: 'Online' | 'Offline' | 'On Call';
+    status: 'Online' | 'Offline' | 'On Call' | 'Break';
     accountsAssigned: number;
     avatarUrl: string;
 };
@@ -181,3 +183,20 @@ export type Organization = {
     status: "Active" | "Inactive";
     plan: "Basic" | "Pro" | "Enterprise";
 };
+
+export type CallDisposition = {
+    call_id: string;
+    agent_id: string;
+    lead_id: string;
+    disposition_type: string;
+    disposition_notes: string;
+    timestamp: Timestamp;
+    call_duration: string;
+    campaign_id: string;
+    outcome_score: number;
+};
+
+export type CallDispositionLog = Omit<CallDisposition, 'timestamp'> & {
+    timestamp: string;
+    debtorName: string;
+}

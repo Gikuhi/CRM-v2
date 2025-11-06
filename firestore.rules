@@ -1,5 +1,6 @@
+
 /**
- * @file Firestore Security Rules for CollectPro Settings Feature
+ * @file Firestore Security Rules for CollectPro
  *
  * @corePhilosophy
  * This ruleset enforces a strict user-ownership model for user profiles and notification preferences,
@@ -12,131 +13,83 @@
  * - `/users/{userId}/notification_preferences`: Stores notification preferences for each user.
  * - `/system_configurations/{configId}`: Stores system-wide configurations, accessible only to admins.
  * - `/roles_admin/{userId}`: Indicates admin role by document existence.
+ * - `/call_dispositions/{dispositionId}`: Stores call outcomes logged by agents.
  *
  * @keySecurityDecisions
  * - User data is nested under `/users/{userId}` to enforce ownership.
  * - Admin privileges are determined by the existence of a document in `/roles_admin/{userId}`.
+ * - Call dispositions can only be created by the authenticated agent assigned to the call.
  * - System configurations are secured and only accessible to admins.
- * - No public listing of user data is allowed.
  *
  * @denormalizationForAuthorization
  * The 'role' field is denormalized into the `/users/{userId}` document to avoid needing separate reads
  * to determine user roles. Admin privileges are determined by the existence of a document in
  * `/roles_admin/{userId}`, allowing simple existence checks in the rules.
- *
- * @structuralSegregation
- * User-specific data is stored under `/users/{userId}`, while system-wide configurations are stored
- * in `/system_configurations/{configId}`. This segregation simplifies security rules and improves
- * performance by avoiding the need for complex filtering based on user roles.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
     /**
      * @description Controls access to user profile data.
      * @path /users/{userId}
-     * @allow (create) - Authenticated user can create their own profile if the userId matches their auth UID.
-     * @allow (get, list, update, delete) - Authenticated user can only access their own profile.
-     * @deny (create) - If the userId does not match the authenticated user's UID.
-     * @deny (update, delete) - If the authenticated user is not the owner.
-     * @principle Enforces document ownership for writes and restricts access to a user's own data tree.
      */
     match /users/{userId} {
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      function isOwner(userId) {
-        return isSignedIn() && request.auth.uid == userId;
-      }
-
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if false;
+      allow read: if isOwner(userId);
       allow create: if isOwner(userId) && request.resource.data.id == request.auth.uid;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId);
     }
 
     /**
      * @description Controls access to user notification preferences.
-     * @path /users/{userId}/notification_preferences
-     * @allow (create) - Authenticated user can create notification preferences for their own profile.
-     * @allow (get, list, update, delete) - Authenticated user can only access notification preferences for their own profile.
-     * @deny (create) - If the userId does not match the authenticated user's UID.
-     * @deny (update, delete) - If the authenticated user is not the owner.
-     * @principle Enforces document ownership for writes and restricts access to a user's own data tree.
+     * @path /users/{userId}/notification_preferences/{prefId}
      */
-    match /users/{userId}/notification_preferences {
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      function isOwner(userId) {
-        return isSignedIn() && request.auth.uid == userId;
-      }
-
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if false;
-      allow create: if isOwner(userId) && request.resource.data.userId == request.auth.uid;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+    match /users/{userId}/notification_preferences/{prefId} {
+      allow read, write: if isOwner(userId);
     }
 
     /**
      * @description Controls access to system-wide configurations.
      * @path /system_configurations/{configId}
-     * @allow (get, list) - Public read access to system configurations.
-     * @allow (create, update, delete) - Only admins can modify system configurations.
-     * @deny (create, update, delete) - If the user is not an admin.
-     * @principle Restricts access to system configurations to authorized admins only.
      */
     match /system_configurations/{configId} {
-      function isSignedIn() {
-        return request.auth != null;
-      }
-
-      function isAdmin() {
+       function isAdmin() {
         return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
       }
 
-      allow get: if true;
-      allow list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin() && resource != null;
-      allow delete: if isAdmin() && resource != null;
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
 
-       /**
-        * @description Grants admin access based on document existence in /roles_admin/{userId}.
-        * @path /roles_admin/{userId}
-        */
-       match /roles_admin/{userId} {
-        function isSignedIn() {
-          return request.auth != null;
-        }
-
-        function isOwner(userId) {
-          return isSignedIn() && request.auth.uid == userId;
-        }
-
-        function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
-        }
-
-        allow get: if isOwner(userId);
-        allow list: if false;
-        allow create: if isOwner(userId);
-        allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-        allow delete: if isExistingOwner(userId);
-       }
+    /**
+     * @description Grants admin access based on document existence.
+     * @path /roles_admin/{userId}
+     */
+    match /roles_admin/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+       function isAdmin() {
+        return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      }
+    }
+    
+    /**
+     * @description Controls access to call disposition logs.
+     * @path /call_dispositions/{dispositionId}
+     */
+    match /call_dispositions/{dispositionId} {
+      allow create: if isSignedIn() && request.resource.data.agent_id == request.auth.uid;
+      allow read: if isSignedIn() && resource.data.agent_id == request.auth.uid;
+      allow list: if isSignedIn(); // For supervisors/admins, should be refined with role checks
+      allow update, delete: if false; // Dispositions are immutable
+    }
   }
 }

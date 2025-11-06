@@ -1,6 +1,6 @@
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -152,4 +152,27 @@ export const organizations: Organization[] = [
     { id: "org-1", name: "DebtSolve Inc.", admin: "Jane Doe", userCount: 12, status: "Active", plan: "Pro" },
     { id: "org-2", name: "CreditRevive", admin: "John Smith", userCount: 8, status: "Active", plan: "Basic" },
     { id: "org-3", name: "FinRecovery LLC", admin: "Peter Jones", userCount: 2, status: "Inactive", plan: "Enterprise" },
+];
+
+export const dispositionCategories = [
+    'Paid / Settled',
+    'Promise to Pay (PTP)',
+    'Call Back Later',
+    'Wrong Number',
+    'Not Interested',
+    'Disconnected / No Answer',
+    'Transferred to Supervisor',
+    'Do Not Call (DNC)',
+    'Customer Requested Callback',
+    'Follow-Up Scheduled',
+    'Unreachable',
+    'Other'
+];
+
+export const dispositionLogs: CallDispositionLog[] = [
+    { call_id: 'disp-1', agent_id: 'u4', lead_id: 'd1', disposition_type: 'Promise to Pay (PTP)', disposition_notes: 'Promised to pay next Friday.', timestamp: '2024-08-01 11:30 AM', call_duration: '4m 15s', campaign_id: 'q3-push', outcome_score: 4, debtorName: 'Emily White' },
+    { call_id: 'disp-2', agent_id: 'u4', lead_id: 'd2', disposition_type: 'Not Interested', disposition_notes: 'Stated they are not interested in any offers.', timestamp: '2024-08-01 10:45 AM', call_duration: '1m 20s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Michael Brown' },
+    { call_id: 'disp-3', agent_id: 'u4', lead_id: 'd3', disposition_type: 'Paid / Settled', disposition_notes: 'Paid full amount via card.', timestamp: '2024-07-31 02:10 PM', call_duration: '8m 55s', campaign_id: 'q3-push', outcome_score: 5, debtorName: 'Jessica Green' },
+    { call_id: 'disp-4', agent_id: 'u4', lead_id: 'd4', disposition_type: 'Do Not Call (DNC)', disposition_notes: 'Customer was very angry and requested to be put on DNC list.', timestamp: '2024-07-31 01:05 PM', call_duration: '2m 30s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Chris Taylor' },
+    { call_id: 'disp-5', agent_id: 'u4', lead_id: 'd5', disposition_type: 'Call Back Later', disposition_notes: '', timestamp: '2024-07-30 09:00 AM', call_duration: '0m 45s', campaign_id: 'q3-push', outcome_score: 3, debtorName: 'Sarah Miller' },
 ];
