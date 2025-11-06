@@ -4,33 +4,50 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function SystemSettingsPage() {
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">System Settings & Configuration</h1>
+      <h1 className="text-3xl font-bold">Organization Settings</h1>
       
-      <Tabs defaultValue="branding">
+      <Tabs defaultValue="general">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="branding">Branding</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="data">Data Retention</TabsTrigger>
           <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="branding">Branding</TabsTrigger>
+          <TabsTrigger value="operations">Operations</TabsTrigger>
+          <TabsTrigger value="integrations">Integrations</TabsTrigger>
         </TabsList>
         
+        <TabsContent value="general" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>General Information</CardTitle>
+              <CardDescription>Manage your organization's basic details and defaults.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="org-name">Organization Name</Label>
+                <Input id="org-name" defaultValue="CollectPro Inc." />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="timezone">Time Zone</Label>
+                 <Input id="timezone" defaultValue="Africa/Nairobi" />
+              </div>
+              <Button>Save General Settings</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="branding" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>Branding</CardTitle>
-              <CardDescription>Customize the look and feel of the application.</CardDescription>
+              <CardDescription>Customize the look and feel of the application for your organization.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="app-name">Application Name</Label>
-                <Input id="app-name" defaultValue="CollectPro" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="logo">Logo</Label>
+                <Label htmlFor="logo">Organization Logo</Label>
                 <Input id="logo" type="file" />
                 <p className="text-sm text-muted-foreground">Upload a new logo (PNG, JPG, SVG).</p>
               </div>
@@ -39,11 +56,35 @@ export default function SystemSettingsPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="operations" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Operational Hours & Statuses</CardTitle>
+              <CardDescription>Define working hours and custom call statuses.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div className="space-y-2">
+                <Label htmlFor="working-hours">Working Hours</Label>
+                <Input id="working-hours" defaultValue="Mon-Fri, 8:00 AM - 6:00 PM" />
+              </div>
+               <div className="space-y-2">
+                <Label htmlFor="break-duration">Default Break Duration (minutes)</Label>
+                <Input id="break-duration" type="number" defaultValue="15" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="custom-statuses">Custom Statuses</Label>
+                <Textarea id="custom-statuses" placeholder="Enter one status per line, e.g., 'Follow-up Required'" defaultValue="Follow-up Required\nInterested - Send Info\nWrong Number"/>
+              </div>
+              <Button>Save Operational Settings</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="integrations" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>Integrations & API Keys</CardTitle>
-              <CardDescription>Configure third-party services.</CardDescription>
+              <CardDescription>Configure third-party services for your organization.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -57,28 +98,6 @@ export default function SystemSettingsPage() {
               <Button>Save Integrations</Button>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="data" className="mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Retention</CardTitle>
-              <CardDescription>Set rules for how long data is stored in the system.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-               <div className="space-y-2">
-                <Label htmlFor="retention-period">Call Recording Retention (days)</Label>
-                <Input id="retention-period" type="number" defaultValue="90" />
-              </div>
-              <Button>Save Data Rules</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="general" className="mt-4">
-             <div className="text-center text-muted-foreground py-8">
-                <p>Other general system settings will be displayed here.</p>
-            </div>
         </TabsContent>
       </Tabs>
     </div>
