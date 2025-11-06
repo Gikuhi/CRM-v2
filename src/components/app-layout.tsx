@@ -174,8 +174,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const renderSidebarMenu = (role: UserProfile['role'] | undefined) => {
-    const isSupervisorOrAdmin = role === 'Admin' || role === 'Supervisor';
-
     return (
         <>
             {isLoading ? (
@@ -187,11 +185,47 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                  </div>
             ) : (
                 <>
-                    {isSupervisorOrAdmin && (
-                        <SidebarGroup>
-                            <SidebarGroupLabel>Admin</SidebarGroupLabel>
-                            <SidebarMenu>
-                                {adminNavItems.map((item) => (
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Admin</SidebarGroupLabel>
+                        <SidebarMenu>
+                            {adminNavItems.map((item) => (
+                            <SidebarMenuItem key={item.href}>
+                                <Link href={item.href}>
+                                <SidebarMenuButton
+                                    isActive={pathname.startsWith(item.href)}
+                                    tooltip={item.label}
+                                >
+                                    <item.icon />
+                                    <span>{item.label}</span>
+                                </SidebarMenuButton>
+                                </Link>
+                            </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroup>
+
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Agent</SidebarGroupLabel>
+                        <SidebarMenu>
+                            {agentNavItems.map((item) => (
+                            <SidebarMenuItem key={item.href}>
+                                <Link href={item.href}>
+                                <SidebarMenuButton
+                                    isActive={pathname === item.href}
+                                    tooltip={item.label}
+                                >
+                                    <item.icon />
+                                    <span>{item.label}</span>
+                                </SidebarMenuButton>
+                                </Link>
+                            </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroup>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
+                        <SidebarMenu>
+                            {teamManagerNavItems.map((item) => (
                                 <SidebarMenuItem key={item.href}>
                                     <Link href={item.href}>
                                     <SidebarMenuButton
@@ -203,51 +237,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                     </SidebarMenuButton>
                                     </Link>
                                 </SidebarMenuItem>
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroup>
-                    )}
-
-                    {role !== 'Admin' && (
-                        <>
-                            <SidebarGroup>
-                                <SidebarGroupLabel>Agent</SidebarGroupLabel>
-                                <SidebarMenu>
-                                    {agentNavItems.map((item) => (
-                                    <SidebarMenuItem key={item.href}>
-                                        <Link href={item.href}>
-                                        <SidebarMenuButton
-                                            isActive={pathname === item.href}
-                                            tooltip={item.label}
-                                        >
-                                            <item.icon />
-                                            <span>{item.label}</span>
-                                        </SidebarMenuButton>
-                                        </Link>
-                                    </SidebarMenuItem>
-                                    ))}
-                                </SidebarMenu>
-                            </SidebarGroup>
-                            <SidebarGroup>
-                                <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
-                                <SidebarMenu>
-                                    {teamManagerNavItems.map((item) => (
-                                        <SidebarMenuItem key={item.href}>
-                                            <Link href={item.href}>
-                                            <SidebarMenuButton
-                                                isActive={pathname.startsWith(item.href)}
-                                                tooltip={item.label}
-                                            >
-                                                <item.icon />
-                                                <span>{item.label}</span>
-                                            </SidebarMenuButton>
-                                            </Link>
-                                        </SidebarMenuItem>
-                                    ))}
-                                </SidebarMenu>
-                            </SidebarGroup>
-                        </>
-                    )}
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroup>
                 </>
             )}
         </>
