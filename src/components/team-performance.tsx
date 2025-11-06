@@ -24,8 +24,8 @@ export function TeamPerformance() {
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-            <YAxis yAxisId="left" stroke="hsl(var(--chart-1))" fontSize={12} tickFormatter={(value) => `$${value/1000}k`} />
-            <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" fontSize={12} />
+            <YAxis yAxisId="left" stroke="var(--color-chart-1)" fontSize={12} tickFormatter={(value) => `$${value/1000}k`} />
+            <YAxis yAxisId="right" orientation="right" stroke="var(--color-chart-2)" fontSize={12} />
             <Tooltip
                 contentStyle={{
                     backgroundColor: 'hsl(var(--card))',

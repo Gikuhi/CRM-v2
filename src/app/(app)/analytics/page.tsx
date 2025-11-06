@@ -1,5 +1,5 @@
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { dashboardStats } from "@/lib/data";
 import { PerformanceOverview } from "@/components/performance-overview";
 import { AgentLeaderboard } from "@/components/agent-leaderboard";
