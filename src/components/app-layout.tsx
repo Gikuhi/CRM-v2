@@ -204,31 +204,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
-  const renderSidebarMenu = (role: UserProfile['role'] | undefined) => {
-    let items: { href: string; icon: React.ElementType; label: string }[] = [];
-    let groupLabel = "";
-
-    switch (role) {
-      case "Super Admin":
-        items = superAdminNavItems;
-        groupLabel = "Super Admin";
-        break;
-      case "Admin":
-        items = adminNavItems;
-        groupLabel = "Admin";
-        break;
-      case "Supervisor":
-        items = teamManagerNavItems;
-        groupLabel = "Supervisor";
-        break;
-      case "Agent":
-      default:
-        items = agentNavItems;
-        groupLabel = "Agent";
-        break;
-    }
-
-
+  const renderSidebarMenu = () => {
+    const allNavGroups = [
+      { label: "Agent", items: agentNavItems },
+      { label: "Supervisor", items: teamManagerNavItems },
+      { label: "Admin", items: adminNavItems },
+      { label: "Super Admin", items: superAdminNavItems },
+    ];
+    
     return (
         <>
             {isLoading ? (
@@ -239,27 +222,26 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <Skeleton className="h-8 w-full" />
                  </div>
             ) : (
-                <>
-                  <SidebarGroup>
-                      <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
-                      <SidebarMenu>
-                          {items.map((item) => (
-                          <SidebarMenuItem key={item.href}>
-                              <Link href={item.href}>
-                              <SidebarMenuButton
-                                  isActive={pathname.startsWith(item.href)}
-                                  tooltip={item.label}
-                              >
-                                  <item.icon />
-                                  <span>{item.label}</span>
-                              </SidebarMenuButton>
-                              </Link>
-                          </SidebarMenuItem>
-                          ))}
-                      </SidebarMenu>
-                  </SidebarGroup>
-
-                </>
+              allNavGroups.map((group) => (
+                <SidebarGroup key={group.label}>
+                  <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+                  <SidebarMenu>
+                    {group.items.map((item) => (
+                      <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                          <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={item.label}
+                          >
+                            <item.icon />
+                            <span>{item.label}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroup>
+              ))
             )}
         </>
     )
@@ -275,7 +257,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </SidebarHeader>
         <SidebarContent>
-           {renderSidebarMenu(userProfile?.role)}
+           {renderSidebarMenu()}
            <SidebarGroup>
              <SidebarGroupLabel>Development</SidebarGroupLabel>
               <SidebarMenu>
