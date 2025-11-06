@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Search, PlusCircle, Upload, MoreHorizontal } from "lucide-react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 
 const campaigns = [
-    { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000 },
-    { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500 },
-    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null },
-    { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500 },
+    { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65 },
+    { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500, progress: 40 },
+    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100 },
+    { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80 },
 ];
 
 
@@ -47,6 +48,7 @@ export default function CampaignManagementPage() {
                     <TableHead>Status</TableHead>
                     <TableHead>Supervisor</TableHead>
                     <TableHead>Leads</TableHead>
+                    <TableHead className="w-[20%]">Progress</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -58,6 +60,12 @@ export default function CampaignManagementPage() {
                         <TableCell><Badge variant={campaign.status === 'Active' ? 'default' : 'secondary'}>{campaign.status}</Badge></TableCell>
                         <TableCell>{campaign.supervisor}</TableCell>
                         <TableCell>{campaign.leads?.toLocaleString() ?? 'N/A'}</TableCell>
+                        <TableCell>
+                           <div className="flex items-center gap-2">
+                                <Progress value={campaign.progress} aria-label={`${campaign.progress}% complete`}/>
+                                <span className="text-sm text-muted-foreground">{campaign.progress}%</span>
+                            </div>
+                        </TableCell>
                         <TableCell className="text-right">
                            <DropdownMenu>
                                 <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>

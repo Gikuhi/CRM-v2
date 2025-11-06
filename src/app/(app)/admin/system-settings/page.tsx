@@ -74,6 +74,7 @@ export default function SystemSettingsPage() {
               <div className="space-y-2">
                 <Label htmlFor="custom-statuses">Custom Statuses</Label>
                 <Textarea id="custom-statuses" placeholder="Enter one status per line, e.g., 'Follow-up Required'" defaultValue="Follow-up Required\nInterested - Send Info\nWrong Number"/>
+                <p className="text-sm text-muted-foreground">These statuses will be available for agents to use during call wrap-up.</p>
               </div>
               <Button>Save Operational Settings</Button>
             </CardContent>

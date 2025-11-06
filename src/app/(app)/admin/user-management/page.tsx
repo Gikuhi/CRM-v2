@@ -1,11 +1,11 @@
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, Upload, Download, MoreHorizontal } from "lucide-react";
+import { Search, PlusCircle, MoreHorizontal } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -68,15 +68,16 @@ export default function UserManagementMasterPage() {
                                         <Avatar>
                                             <AvatarFallback>{agent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                         </Avatar>
-                                        {agent.name}
+                                        <span className="font-medium">{agent.name}</span>
                                      </TableCell>
                                      <TableCell>{agent.supervisor}</TableCell>
-                                     <TableCell><Badge variant="outline">{agent.status}</Badge></TableCell>
+                                     <TableCell><Badge variant={agent.status === 'Online' ? 'default' : 'outline'}>{agent.status}</Badge></TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem>Assign to Supervisor</DropdownMenuItem>
                                                 <DropdownMenuItem>Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
@@ -125,7 +126,7 @@ export default function UserManagementMasterPage() {
                                         <Avatar>
                                             <AvatarFallback>{supervisor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                         </Avatar>
-                                        {supervisor.name}
+                                        <span className="font-medium">{supervisor.name}</span>
                                      </TableCell>
                                      <TableCell>{supervisor.team}</TableCell>
                                      <TableCell>{supervisor.agents}</TableCell>

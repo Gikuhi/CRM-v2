@@ -1,9 +1,11 @@
+
 "use client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileDown, FilePlus2 } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const teamPerformanceData = [
   { name: 'Alpha Team', calls: 450, collections: 12000 },
@@ -12,9 +14,11 @@ const teamPerformanceData = [
 ];
 
 const agentPerformanceData = [
-    { rank: 1, name: 'Peris Wanyangi', calls: 150, collections: 5200 },
-    { rank: 2, name: 'John Okoro', calls: 120, collections: 4800 },
-    { rank: 3, name: 'Grace Akinyi', calls: 180, collections: 6100 },
+    { rank: 1, name: 'Peris Wanyangi', team: 'Alpha Team', calls: 150, collections: 5200 },
+    { rank: 2, name: 'Grace Akinyi', team: 'Bravo Team', calls: 180, collections: 6100 },
+    { rank: 3, name: 'John Okoro', team: 'Alpha Team', calls: 120, collections: 4800 },
+    { rank: 4, name: 'Samuel Mwangi', team: 'Bravo Team', calls: 110, collections: 4100 },
+    { rank: 5, name: 'Fatuma Ali', team: 'Bravo Team', calls: 90, collections: 3500 },
 ];
 
 export default function ComprehensiveReportingCenterPage() {
@@ -47,8 +51,8 @@ export default function ComprehensiveReportingCenterPage() {
                 <BarChart data={teamPerformanceData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis yAxisId="left" orientation="left" />
-                    <YAxis yAxisId="right" orientation="right" />
+                    <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" tickFormatter={(value) => `$${value/1000}k`} />
+                    <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
                     <Tooltip 
                          contentStyle={{
                             backgroundColor: 'hsl(var(--card))',
@@ -68,9 +72,28 @@ export default function ComprehensiveReportingCenterPage() {
             <CardDescription>Top performing agents in the selected period.</CardDescription>
         </CardHeader>
         <CardContent>
-             <div className="text-center text-muted-foreground py-8">
-                <p>An agent leaderboard table will be displayed here.</p>
-            </div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Rank</TableHead>
+                        <TableHead>Agent</TableHead>
+                        <TableHead>Team</TableHead>
+                        <TableHead className="text-right">Collections</TableHead>
+                        <TableHead className="text-right">Calls Made</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {agentPerformanceData.map(agent => (
+                        <TableRow key={agent.rank}>
+                            <TableCell className="font-bold">{agent.rank}</TableCell>
+                            <TableCell>{agent.name}</TableCell>
+                            <TableCell>{agent.team}</TableCell>
+                            <TableCell className="text-right">${agent.collections.toLocaleString()}</TableCell>
+                            <TableCell className="text-right">{agent.calls}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </CardContent>
       </Card>
     </div>

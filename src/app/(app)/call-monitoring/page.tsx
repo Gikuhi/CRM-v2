@@ -1,31 +1,26 @@
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, MessageSquarePlus } from "lucide-react";
 import { callLogs } from "@/lib/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function CallMonitoringPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Call Monitoring</CardTitle>
-        <CardDescription>Review call recordings and assess compliance.</CardDescription>
+        <CardTitle>Team Call Monitoring</CardTitle>
+        <CardDescription>Review your team's call recordings, provide ratings, and add coaching notes.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Call Details</TableHead>
-              <TableHead className="hidden md:table-cell">Agent</TableHead>
-              <TableHead className="hidden sm:table-cell">Duration</TableHead>
-              <TableHead className="hidden md:table-cell">Compliance Rating</TableHead>
+              <TableHead>Agent</TableHead>
+              <TableHead>Duration</TableHead>
+              <TableHead>Compliance Rating</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -36,9 +31,9 @@ export default function CallMonitoringPage() {
                   <div className="font-medium">{log.debtorName}</div>
                   <div className="text-sm text-muted-foreground">{log.date}</div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{log.agent}</TableCell>
-                <TableCell className="hidden sm:table-cell">{log.duration}</TableCell>
-                <TableCell className="hidden md:table-cell">
+                <TableCell>{log.agent}</TableCell>
+                <TableCell>{log.duration}</TableCell>
+                <TableCell>
                   <div className="flex items-center gap-1">
                      <Select defaultValue="4">
                       <SelectTrigger className="w-24 h-8 text-xs">
@@ -52,8 +47,12 @@ export default function CallMonitoringPage() {
                     </Select>
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
-                   <Button size="icon" variant="ghost">
+                <TableCell className="text-right space-x-1">
+                   <Button size="icon" variant="ghost" title="Add Coaching Note">
+                    <MessageSquarePlus className="h-5 w-5" />
+                    <span className="sr-only">Add Coaching Note</span>
+                  </Button>
+                   <Button size="icon" variant="ghost" title="Play Recording">
                     <PlayCircle className="h-5 w-5" />
                     <span className="sr-only">Play recording</span>
                   </Button>

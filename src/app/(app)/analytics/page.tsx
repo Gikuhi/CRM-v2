@@ -2,6 +2,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { dashboardStats } from "@/lib/data";
 import { PerformanceOverview } from "@/components/performance-overview";
+import { AgentLeaderboard } from "@/components/agent-leaderboard";
 
 export default function AnalyticsPage() {
   return (
@@ -23,17 +24,8 @@ export default function AnalyticsPage() {
       
       <PerformanceOverview />
 
-       <Card>
-        <CardHeader>
-          <CardTitle>Call Outcomes</CardTitle>
-          <CardDescription>Breakdown of your call results for the current month.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="text-center text-muted-foreground py-8">
-                <p>A chart showing call outcomes (e.g., Paid, Promise, Follow-up) will be displayed here.</p>
-            </div>
-        </CardContent>
-      </Card>
+      <AgentLeaderboard />
+
     </div>
   );
 }
