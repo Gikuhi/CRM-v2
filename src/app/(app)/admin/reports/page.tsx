@@ -49,7 +49,12 @@ export default function ComprehensiveReportingCenterPage() {
                     <XAxis dataKey="name" />
                     <YAxis yAxisId="left" orientation="left" />
                     <YAxis yAxisId="right" orientation="right" />
-                    <Tooltip />
+                    <Tooltip 
+                         contentStyle={{
+                            backgroundColor: 'hsl(var(--card))',
+                            borderColor: 'hsl(var(--border))'
+                        }}
+                    />
                     <Legend />
                     <Bar yAxisId="left" dataKey="collections" fill="hsl(var(--chart-1))" name="Collections ($)" />
                     <Bar yAxisId="right" dataKey="calls" fill="hsl(var(--chart-2))" name="Calls Made" />

@@ -41,6 +41,8 @@ import {
   Banknote,
   FileSearch,
   SlidersHorizontal,
+  HelpCircle,
+  TrendingUp,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -79,35 +81,31 @@ import { Skeleton } from "./ui/skeleton";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/debtor-profile", icon: Users, label: "Debtor Profile" },
-  { href: "/dialer", icon: PhoneForwarded, label: "Dialer" },
-  { href: "/incoming-call", icon: PhoneIncoming, label: "Incoming Call" },
-  { href: "/ptp-capture", icon: HandCoins, label: "PTP Capture" },
-  { href: "/wrap-matter", icon: FileStack, label: "Wrap Matter" },
-  { href: "/matter-dashboard", icon: LayoutDashboard, label: "Matter Dashboard" },
+  { href: "/debtor-profile", icon: Users, label: "Leads" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
-  { href: "/tasks", icon: ListChecks, label: "Tasks" },
-  { href: "/messaging", icon: MessageSquare, label: "Messaging" },
+  { href: "/messaging", icon: MessageSquare, label: "Messages" },
+  { href: "/analytics", icon: TrendingUp, label: "My Stats" },
+  { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
+  { href: "/help", icon: HelpCircle, label: "Help" },
 ];
 
 const adminNavItems = [
     { href: "/admin/dashboard", icon: LayoutGrid, label: "Dashboard" },
-    { href: "/admin/user-management", icon: BookUser, label: "Users & Roles" },
+    { href: "/admin/user-management", icon: BookUser, label: "Users" },
     { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
-    { href: "/admin/queues", icon: GitBranch, label: "Queues & Routing" },
-    { href: "/admin/reports", icon: FileBarChart, label: "Reports & Analytics" },
-    { href: "/admin/compliance", icon: ShieldAlert, label: "Compliance & QA" },
-    { href: "/admin/system-settings", icon: Settings2, label: "System Settings" },
+    { href: "/admin/reports", icon: FileBarChart, label: "Reports" },
+    { href: "/admin/system-settings", icon: Settings2, label: "Org Settings" },
+    { href: "/admin/billing", icon: Banknote, label: "Billing" },
 ]
 
 const teamManagerNavItems = [
     { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
-    { href: "/team-management", icon: Users2, label: "Agent Management" },
+    { href: "/team-management", icon: Users2, label: "Agents" },
+    { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
+    { href: "/analytics", icon: BarChart3, label: "Reports" },
+    { href: "/messaging", icon: MessageSquare, label: "Messages" },
+    { href: "/tasks", icon: CalendarClock, label: "Schedule" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
-    { href: "/analytics", icon: BarChart3, label: "Performance Analytics" },
-    { href: "/tasks", icon: CalendarClock, label: "Schedule Management" },
-    { href: "/reports", icon: ShieldCheck, label: "Quality Assurance" },
-    { href: "/messaging", icon: MessageSquare, label: "Communication Hub" },
 ];
 
 const superAdminNavItems = [
@@ -126,23 +124,24 @@ const superAdminNavItems = [
 
 
 const pageTitles: { [key: string]: string } = {
-  "/dashboard": "Dashboard",
-  "/debtor-profile": "Debtor Profile Enhancement",
+  "/dashboard": "Agent Dashboard",
+  "/debtor-profile": "Lead Management",
   "/dialer": "Dialer",
   "/incoming-call": "Incoming Call",
   "/ptp-capture": "Promise to Pay Capture",
   "/wrap-matter": "Wrap Matter",
   "/matter-dashboard": "Matter Dashboard",
   "/call-logs": "Call Logs",
-  "/tasks": "Task Management",
+  "/tasks": "Follow-up Tasks",
   "/messaging": "Communication Hub",
-  "/analytics": "Performance Analytics",
+  "/analytics": "My Stats",
+  "/help": "Help & Support",
   "/team-management": "Agent Management",
   "/reports": "Reports & Analytics",
   "/call-monitoring": "Call Monitoring",
   "/user-management": "User Management",
   "/settings": "Settings",
-  "/admin-dashboard": "Team Manager Dashboard",
+  "/admin-dashboard": "Supervisor Dashboard",
   "/pages-list": "Pages List",
   "/admin/dashboard": "Admin Dashboard",
   "/admin/user-management": "User & Role Management",
@@ -154,7 +153,8 @@ const pageTitles: { [key: string]: string } = {
   "/admin/campaigns": "Campaign Management",
   "/admin/queues": "Queue & Routing Control",
   "/admin/compliance": "Compliance & QA",
-  "/admin/system-settings": "System Settings",
+  "/admin/system-settings": "Organization Settings",
+  "/admin/billing": "Billing & Subscription",
   "/super-admin/overview": "Super Admin Overview",
   "/super-admin/organizations": "Organization Management",
   "/super-admin/global-users": "Global User Management",
@@ -171,6 +171,7 @@ const pageTitles: { [key: string]: string } = {
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
@@ -200,7 +201,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     )
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await auth.signOut();
     router.push("/login");
   };
 
