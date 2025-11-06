@@ -1,4 +1,3 @@
-
 "use client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ export default function ComprehensiveReportingCenterPage() {
               <SelectContent>
                 <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="this-week">This Week</SelectItem>
-                <SelectItem value: "this-month">This Month</SelectItem>
+                <SelectItem value="this-month">This Month</SelectItem>
               </SelectContent>
             </Select>
             <Button variant="outline"><FileDown className="mr-2 h-4 w-4"/> Export CSV</Button>
@@ -48,8 +47,8 @@ export default function ComprehensiveReportingCenterPage() {
                 <BarChart data={teamPerformanceData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" />
-                    <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
+                    <YAxis yAxisId="left" orientation="left" />
+                    <YAxis yAxisId="right" orientation="right" />
                     <Tooltip />
                     <Legend />
                     <Bar yAxisId="left" dataKey="collections" fill="hsl(var(--chart-1))" name="Collections ($)" />
