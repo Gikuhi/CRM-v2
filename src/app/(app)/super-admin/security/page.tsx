@@ -1,4 +1,5 @@
 
+"use client"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -28,7 +29,7 @@ export default function SuperAdminSecurityPage() {
             </div>
             <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                    <FormLabel className="text-base">Enforce 2FA</FormLabel>
+                    <Label className="text-base">Enforce 2FA</Label>
                     <p className="text-sm text-muted-foreground">
                         Require Two-Factor Authentication for all users.
                     </p>
@@ -47,7 +48,7 @@ export default function SuperAdminSecurityPage() {
           <CardContent className="space-y-4">
              <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                    <FormLabel className="text-base">Enable IP Whitelisting</FormLabel>
+                    <Label className="text-base">Enable IP Whitelisting</Label>
                 </div>
                 <Switch />
             </div>
@@ -62,8 +63,3 @@ export default function SuperAdminSecurityPage() {
     </div>
   );
 }
-
-// Dummy FormLabel component to avoid error
-const FormLabel = ({ children, ...props }: React.ComponentProps<"label">) => (
-    <label {...props}>{children}</label>
-)
