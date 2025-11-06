@@ -88,7 +88,7 @@ export type TeamMember = {
 export type User = {
     id: string;
     name: string;
-    role: 'Agent' | 'Supervisor' | 'Admin';
+    role: 'Agent' | 'Supervisor' | 'Admin' | 'Super Admin';
     createdAt: string;
 };
 
@@ -120,7 +120,7 @@ export type UserProfile = {
   email: string;
   phoneNumber?: string;
   profilePictureUrl?: string;
-  role: 'Agent' | 'Supervisor' | 'Admin';
+  role: 'Agent' | 'Supervisor' | 'Admin' | 'Super Admin';
   languagePreference: string;
   themeMode: 'light' | 'dark';
 };
@@ -150,4 +150,34 @@ export type AdminCallStats = {
 export type AdminCollectionsStat = {
     period: string;
     amount: number;
+};
+
+export type SuperAdminStat = {
+    title: string;
+    value: string;
+    change: string;
+    changeType: "increase" | "decrease";
+};
+
+export type SystemHealthStat = {
+    metric: string;
+    value: string;
+    status: "Healthy" | "Warning" | "Critical";
+    details: string;
+};
+
+export type RecentActivity = {
+    id: string;
+    user: string;
+    action: string;
+    date: string;
+};
+
+export type Organization = {
+    id: string;
+    name: string;
+    admin: string;
+    userCount: number;
+    status: "Active" | "Inactive";
+    plan: "Basic" | "Pro" | "Enterprise";
 };

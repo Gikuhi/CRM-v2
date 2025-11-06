@@ -1,6 +1,6 @@
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -117,4 +117,31 @@ export const adminCollectionsData: AdminCollectionsStat[] = [
     { period: 'Yesterday', amount: 7890 },
     { period: 'Last Week', amount: 45231 },
     { period: 'Last Month', amount: 189500 },
+];
+
+export const superAdminOverviewStats: SuperAdminStat[] = [
+    { title: "Total Organizations", value: "3", change: "+1", changeType: "increase" },
+    { title: "Total Users", value: "22", change: "+5", changeType: "increase" },
+    { title: "Active Campaigns", value: "4", change: "-1", changeType: "decrease" },
+    { title: "Total Revenue", value: "$250,345", change: "+8%", changeType: "increase" },
+];
+
+export const systemHealthStats: SystemHealthStat[] = [
+    { metric: "API Server Uptime", value: "99.98%", status: "Healthy", details: "Last check: 1 min ago" },
+    { metric: "Database Connectivity", value: "OK", status: "Healthy", details: "All instances responding" },
+    { metric: "CPU Usage", value: "58%", status: "Warning", details: "Spike detected in org-2" },
+    { metric: "Memory Usage", value: "75%", status: "Healthy", details: "Stable" },
+    { metric: "Active Calls", value: "1,432", status: "Healthy", details: "Load is nominal" },
+];
+
+export const recentSuperAdminActivities: RecentActivity[] = [
+    { id: "sa-1", user: "Super Admin", action: "Created new organization 'FinCorp'", date: "2024-08-01 10:00 AM" },
+    { id: "sa-2", user: "Super Admin", action: "Assigned 'Pro' plan to 'DebtSolve'", date: "2024-08-01 09:45 AM" },
+    { id: "sa-3", user: "Super Admin", action: "Disabled user 'test@example.com'", date: "2024-07-31 04:30 PM" },
+];
+
+export const organizations: Organization[] = [
+    { id: "org-1", name: "DebtSolve Inc.", admin: "Jane Doe", userCount: 12, status: "Active", plan: "Pro" },
+    { id: "org-2", name: "CreditRevive", admin: "John Smith", userCount: 8, status: "Active", plan: "Basic" },
+    { id: "org-3", name: "FinRecovery LLC", admin: "Peter Jones", userCount: 2, status: "Inactive", plan: "Enterprise" },
 ];

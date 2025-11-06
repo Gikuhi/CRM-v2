@@ -36,6 +36,11 @@ import {
   GitBranch,
   ShieldAlert,
   Settings2,
+  Shield,
+  HeartPulse,
+  Banknote,
+  FileSearch,
+  SlidersHorizontal,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -105,6 +110,21 @@ const teamManagerNavItems = [
     { href: "/messaging", icon: MessageSquare, label: "Communication Hub" },
 ];
 
+const superAdminNavItems = [
+  { href: "/super-admin/overview", icon: LayoutDashboard, label: "Overview" },
+  { href: "/super-admin/organizations", icon: Building, label: "Organizations" },
+  { href: "/super-admin/global-users", icon: Users, label: "Global Users" },
+  { href: "/super-admin/campaigns", icon: Activity, label: "Campaigns" },
+  { href: "/super-admin/system-health", icon: HeartPulse, label: "System Health" },
+  { href: "/super-admin/billing", icon: Banknote, label: "Billing" },
+  { href: "/super-admin/security", icon: Shield, label: "Security" },
+  { href: "/super-admin/integrations", icon: SlidersHorizontal, label: "Integrations" },
+  { href: "/super-admin/reports", icon: FileBarChart, label: "Reports" },
+  { href: "/super-admin/audit", icon: FileSearch, label: "Audit & Compliance" },
+  { href: "/super-admin/settings", icon: Settings, label: "Settings" },
+];
+
+
 const pageTitles: { [key: string]: string } = {
   "/dashboard": "Dashboard",
   "/debtor-profile": "Debtor Profile Enhancement",
@@ -135,6 +155,17 @@ const pageTitles: { [key: string]: string } = {
   "/admin/queues": "Queue & Routing Control",
   "/admin/compliance": "Compliance & QA",
   "/admin/system-settings": "System Settings",
+  "/super-admin/overview": "Super Admin Overview",
+  "/super-admin/organizations": "Organization Management",
+  "/super-admin/global-users": "Global User Management",
+  "/super-admin/campaigns": "Global Campaign Management",
+  "/super-admin/system-health": "System Health Monitoring",
+  "/super-admin/billing": "Billing & Subscriptions",
+  "/super-admin/security": "Security Management",
+  "/super-admin/integrations": "Global Integrations",
+  "/super-admin/reports": "Global Reports",
+  "/super-admin/audit": "Audit & Compliance Center",
+  "/super-admin/settings": "Global Settings",
 };
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -174,6 +205,30 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const renderSidebarMenu = (role: UserProfile['role'] | undefined) => {
+    let items: { href: string; icon: React.ElementType; label: string }[] = [];
+    let groupLabel = "";
+
+    switch (role) {
+      case "Super Admin":
+        items = superAdminNavItems;
+        groupLabel = "Super Admin";
+        break;
+      case "Admin":
+        items = adminNavItems;
+        groupLabel = "Admin";
+        break;
+      case "Supervisor":
+        items = teamManagerNavItems;
+        groupLabel = "Supervisor";
+        break;
+      case "Agent":
+      default:
+        items = agentNavItems;
+        groupLabel = "Agent";
+        break;
+    }
+
+
     return (
         <>
             {isLoading ? (
@@ -185,61 +240,25 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                  </div>
             ) : (
                 <>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Admin</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {adminNavItems.map((item) => (
-                            <SidebarMenuItem key={item.href}>
-                                <Link href={item.href}>
-                                <SidebarMenuButton
-                                    isActive={pathname.startsWith(item.href)}
-                                    tooltip={item.label}
-                                >
-                                    <item.icon />
-                                    <span>{item.label}</span>
-                                </SidebarMenuButton>
-                                </Link>
-                            </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroup>
+                  <SidebarGroup>
+                      <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
+                      <SidebarMenu>
+                          {items.map((item) => (
+                          <SidebarMenuItem key={item.href}>
+                              <Link href={item.href}>
+                              <SidebarMenuButton
+                                  isActive={pathname.startsWith(item.href)}
+                                  tooltip={item.label}
+                              >
+                                  <item.icon />
+                                  <span>{item.label}</span>
+                              </SidebarMenuButton>
+                              </Link>
+                          </SidebarMenuItem>
+                          ))}
+                      </SidebarMenu>
+                  </SidebarGroup>
 
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Agent</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {agentNavItems.map((item) => (
-                            <SidebarMenuItem key={item.href}>
-                                <Link href={item.href}>
-                                <SidebarMenuButton
-                                    isActive={pathname === item.href}
-                                    tooltip={item.label}
-                                >
-                                    <item.icon />
-                                    <span>{item.label}</span>
-                                </SidebarMenuButton>
-                                </Link>
-                            </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroup>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Supervisor</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {teamManagerNavItems.map((item) => (
-                                <SidebarMenuItem key={item.href}>
-                                    <Link href={item.href}>
-                                    <SidebarMenuButton
-                                        isActive={pathname.startsWith(item.href)}
-                                        tooltip={item.label}
-                                    >
-                                        <item.icon />
-                                        <span>{item.label}</span>
-                                    </SidebarMenuButton>
-                                    </Link>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroup>
                 </>
             )}
         </>
