@@ -72,7 +72,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AgentInfoSheet } from "./agent-info-sheet";
 import { AgentStatusMenu } from "./agent-status-menu";
-import { useUser } from "@/firebase";
+import { useAuth, useUser } from "@/firebase";
 import { useDoc } from "@/firebase/firestore/use-doc";
 import { doc } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase/provider";
