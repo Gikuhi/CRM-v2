@@ -34,6 +34,7 @@ import {
   LifeBuoy,
   Settings2,
   Shield,
+  UsersRound,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -84,6 +85,7 @@ const agentNavItems = [
 
 const adminNavItems = [
     { href: "/admin/dashboard", icon: LayoutGrid, label: "Dashboard" },
+    { href: "/admin/teams", icon: UsersRound, label: "Teams" },
     { href: "/admin/user-management", icon: BookUser, label: "Users" },
     { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
     { href: "/admin/reports", icon: FileBarChart, label: "Reports" },
@@ -138,6 +140,7 @@ const pageTitles: { [key: string]: string } = {
   "/admin-dashboard": "Supervisor Dashboard",
   "/pages-list": "Pages List",
   "/admin/dashboard": "Admin Dashboard",
+  "/admin/teams": "Teams Management",
   "/admin/user-management": "User & Role Management",
   "/admin/analytics": "Cross-Team Analytics",
   "/admin/call-monitoring": "System-Wide Call Monitoring",

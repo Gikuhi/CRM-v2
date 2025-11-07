@@ -44,6 +44,14 @@
         "themeMode": {
           "type": "string",
           "description": "The user's preferred theme mode (light or dark)."
+        },
+        "team_id": {
+          "type": "string",
+          "description": "The ID of the team the user belongs to."
+        },
+        "team_name": {
+          "type": "string",
+          "description": "The name of the team the user belongs to."
         }
       },
       "required": [
@@ -52,6 +60,65 @@
         "username",
         "email"
       ]
+    },
+    "Team": {
+      "title": "Team",
+      "description": "Represents a team of agents and a supervisor within an organization.",
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "string",
+          "description": "Unique identifier for the team."
+        },
+        "org_id": {
+          "type": "string",
+          "description": "Identifier for the organization this team belongs to."
+        },
+        "team_name": {
+          "type": "string",
+          "description": "The name of the team."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the team's purpose."
+        },
+        "leader_id": {
+          "type": "string",
+          "description": "The user ID of the team leader (supervisor)."
+        },
+        "leader_name": {
+          "type": "string",
+          "description": "The name of the team leader."
+        },
+        "members": {
+          "type": "array",
+          "description": "An array of objects representing the team members (agents).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "user_id": { "type": "string" },
+              "name": { "type": "string" },
+              "role": { "type": "string" }
+            },
+            "required": ["user_id", "name"]
+          }
+        },
+        "campaign_id": {
+          "type": "string",
+          "description": "The ID of the campaign assigned to this team."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the team was created."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the team was last updated."
+        }
+      },
+      "required": ["team_id", "org_id", "team_name", "leader_id", "members"]
     },
     "NotificationPreferences": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -179,9 +246,9 @@
         "definition": {
           "entityName": "UserProfile",
           "schema": {
-            "$ref": "#/backend/entities/UserProfile"
+            "$ref": "#/entities/UserProfile"
           },
-          "description": "Stores user profile data. Includes denormalized 'role' field for authorization independence.",
+          "description": "Stores user profile data. Includes denormalized 'role' and 'team' fields for authorization.",
           "params": [
             {
               "name": "userId",
@@ -191,11 +258,27 @@
         }
       },
       {
+        "path": "/teams/{teamId}",
+        "definition": {
+          "entityName": "Team",
+          "schema": {
+            "$ref": "#/entities/Team"
+          },
+          "description": "Stores team data, including leader and members. Accessible by Admins and team leaders.",
+          "params": [
+            {
+              "name": "teamId",
+              "description": "The unique identifier for the team."
+            }
+          ]
+        }
+      },
+      {
         "path": "/users/{userId}/notification_preferences",
         "definition": {
           "entityName": "NotificationPreferences",
           "schema": {
-            "$ref": "#/backend/entities/NotificationPreferences"
+            "$ref": "#/entities/NotificationPreferences"
           },
           "description": "Stores notification preferences for a user.",
           "params": [
@@ -211,7 +294,7 @@
         "definition": {
           "entityName": "SystemConfiguration",
           "schema": {
-            "$ref": "#/backend/entities/SystemConfiguration"
+            "$ref": "#/entities/SystemConfiguration"
           },
           "description": "Stores system-wide configuration settings. Accessible only to admins.",
           "params": [
@@ -227,7 +310,7 @@
         "definition": {
           "entityName": "RoleAdmin",
           "schema": {
-            "$ref": "#/backend/entities/UserProfile"
+            "$ref": "#/entities/UserProfile"
           },
           "description": "Indicates admin role. Existence of document grants admin privileges.",
           "params": [
@@ -243,7 +326,7 @@
         "definition": {
           "entityName": "CallDisposition",
           "schema": {
-            "$ref": "#/backend/entities/CallDisposition"
+            "$ref": "#/entities/CallDisposition"
           },
           "description": "Stores the outcome and notes for each call made by an agent.",
           "params": [
@@ -255,6 +338,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's features. User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership. System-wide configurations are in a separate `/system_configurations` collection, accessible only to admins. Roles are managed via document existence in `/roles_admin/{userId}`. A new `call_dispositions` collection is added to log call outcomes; security rules will enforce that agents can only create dispositions for their own calls."
+    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's features. User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership. A new `/teams` collection is added to store team information, which can be managed by Admins. System-wide configurations are in a separate `/system_configurations` collection, accessible only to admins. Roles are managed via document existence in `/roles_admin/{userId}`. A new `call_dispositions` collection is added to log call outcomes; security rules will enforce that agents can only create dispositions for their own calls."
   }
 }

@@ -125,6 +125,8 @@ export type UserProfile = {
   role: 'Agent' | 'Supervisor' | 'Admin' | 'Super Admin';
   languagePreference: string;
   themeMode: 'light' | 'dark';
+  team_id?: string;
+  team_name?: string;
 };
 
 export type NotificationPreferences = {
@@ -200,3 +202,16 @@ export type CallDispositionLog = Omit<CallDisposition, 'timestamp'> & {
     timestamp: string;
     debtorName: string;
 }
+
+export type Team = {
+    team_id: string;
+    org_id: string;
+    team_name: string;
+    description: string;
+    leader_id: string;
+    leader_name: string;
+    members: { user_id: string; name: string; role: string }[];
+    campaign_id: string;
+    campaign_name: string;
+    created_at: string;
+};

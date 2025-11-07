@@ -1,6 +1,6 @@
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -175,4 +175,60 @@ export const dispositionLogs: CallDispositionLog[] = [
     { call_id: 'disp-3', agent_id: 'u4', lead_id: 'd3', disposition_type: 'Paid / Settled', disposition_notes: 'Paid full amount via card.', timestamp: '2024-07-31 02:10 PM', call_duration: '8m 55s', campaign_id: 'q3-push', outcome_score: 5, debtorName: 'Jessica Green' },
     { call_id: 'disp-4', agent_id: 'u4', lead_id: 'd4', disposition_type: 'Do Not Call (DNC)', disposition_notes: 'Customer was very angry and requested to be put on DNC list.', timestamp: '2024-07-31 01:05 PM', call_duration: '2m 30s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Chris Taylor' },
     { call_id: 'disp-5', agent_id: 'u4', lead_id: 'd5', disposition_type: 'Call Back Later', disposition_notes: '', timestamp: '2024-07-30 09:00 AM', call_duration: '0m 45s', campaign_id: 'q3-push', outcome_score: 3, debtorName: 'Sarah Miller' },
+];
+
+export const mockTeams: Team[] = [
+    {
+        team_id: "team-alpha-01",
+        org_id: "org-1",
+        team_name: "Team Alpha",
+        description: "Focused on high-value debt recovery.",
+        leader_id: "u3",
+        leader_name: "Beatrice Njeri",
+        members: [
+            { user_id: 'u4', name: 'Peris Wanyangi', role: 'Agent' },
+            { user_id: 'u5', name: 'John Okoro', role: 'Agent' },
+        ],
+        campaign_id: "q3-push",
+        campaign_name: "Debt Recovery",
+        created_at: "2024-07-15"
+    },
+    {
+        team_id: "team-bravo-02",
+        org_id: "org-1",
+        team_name: "Team Bravo",
+        description: "Handles customer retention and follow-ups.",
+        leader_id: "sup-temp-2",
+        leader_name: "Sarah Kamau",
+        members: [
+            { user_id: 'u6', name: 'Grace Akinyi', role: 'Agent' },
+            { user_id: 'u7', name: 'Samuel Mwangi', role: 'Agent' },
+            { user_id: 'u8', name: 'Fatuma Ali', role: 'Agent' },
+        ],
+        campaign_id: "retention-24",
+        campaign_name: "Customer Retention",
+        created_at: "2024-07-18"
+    },
+     {
+        team_id: "team-delta-03",
+        org_id: "org-2",
+        team_name: "Team Delta",
+        description: "Manages new account activations.",
+        leader_id: "sup-temp-3",
+        leader_name: "Kevin Otieno",
+        members: [
+            { user_id: 'agent-temp-1', name: 'Agent 1', role: 'Agent' },
+            { user_id: 'agent-temp-2', name: 'Agent 2', role: 'Agent' },
+        ],
+        campaign_id: "new-accounts-q3",
+        campaign_name: "New Accounts",
+        created_at: "2024-08-01"
+    }
+];
+
+export const mockCampaigns = [
+    { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65 },
+    { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500, progress: 40 },
+    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100 },
+    { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80 },
 ];
