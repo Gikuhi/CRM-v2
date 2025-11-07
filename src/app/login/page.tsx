@@ -1,8 +1,9 @@
+
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,36 +15,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CreditCard } from "lucide-react";
-import { useAuth, useUser, initiateEmailSignIn } from "@/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
-  const auth = useAuth();
-  const { user, isUserLoading } = useUser();
 
   // Pre-fill with default credentials for development
   const [email, setEmail] = React.useState('admin@collectpro.com');
   const [password, setPassword] = React.useState('password123');
 
-  useEffect(() => {
-    if (!isUserLoading && user) {
-      router.replace('/dashboard');
-    }
-  }, [user, isUserLoading, router]);
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    initiateEmailSignIn(auth, email, password);
+    // Directly navigate to dashboard without authentication
+    router.replace('/dashboard');
   };
   
-  if (isUserLoading || user) {
-    return (
-        <div className="flex items-center justify-center min-h-screen bg-background">
-            <div>Loading...</div>
-        </div>
-    )
-  }
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-sm">

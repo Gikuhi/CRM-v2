@@ -179,27 +179,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
 
   React.useEffect(() => {
-    if (isUserLoading || isProfileLoading) {
-      return; 
-    }
+    // We are skipping authentication checks now
+    // if (isUserLoading || isProfileLoading) {
+    //   return; 
+    // }
 
-    if (!user) {
-      router.replace('/login');
-    }
+    // if (!user) {
+    //   router.replace('/login');
+    // }
   }, [user, isUserLoading, isProfileLoading, router]);
 
   const isLoading = isUserLoading || isProfileLoading;
 
-  if (isLoading || !user) {
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <div>Loading...</div>
-        </div>
-    )
-  }
-
+  // Since authentication is removed, we don't need a loading screen,
+  // but we can keep a skeleton UI for fetching profile data if needed.
+  // For now, we will render the layout immediately.
+  
   const handleLogout = async () => {
-    await auth.signOut();
+    // Since we removed auth, logout just redirects to login page
     router.push("/login");
   };
 
