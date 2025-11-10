@@ -10,13 +10,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { dialerLeads, dispositionCategories } from "@/lib/data";
 import type { CallDisposition, DialerLead } from "@/lib/types";
-import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot, Save, Loader2, ArrowRight } from "lucide-react";
+import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot, Save, Loader2, ArrowRight, CheckCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, useFirestore } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type CallStatus = "idle" | "dialing" | "active" | "wrap-up" | "ended";
 
@@ -28,6 +30,7 @@ export default function DialerPage() {
   const [callNotes, setCallNotes] = React.useState("");
   const [disposition, setDisposition] = React.useState<string>("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
 
   const { toast } = useToast();
   const firestore = useFirestore();
@@ -37,6 +40,7 @@ export default function DialerPage() {
   const startCall = (lead: DialerLead) => {
     setCallStatus("dialing");
     setCurrentLead(lead);
+    setIsRpcConfirmed(false); // Reset RPC status for new call
 
     setTimeout(() => {
       setCallStatus("active");
@@ -60,6 +64,16 @@ export default function DialerPage() {
     setIsRecording(false);
   };
 
+  const handleRpcConfirm = () => {
+    setIsRpcConfirmed(true);
+    toast({
+        title: "✅ RPC Confirmed",
+        description: "You can now wrap the call.",
+    });
+    // Here you would also update Firestore for the current call log
+    // For now, we just update the state
+  };
+
   const handleDispositionSubmit = async () => {
     if (!disposition) {
         toast({
@@ -80,7 +94,7 @@ export default function DialerPage() {
 
     setIsSubmitting(true);
 
-    const dispositionData: Omit<CallDisposition, 'call_id' | 'timestamp'> = {
+    const dispositionData: Omit<CallDisposition, 'call_id' | 'timestamp' | 'rpc_timestamp'> = {
         agent_id: user?.uid ?? 'unknown_agent',
         lead_id: currentLead?.id ?? 'unknown_lead',
         disposition_type: disposition,
@@ -88,13 +102,18 @@ export default function DialerPage() {
         call_duration: "3m 45s", // Mock duration
         campaign_id: "q3-push", // Mock campaign
         outcome_score: Math.floor(Math.random() * 5) + 1, // Mock score
+        rpc_status: isRpcConfirmed,
     };
     
+    const dataToSave = isRpcConfirmed 
+      ? { ...dispositionData, timestamp: serverTimestamp(), rpc_timestamp: serverTimestamp() }
+      : { ...dispositionData, timestamp: serverTimestamp() };
+
     // Non-blocking write to Firestore
     const dispositionsRef = collection(firestore, 'call_dispositions');
-    addDocumentNonBlocking(dispositionsRef, { ...dispositionData, timestamp: serverTimestamp() });
+    addDocumentNonBlocking(dispositionsRef, dataToSave);
 
-    console.log("Saving disposition:", dispositionData);
+    console.log("Saving disposition:", dataToSave);
     
     setTimeout(() => {
         toast({
@@ -108,7 +127,6 @@ export default function DialerPage() {
         setTimeout(() => {
             setCallStatus("idle");
             setCurrentLead(null);
-            // In a real app, you would fetch the next lead here for auto-dialing.
         }, 1000);
     }, 1000);
   };
@@ -214,10 +232,31 @@ export default function DialerPage() {
                 </div>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                         <Button 
+                            onClick={handleRpcConfirm} 
+                            disabled={isRpcConfirmed} 
+                            className={cn(
+                                'w-full',
+                                isRpcConfirmed && 'bg-green-600 hover:bg-green-700'
+                            )}
+                        >
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          {isRpcConfirmed ? "RPC Confirmed" : "Right Party Contact (RPC)"}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Mark this call as a Right Party Contact.</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+
             <Button variant="destructive" onClick={handleEndCall} className="w-full">
               <PhoneOff className="mr-2 h-4 w-4" />
-              End Call & Prepare to Wrap
+              End Call
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -229,15 +268,18 @@ export default function DialerPage() {
           <DialogHeader>
             <DialogTitle>Call Wrap-Up: {currentLead?.name}</DialogTitle>
             <DialogDescription>
-              Select the call outcome and add any final notes before proceeding to the wrap matter screen.
+              {isRpcConfirmed
+                ? "Select the call outcome and add any final notes before proceeding."
+                : "Right Party Contact not confirmed. Select a non-contact outcome."
+              }
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
                 <Label htmlFor="disposition">Call Disposition</Label>
-                <Select value={disposition} onValueChange={setDisposition}>
+                <Select value={disposition} onValueChange={setDisposition} disabled={!isRpcConfirmed}>
                     <SelectTrigger id="disposition">
-                        <SelectValue placeholder="Select call outcome..." />
+                        <SelectValue placeholder={isRpcConfirmed ? "Select call outcome..." : "RPC not confirmed"} />
                     </SelectTrigger>
                     <SelectContent>
                         {dispositionCategories.map(cat => (
@@ -260,7 +302,7 @@ export default function DialerPage() {
           </div>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setCallStatus("idle")}>Cancel</Button>
-            <Button onClick={() => router.push('/wrap-matter')} disabled={isSubmitting || !disposition}>
+            <Button onClick={() => router.push('/wrap-matter')} disabled={isSubmitting || !isRpcConfirmed}>
                 Wrap Matter
                 <ArrowRight className="ml-2 h-4 w-4"/>
             </Button>

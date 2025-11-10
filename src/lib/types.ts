@@ -31,6 +31,7 @@ export type CallLog = {
   duration: string;
   outcome: 'Payment Promised' | 'No Answer' | 'Follow-up Required' | 'Collected';
   agent: string;
+  rpc_status?: boolean;
 };
 
 export type Task = {
@@ -196,6 +197,8 @@ export type CallDisposition = {
     call_duration: string;
     campaign_id: string;
     outcome_score: number;
+    rpc_status: boolean;
+    rpc_timestamp?: Timestamp;
 };
 
 export type Interaction = {
@@ -211,8 +214,9 @@ export type Interaction = {
 };
 
 
-export type CallDispositionLog = Omit<CallDisposition, 'timestamp'> & {
+export type CallDispositionLog = Omit<CallDisposition, 'timestamp' | 'rpc_timestamp'> & {
     timestamp: string;
+    rpc_timestamp?: string;
     debtorName: string;
 }
 

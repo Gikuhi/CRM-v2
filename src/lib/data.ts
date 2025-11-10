@@ -26,11 +26,11 @@ export const performanceData: PerformanceMetric[] = [
 ];
 
 export const callLogs: CallLog[] = [
-    { id: 'cl1', debtorName: 'Jane Doe', date: '2024-07-30 10:15 AM', duration: '5m 32s', outcome: 'Payment Promised', agent: 'Peris Wanyangi' },
-    { id: 'cl2', debtorName: 'John Smith', date: '2024-07-30 09:45 AM', duration: '2m 10s', outcome: 'No Answer', agent: 'Peris Wanyangi' },
-    { id: 'cl3', debtorName: 'Sam Wilson', date: '2024-07-29 03:20 PM', duration: '12m 05s', outcome: 'Collected', agent: 'Peris Wanyangi' },
-    { id: 'cl4', debtorName: 'Maria Garcia', date: '2024-07-29 11:00 AM', duration: '8m 45s', outcome: 'Follow-up Required', agent: 'Peris Wanyangi' },
-    { id: 'cl5', debtorName: 'Peter Jones', date: '2024-07-28 04:55 PM', duration: '1m 30s', outcome: 'No Answer', agent: 'Peris Wanyangi' },
+    { id: 'cl1', debtorName: 'Jane Doe', date: '2024-07-30 10:15 AM', duration: '5m 32s', outcome: 'Payment Promised', agent: 'Peris Wanyangi', rpc_status: true },
+    { id: 'cl2', debtorName: 'John Smith', date: '2024-07-30 09:45 AM', duration: '2m 10s', outcome: 'No Answer', agent: 'Peris Wanyangi', rpc_status: false },
+    { id: 'cl3', debtorName: 'Sam Wilson', date: '2024-07-29 03:20 PM', duration: '12m 05s', outcome: 'Collected', agent: 'Peris Wanyangi', rpc_status: true },
+    { id: 'cl4', debtorName: 'Maria Garcia', date: '2024-07-29 11:00 AM', duration: '8m 45s', outcome: 'Follow-up Required', agent: 'Peris Wanyangi', rpc_status: true },
+    { id: 'cl5', debtorName: 'Peter Jones', date: '2024-07-28 04:55 PM', duration: '1m 30s', outcome: 'No Answer', agent: 'Peris Wanyangi', rpc_status: false },
 ];
 
 export const tasks: Task[] = [
@@ -209,11 +209,11 @@ export const wrapMatterDispositions = {
 
 
 export const dispositionLogs: CallDispositionLog[] = [
-    { call_id: 'disp-1', agent_id: 'u4', lead_id: 'd1', disposition_type: 'Promise to Pay (PTP)', disposition_notes: 'Promised to pay next Friday.', timestamp: '2024-08-01 11:30 AM', call_duration: '4m 15s', campaign_id: 'q3-push', outcome_score: 4, debtorName: 'Emily White' },
-    { call_id: 'disp-2', agent_id: 'u4', lead_id: 'd2', disposition_type: 'Not Interested', disposition_notes: 'Stated they are not interested in any offers.', timestamp: '2024-08-01 10:45 AM', call_duration: '1m 20s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Michael Brown' },
-    { call_id: 'disp-3', agent_id: 'u4', lead_id: 'd3', disposition_type: 'Paid / Settled', disposition_notes: 'Paid full amount via card.', timestamp: '2024-07-31 02:10 PM', call_duration: '8m 55s', campaign_id: 'q3-push', outcome_score: 5, debtorName: 'Jessica Green' },
-    { call_id: 'disp-4', agent_id: 'u4', lead_id: 'd4', disposition_type: 'Do Not Call (DNC)', disposition_notes: 'Customer was very angry and requested to be put on DNC list.', timestamp: '2024-07-31 01:05 PM', call_duration: '2m 30s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Chris Taylor' },
-    { call_id: 'disp-5', agent_id: 'u4', lead_id: 'd5', disposition_type: 'Call Back Later', disposition_notes: '', timestamp: '2024-07-30 09:00 AM', call_duration: '0m 45s', campaign_id: 'q3-push', outcome_score: 3, debtorName: 'Sarah Miller' },
+    { call_id: 'disp-1', agent_id: 'u4', lead_id: 'd1', disposition_type: 'Promise to Pay (PTP)', disposition_notes: 'Promised to pay next Friday.', timestamp: '2024-08-01 11:30 AM', call_duration: '4m 15s', campaign_id: 'q3-push', outcome_score: 4, debtorName: 'Emily White', rpc_status: true },
+    { call_id: 'disp-2', agent_id: 'u4', lead_id: 'd2', disposition_type: 'Not Interested', disposition_notes: 'Stated they are not interested in any offers.', timestamp: '2024-08-01 10:45 AM', call_duration: '1m 20s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Michael Brown', rpc_status: true },
+    { call_id: 'disp-3', agent_id: 'u4', lead_id: 'd3', disposition_type: 'Paid / Settled', disposition_notes: 'Paid full amount via card.', timestamp: '2024-07-31 02:10 PM', call_duration: '8m 55s', campaign_id: 'q3-push', outcome_score: 5, debtorName: 'Jessica Green', rpc_status: true },
+    { call_id: 'disp-4', agent_id: 'u4', lead_id: 'd4', disposition_type: 'Do Not Call (DNC)', disposition_notes: 'Customer was very angry and requested to be put on DNC list.', timestamp: '2024-07-31 01:05 PM', call_duration: '2m 30s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Chris Taylor', rpc_status: true },
+    { call_id: 'disp-5', agent_id: 'u4', lead_id: 'd5', disposition_type: 'Call Back Later', disposition_notes: '', timestamp: '2024-07-30 09:00 AM', call_duration: '0m 45s', campaign_id: 'q3-push', outcome_score: 3, debtorName: 'Sarah Miller', rpc_status: false },
 ];
 
 export const mockTeams: Team[] = [
