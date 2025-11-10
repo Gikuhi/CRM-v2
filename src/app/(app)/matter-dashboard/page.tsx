@@ -1,3 +1,7 @@
+
+"use client";
+
+import * as React from "react";
 import Link from "next/link";
 import {
   Accordion,
@@ -31,7 +35,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDown, FileText, Landmark, User, Workflow } from "lucide-react";
+import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const InfoItem = ({ label, value }: { label: string; value: string }) => (
   <div>
@@ -41,6 +48,17 @@ const InfoItem = ({ label, value }: { label: string; value: string }) => (
 );
 
 export default function MatterDashboardPage() {
+  const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
+  const { toast } = useToast();
+
+  const handleRpcConfirm = () => {
+    setIsRpcConfirmed(true);
+    toast({
+        title: "✅ RPC Confirmed",
+        description: "You can now wrap the call.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -53,7 +71,26 @@ export default function MatterDashboardPage() {
             <Button>Wrap Matter</Button>
           </Link>
           <Button variant="secondary">Query</Button>
-          <Button variant="secondary">**RPC**</Button>
+          <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                         <Button 
+                            onClick={handleRpcConfirm} 
+                            disabled={isRpcConfirmed} 
+                            variant="secondary"
+                            className={cn(
+                                isRpcConfirmed && 'bg-green-600 hover:bg-green-700 text-white'
+                            )}
+                        >
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          {isRpcConfirmed ? "RPC Confirmed" : "RPC"}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Mark this call as a Right Party Contact.</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
       </div>
 
