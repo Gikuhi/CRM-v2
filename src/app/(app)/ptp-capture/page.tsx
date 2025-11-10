@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -9,8 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ptpOffers, type PtpOffer } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
 
 const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => void }) => {
+  const router = useRouter();
   const headers = [
     "Discount Offer",
     "Once Off Matter Level Settlement",
@@ -53,8 +56,12 @@ const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => 
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Promise to Pay Offer</CardTitle>
+        <Button variant="outline" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -169,7 +176,7 @@ const PtpConfirmation = ({ onBack, onConclude }: { onBack: () => void; onConclud
                 </div>
             </CardContent>
              <CardFooter className="flex justify-end gap-4">
-                <Button variant="outline" onClick={onBack}>Decline PTP</Button>
+                <Button variant="outline" onClick={onBack}>Back</Button>
                 <Button onClick={onConclude}>Conclude PTP</Button>
             </CardFooter>
         </Card>
