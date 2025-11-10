@@ -18,7 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Save, ArrowRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { mockDebtor, mockPtpRecords } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -109,6 +109,11 @@ export default function AddPtpPage() {
             Scheduling a payment for {debtor.full_name} (Acct: {debtor.account_number})
           </p>
         </div>
+         <Button asChild>
+            <Link href="/ptp-capture">
+              View PTP Offers <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
