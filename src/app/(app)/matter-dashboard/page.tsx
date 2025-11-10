@@ -35,7 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle } from "lucide-react";
+import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -50,6 +50,7 @@ const InfoItem = ({ label, value }: { label: string; value: string }) => (
 export default function MatterDashboardPage() {
   const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
   const { toast } = useToast();
+  const debtorId = "mock-debtor-123"; // Mock debtorId for navigation
 
   const handleRpcConfirm = () => {
     setIsRpcConfirmed(true);
@@ -64,9 +65,11 @@ export default function MatterDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">Matter Dashboard</h1>
         <div className="flex gap-2">
-          <Link href="/ptp-capture">
-            <Button>PTP Assist</Button>
-          </Link>
+          <Button asChild>
+            <Link href={`/debtor/${debtorId}/add-ptp`}>
+              <PlusCircle className="mr-2 h-4 w-4" /> Add PTP
+            </Link>
+          </Button>
           <Link href="/wrap-matter">
             <Button>Wrap Matter</Button>
           </Link>
