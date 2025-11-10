@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -42,16 +43,8 @@ export default function IncomingCallPage() {
                         <Link href="/matter-dashboard">
                             <Button variant="outline">Matter</Button>
                         </Link>
-                        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">ACTIVATE</Button>
                     </div>
                 </div>
-
-                <div className="relative my-4">
-                    <Button variant="outline" className="bg-primary text-primary-foreground border-primary hover:bg-primary/90 absolute -left-4 top-1/2 -translate-y-1/2 z-10" style={{ clipPath: 'polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%)' }}>
-                        Lost RPC had PTP
-                    </Button>
-                </div>
-
 
                 <p className="text-sm text-center text-muted-foreground mb-6 pt-2">
                     I am calling about your LendPlus Account. I see you have not made a payment since the account was handed over on 1 November 2023
