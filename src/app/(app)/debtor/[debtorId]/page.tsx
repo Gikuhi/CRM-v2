@@ -61,7 +61,7 @@ const InfoItem = ({
 
 export default function DebtorInformationPage() {
   const params = useParams();
-  const debtorId = params.debtorId;
+  const debtorId = params.debtorId as string;
 
   // In a real app, you would fetch this data from Firestore based on debtorId
   const debtor = mockDebtor;
@@ -114,7 +114,7 @@ export default function DebtorInformationPage() {
             <Edit className="mr-2 h-4 w-4" /> Edit Info
           </Button>
           <Button asChild>
-            <Link href="/ptp-capture">
+            <Link href={`/debtor/${debtorId}/add-ptp`}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add PTP
             </Link>
           </Button>
