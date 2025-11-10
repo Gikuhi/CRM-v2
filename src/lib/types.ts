@@ -198,6 +198,19 @@ export type CallDisposition = {
     outcome_score: number;
 };
 
+export type Interaction = {
+    interaction_id: string;
+    debtor_id: string;
+    agent_id: string;
+    call_id: string;
+    wrap_matter: string;
+    notes: string;
+    timestamp: Timestamp;
+    call_duration: number;
+    created_at: Timestamp;
+};
+
+
 export type CallDispositionLog = Omit<CallDisposition, 'timestamp'> & {
     timestamp: string;
     debtorName: string;

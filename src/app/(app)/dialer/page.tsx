@@ -10,12 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { dialerLeads, dispositionCategories } from "@/lib/data";
 import type { CallDisposition, DialerLead } from "@/lib/types";
-import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot, Save, Loader2 } from "lucide-react";
+import { Phone, PhoneOff, Mic, MicOff, Pause, ArrowRightLeft, Bot, Save, Loader2, ArrowRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, useFirestore } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 type CallStatus = "idle" | "dialing" | "active" | "wrap-up" | "ended";
 
@@ -31,6 +32,7 @@ export default function DialerPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useAuth();
+  const router = useRouter();
   
   const startCall = (lead: DialerLead) => {
     setCallStatus("dialing");
@@ -215,7 +217,7 @@ export default function DialerPage() {
           <DialogFooter>
             <Button variant="destructive" onClick={handleEndCall} className="w-full">
               <PhoneOff className="mr-2 h-4 w-4" />
-              End Call & Wrap Up
+              End Call & Prepare to Wrap
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -227,7 +229,7 @@ export default function DialerPage() {
           <DialogHeader>
             <DialogTitle>Call Wrap-Up: {currentLead?.name}</DialogTitle>
             <DialogDescription>
-              Select the call outcome and add any final notes.
+              Select the call outcome and add any final notes before proceeding to the wrap matter screen.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -258,9 +260,9 @@ export default function DialerPage() {
           </div>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setCallStatus("idle")}>Cancel</Button>
-            <Button onClick={handleDispositionSubmit} disabled={isSubmitting || !disposition}>
-                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4"/>}
-                Submit Disposition
+            <Button onClick={() => router.push('/wrap-matter')} disabled={isSubmitting || !disposition}>
+                Wrap Matter
+                <ArrowRight className="ml-2 h-4 w-4"/>
             </Button>
           </DialogFooter>
         </DialogContent>

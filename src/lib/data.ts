@@ -169,6 +169,45 @@ export const dispositionCategories = [
     'Other'
 ];
 
+export const wrapMatterDispositions = {
+    'CONTACT MADE': [
+        'PTP Given',
+        'PTP Kept',
+        'Paid in Full',
+        'Partial Payment Made',
+        'Will Pay Today',
+        'Disputed Debt',
+        'Requires Manager Call-Back',
+        'Negotiated Settlement',
+        'Payment Arrangement Setup',
+        'Wrong Amount Dispute',
+        'Awaiting Confirmation of Payment',
+    ],
+    'NO CONTACT / UNSUCCESSFUL': [
+        'No Answer',
+        'Line Busy',
+        'Phone Switched Off',
+        'Invalid Number',
+        'Call Dropped',
+        'Contacted Wrong Person',
+        'Do Not Call (DNC)',
+    ],
+    'FOLLOW-UP / RESCHEDULED': [
+        'Call Back Requested',
+        'Promise Verification Pending',
+        'Follow-Up Tomorrow',
+        'Client Requested Delay',
+    ],
+    'ESCALATIONS / OTHER': [
+        'Escalated to Supervisor',
+        'Legal Action Recommended',
+        'Disconnected / Write-Off',
+        'Settled / Account Closed',
+        'Deceased / Unrecoverable',
+    ],
+};
+
+
 export const dispositionLogs: CallDispositionLog[] = [
     { call_id: 'disp-1', agent_id: 'u4', lead_id: 'd1', disposition_type: 'Promise to Pay (PTP)', disposition_notes: 'Promised to pay next Friday.', timestamp: '2024-08-01 11:30 AM', call_duration: '4m 15s', campaign_id: 'q3-push', outcome_score: 4, debtorName: 'Emily White' },
     { call_id: 'disp-2', agent_id: 'u4', lead_id: 'd2', disposition_type: 'Not Interested', disposition_notes: 'Stated they are not interested in any offers.', timestamp: '2024-08-01 10:45 AM', call_duration: '1m 20s', campaign_id: 'q3-push', outcome_score: 1, debtorName: 'Michael Brown' },
