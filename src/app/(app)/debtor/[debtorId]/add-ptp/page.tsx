@@ -100,11 +100,9 @@ export default function AddPtpPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Button variant="ghost" asChild>
-            <Link href={`/debtor/${debtorId}`}>
+          <Button variant="ghost" onClick={() => router.back()}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Debtor’s Information
-            </Link>
+              Back
           </Button>
           <h1 className="text-3xl font-bold mt-2">Set Up Promise To Pay</h1>
           <p className="text-muted-foreground">
