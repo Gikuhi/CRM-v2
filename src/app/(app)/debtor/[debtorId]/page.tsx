@@ -113,8 +113,10 @@ export default function DebtorInformationPage() {
           <Button variant="outline">
             <Edit className="mr-2 h-4 w-4" /> Edit Info
           </Button>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add PTP
+          <Button asChild>
+            <Link href="/ptp-capture">
+              <PlusCircle className="mr-2 h-4 w-4" /> Add PTP
+            </Link>
           </Button>
         </div>
       </div>
@@ -292,5 +294,3 @@ export default function DebtorInformationPage() {
     </div>
   );
 }
-
-    
