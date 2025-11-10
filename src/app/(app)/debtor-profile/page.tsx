@@ -6,21 +6,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, PlusCircle, Phone } from "lucide-react";
+import { Eye, Phone } from "lucide-react";
 import { dialerLeads } from "@/lib/data";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import React from "react";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 export default function DebtorProfilePage() {
@@ -74,5 +62,3 @@ export default function DebtorProfilePage() {
     </>
   );
 }
-
-    
