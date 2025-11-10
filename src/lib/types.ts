@@ -201,16 +201,16 @@ export type CallDisposition = {
     rpc_timestamp?: Timestamp;
 };
 
-export type Interaction = {
+export type InteractionLog = {
     interaction_id: string;
     debtor_id: string;
     agent_id: string;
-    call_id: string;
+    agent_name: string;
+    rpc_status: boolean;
     wrap_matter: string;
     notes: string;
-    timestamp: Timestamp;
-    call_duration: number;
-    created_at: Timestamp;
+    call_duration: string;
+    created_at: string;
 };
 
 
@@ -232,3 +232,47 @@ export type Team = {
     campaign_name: string;
     created_at: string;
 };
+
+export type DebtorProfile = {
+    debtor_id: string;
+    full_name: string;
+    account_number: string;
+    id_number: string;
+    phone_numbers: string[];
+    email: string;
+    address: string;
+    employer: string;
+    occupation: string;
+    total_debt: number;
+    original_amount: number;
+    last_payment_date: string;
+    amount_paid: number;
+    remaining_balance: number;
+    payment_frequency: string;
+    loan_type: string;
+    interest_rate: number;
+};
+
+export type PtpRecord = {
+    ptp_id: string;
+    debtor_id: string;
+    agent_id: string;
+    agent_name: string;
+    ptp_amount: number;
+    ptp_date: string;
+    payment_method: string;
+    status: 'Pending' | 'Kept' | 'Broken';
+    notes: string;
+    created_at: string;
+};
+
+export type DebtorNote = {
+    note_id: string;
+    debtor_id: string;
+    user_id: string;
+    user_name: string;
+    note_text: string;
+    timestamp: string;
+};
+
+    

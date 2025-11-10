@@ -7,337 +7,112 @@
       "type": "object",
       "description": "Represents a user profile within the CollectPro application.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the user profile."
-        },
-        "fullName": {
-          "type": "string",
-          "description": "The user's full name."
-        },
-        "username": {
-          "type": "string",
-          "description": "The user's username for login."
-        },
-        "email": {
-          "type": "string",
-          "description": "The user's email address.",
-          "format": "email"
-        },
-        "phoneNumber": {
-          "type": "string",
-          "description": "The user's phone number."
-        },
-        "profilePictureUrl": {
-          "type": "string",
-          "description": "URL of the user's profile picture.",
-          "format": "uri"
-        },
-        "role": {
-          "type": "string",
-          "description": "The user's role within the system (e.g., Agent, Supervisor, Admin)."
-        },
-        "languagePreference": {
-          "type": "string",
-          "description": "The user's preferred language."
-        },
-        "themeMode": {
-          "type": "string",
-          "description": "The user's preferred theme mode (light or dark)."
-        },
-        "team_id": {
-          "type": "string",
-          "description": "The ID of the team the user belongs to."
-        },
-        "team_name": {
-          "type": "string",
-          "description": "The name of the team the user belongs to."
-        }
+        "id": { "type": "string", "description": "Unique identifier for the user profile." },
+        "fullName": { "type": "string", "description": "The user's full name." },
+        "username": { "type": "string", "description": "The user's username for login." },
+        "email": { "type": "string", "description": "The user's email address.", "format": "email" },
+        "phoneNumber": { "type": "string", "description": "The user's phone number." },
+        "profilePictureUrl": { "type": "string", "description": "URL of the user's profile picture.", "format": "uri" },
+        "role": { "type": "string", "description": "The user's role within the system (e.g., Agent, Supervisor, Admin)." },
+        "languagePreference": { "type": "string", "description": "The user's preferred language." },
+        "themeMode": { "type": "string", "description": "The user's preferred theme mode (light or dark)." },
+        "team_id": { "type": "string", "description": "The ID of the team the user belongs to." },
+        "team_name": { "type": "string", "description": "The name of the team the user belongs to." }
       },
-      "required": [
-        "id",
-        "fullName",
-        "username",
-        "email"
-      ]
+      "required": ["id", "fullName", "username", "email"]
     },
     "Team": {
-      "title": "Team",
-      "description": "Represents a team of agents and a supervisor within an organization.",
-      "type": "object",
+      "title": "Team", "description": "Represents a team of agents and a supervisor.", "type": "object",
       "properties": {
-        "team_id": {
-          "type": "string",
-          "description": "Unique identifier for the team."
-        },
-        "org_id": {
-          "type": "string",
-          "description": "Identifier for the organization this team belongs to."
-        },
-        "team_name": {
-          "type": "string",
-          "description": "The name of the team."
-        },
-        "description": {
-          "type": "string",
-          "description": "A brief description of the team's purpose."
-        },
-        "leader_id": {
-          "type": "string",
-          "description": "The user ID of the team leader (supervisor)."
-        },
-        "leader_name": {
-          "type": "string",
-          "description": "The name of the team leader."
-        },
-        "members": {
-          "type": "array",
-          "description": "An array of objects representing the team members (agents).",
-          "items": {
-            "type": "object",
-            "properties": {
-              "user_id": { "type": "string" },
-              "name": { "type": "string" },
-              "role": { "type": "string" }
-            },
-            "required": ["user_id", "name"]
-          }
-        },
-        "campaign_id": {
-          "type": "string",
-          "description": "The ID of the campaign assigned to this team."
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp when the team was created."
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp when the team was last updated."
-        }
-      },
-      "required": ["team_id", "org_id", "team_name", "leader_id", "members"]
+        "team_id": { "type": "string", "description": "Unique identifier for the team." },
+        "org_id": { "type": "string", "description": "Identifier for the organization." },
+        "team_name": { "type": "string", "description": "The name of the team." },
+        "description": { "type": "string", "description": "A brief description of the team." },
+        "leader_id": { "type": "string", "description": "The user ID of the team leader." },
+        "leader_name": { "type": "string", "description": "The name of the team leader." },
+        "members": { "type": "array", "items": { "type": "object", "properties": { "user_id": { "type": "string" }, "name": { "type": "string" }, "role": { "type": "string" } }, "required": ["user_id", "name"] } },
+        "campaign_id": { "type": "string", "description": "The ID of the assigned campaign." },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }, "required": ["team_id", "org_id", "team_name", "leader_id", "members"]
     },
     "NotificationPreferences": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "NotificationPreferences",
-      "type": "object",
-      "description": "Represents a user's notification preferences.",
+      "title": "NotificationPreferences", "type": "object", "description": "User's notification preferences.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the notification preferences."
-        },
-        "userId": {
-          "type": "string",
-          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 NotificationPreferences)"
-        },
-        "emailAlertsEnabled": {
-          "type": "boolean",
-          "description": "Indicates whether email alerts are enabled."
-        },
-        "smsAlertsEnabled": {
-          "type": "boolean",
-          "description": "Indicates whether SMS alerts are enabled."
-        },
-        "inAppNotificationsEnabled": {
-          "type": "boolean",
-          "description": "Indicates whether in-app notifications are enabled."
-        }
-      },
-      "required": [
-        "id",
-        "userId"
-      ]
+        "id": { "type": "string" }, "userId": { "type": "string" }, "emailAlertsEnabled": { "type": "boolean" },
+        "smsAlertsEnabled": { "type": "boolean" }, "inAppNotificationsEnabled": { "type": "boolean" }
+      }, "required": ["id", "userId"]
     },
     "SystemConfiguration": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "SystemConfiguration",
-      "type": "object",
-      "description": "Represents system-wide configuration settings.",
+      "title": "SystemConfiguration", "type": "object", "description": "System-wide configuration settings.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the system configuration."
-        },
-        "callTimeout": {
-          "type": "number",
-          "description": "The call timeout duration in seconds."
-        },
-        "maxConcurrentCalls": {
-          "type": "number",
-          "description": "The maximum number of concurrent calls allowed."
-        },
-        "recordingEnabled": {
-          "type": "boolean",
-          "description": "Indicates whether call recording is enabled."
-        }
-      },
-      "required": [
-        "id"
-      ]
+        "id": { "type": "string" }, "callTimeout": { "type": "number" }, "maxConcurrentCalls": { "type": "number" },
+        "recordingEnabled": { "type": "boolean" }
+      }, "required": ["id"]
     },
     "CallDisposition": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "CallDisposition",
-      "type": "object",
-      "description": "Represents the outcome of a single call.",
+      "title": "CallDisposition", "type": "object", "description": "Outcome of a single call.",
       "properties": {
-        "call_id": {
-          "type": "string",
-          "description": "Unique identifier for the call."
-        },
-        "agent_id": {
-          "type": "string",
-          "description": "The ID of the agent who handled the call."
-        },
-        "lead_id": {
-          "type": "string",
-          "description": "The ID of the lead that was called."
-        },
-        "disposition_type": {
-          "type": "string",
-          "description": "The selected outcome category for the call."
-        },
-        "disposition_notes": {
-          "type": "string",
-          "description": "Optional notes from the agent about the call."
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp when the disposition was logged."
-        },
-        "call_duration": {
-          "type": "string",
-          "description": "The duration of the call."
-        },
-        "campaign_id": {
-          "type": "string",
-          "description": "The ID of the campaign this call was part of."
-        },
-        "outcome_score": {
-          "type": "number",
-          "description": "A numeric score representing the call outcome for analytics."
-        }
-      },
-      "required": [
-        "call_id",
-        "agent_id",
-        "lead_id",
-        "disposition_type",
-        "timestamp",
-        "campaign_id"
-      ]
+        "call_id": { "type": "string" }, "agent_id": { "type": "string" }, "lead_id": { "type": "string" },
+        "disposition_type": { "type": "string" }, "disposition_notes": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }, "call_duration": { "type": "string" },
+        "campaign_id": { "type": "string" }, "outcome_score": { "type": "number" }
+      }, "required": ["call_id", "agent_id", "lead_id", "disposition_type", "timestamp"]
+    },
+    "Debtor": {
+      "title": "Debtor", "type": "object", "description": "A debtor's full profile.",
+      "properties": {
+        "debtor_id": { "type": "string" }, "full_name": { "type": "string" }, "account_number": { "type": "string" },
+        "id_number": { "type": "string" }, "phone_numbers": { "type": "array", "items": { "type": "string" } },
+        "email": { "type": "string", "format": "email" }, "address": { "type": "string" }, "employer": { "type": "string" },
+        "occupation": { "type": "string" }, "total_debt": { "type": "number" }, "original_amount": { "type": "number" },
+        "last_payment_date": { "type": "string", "format": "date-time" }, "amount_paid": { "type": "number" },
+        "remaining_balance": { "type": "number" }, "payment_frequency": { "type": "string" }, "loan_type": { "type": "string" },
+        "interest_rate": { "type": "number" }, "assigned_agent_id": { "type": "string" }, "assigned_supervisor_id": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }, "updated_at": { "type": "string", "format": "date-time" }
+      }, "required": ["debtor_id", "full_name", "total_debt"]
+    },
+    "PTPRecord": {
+      "title": "PTPRecord", "type": "object", "description": "A Promise to Pay record.",
+      "properties": {
+        "ptp_id": { "type": "string" }, "debtor_id": { "type": "string" }, "agent_id": { "type": "string" },
+        "ptp_amount": { "type": "number" }, "ptp_date": { "type": "string", "format": "date" },
+        "payment_method": { "type": "string" }, "status": { "type": "string", "enum": ["Pending", "Kept", "Broken"] },
+        "notes": { "type": "string" }, "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }, "required": ["ptp_id", "debtor_id", "agent_id", "ptp_amount", "ptp_date", "status"]
+    },
+    "Interaction": {
+      "title": "Interaction", "type": "object", "description": "A single interaction with a debtor.",
+      "properties": {
+        "interaction_id": { "type": "string" }, "debtor_id": { "type": "string" }, "agent_id": { "type": "string" },
+        "rpc_status": { "type": "boolean" }, "wrap_matter": { "type": "string" }, "notes": { "type": "string" },
+        "call_duration": { "type": "number" }, "created_at": { "type": "string", "format": "date-time" }
+      }, "required": ["interaction_id", "debtor_id", "agent_id", "created_at"]
+    },
+    "DebtorNote": {
+      "title": "DebtorNote", "type": "object", "description": "A note related to a debtor.",
+      "properties": {
+        "note_id": { "type": "string" }, "debtor_id": { "type": "string" }, "user_id": { "type": "string" },
+        "note_text": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" }
+      }, "required": ["note_id", "debtor_id", "user_id", "note_text", "timestamp"]
     }
   },
-  "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
-  },
+  "auth": { "providers": ["password", "anonymous"] },
   "firestore": {
     "structure": [
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "UserProfile",
-          "schema": {
-            "$ref": "#/entities/UserProfile"
-          },
-          "description": "Stores user profile data. Includes denormalized 'role' and 'team' fields for authorization.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/teams/{teamId}",
-        "definition": {
-          "entityName": "Team",
-          "schema": {
-            "$ref": "#/entities/Team"
-          },
-          "description": "Stores team data, including leader and members. Accessible by Admins and team leaders.",
-          "params": [
-            {
-              "name": "teamId",
-              "description": "The unique identifier for the team."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/notification_preferences",
-        "definition": {
-          "entityName": "NotificationPreferences",
-          "schema": {
-            "$ref": "#/entities/NotificationPreferences"
-          },
-          "description": "Stores notification preferences for a user.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/system_configurations/{configId}",
-        "definition": {
-          "entityName": "SystemConfiguration",
-          "schema": {
-            "$ref": "#/entities/SystemConfiguration"
-          },
-          "description": "Stores system-wide configuration settings. Accessible only to admins.",
-          "params": [
-            {
-              "name": "configId",
-              "description": "The unique identifier for the system configuration."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/roles_admin/{userId}",
-        "definition": {
-          "entityName": "RoleAdmin",
-          "schema": {
-            "$ref": "#/entities/UserProfile"
-          },
-          "description": "Indicates admin role. Existence of document grants admin privileges.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/call_dispositions/{dispositionId}",
-        "definition": {
-          "entityName": "CallDisposition",
-          "schema": {
-            "$ref": "#/entities/CallDisposition"
-          },
-          "description": "Stores the outcome and notes for each call made by an agent.",
-          "params": [
-            {
-              "name": "dispositionId",
-              "description": "The unique identifier for the call disposition log."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability for the CollectPro application's features. User profiles and notification preferences are stored under the `/users/{userId}` path, providing path-based ownership. A new `/teams` collection is added to store team information, which can be managed by Admins. System-wide configurations are in a separate `/system_configurations` collection, accessible only to admins. Roles are managed via document existence in `/roles_admin/{userId}`. A new `call_dispositions` collection is added to log call outcomes; security rules will enforce that agents can only create dispositions for their own calls."
+      { "path": "/users/{userId}", "definition": { "entityName": "UserProfile", "schema": { "$ref": "#/entities/UserProfile" } } },
+      { "path": "/teams/{teamId}", "definition": { "entityName": "Team", "schema": { "$ref": "#/entities/Team" } } },
+      { "path": "/users/{userId}/notification_preferences", "definition": { "entityName": "NotificationPreferences", "schema": { "$ref": "#/entities/NotificationPreferences" } } },
+      { "path": "/system_configurations/{configId}", "definition": { "entityName": "SystemConfiguration", "schema": { "$ref": "#/entities/SystemConfiguration" } } },
+      { "path": "/roles_admin/{userId}", "definition": { "entityName": "UserProfile", "schema": { "$ref": "#/entities/UserProfile" } } },
+      { "path": "/call_dispositions/{dispositionId}", "definition": { "entityName": "CallDisposition", "schema": { "$ref": "#/entities/CallDisposition" } } },
+      { "path": "/debtors/{debtorId}", "definition": { "entityName": "Debtor", "schema": { "$ref": "#/entities/Debtor" } } },
+      { "path": "/ptp_records/{ptpId}", "definition": { "entityName": "PTPRecord", "schema": { "$ref": "#/entities/PTPRecord" } } },
+      { "path": "/interactions/{interactionId}", "definition": { "entityName": "Interaction", "schema": { "$ref": "#/entities/Interaction" } } },
+      { "path": "/debtor_notes/{noteId}", "definition": { "entityName": "DebtorNote", "schema": { "$ref": "#/entities/DebtorNote" } } }
+    ]
   }
 }
+
+    

@@ -1,6 +1,6 @@
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -271,3 +271,41 @@ export const mockCampaigns = [
     { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100 },
     { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80 },
 ];
+
+export const mockDebtor: DebtorProfile = {
+  debtor_id: 'd1',
+  full_name: 'Emily White',
+  account_number: 'EW-84375049584',
+  id_number: '30123456',
+  phone_numbers: ['555-0101', '555-0199'],
+  email: 'emily.white@example.com',
+  address: '123 Main St, Anytown, USA',
+  employer: 'Tech Solutions Inc.',
+  occupation: 'Software Engineer',
+  total_debt: 750.00,
+  original_amount: 1000.00,
+  last_payment_date: '2024-06-15',
+  amount_paid: 250.00,
+  remaining_balance: 750.00,
+  payment_frequency: 'Monthly',
+  loan_type: 'Personal Loan',
+  interest_rate: 12.5,
+};
+
+export const mockPtpRecords: PtpRecord[] = [
+  { ptp_id: 'ptp-1', debtor_id: 'd1', agent_id: 'u4', agent_name: 'Peris Wanyangi', ptp_amount: 150.00, ptp_date: '2024-07-25', payment_method: 'M-Pesa', status: 'Broken', notes: 'Client promised to pay but did not.', created_at: '2024-07-15' },
+  { ptp_id: 'ptp-2', debtor_id: 'd1', agent_id: 'u4', agent_name: 'Peris Wanyangi', ptp_amount: 200.00, ptp_date: '2024-08-10', payment_method: 'Direct Deposit', status: 'Pending', notes: 'New promise made during last call.', created_at: '2024-08-01' },
+];
+
+export const mockInteractions: InteractionLog[] = [
+  { interaction_id: 'int-1', debtor_id: 'd1', agent_id: 'u4', agent_name: 'Peris Wanyangi', rpc_status: true, wrap_matter: 'PTP Given', notes: 'Client agreed to pay 200 by Aug 10th.', call_duration: '5m 30s', created_at: '2024-08-01 11:30 AM' },
+  { interaction_id: 'int-2', debtor_id: 'd1', agent_id: 'u4', agent_name: 'Peris Wanyangi', rpc_status: false, wrap_matter: 'No Answer', notes: 'Called twice, no answer.', call_duration: '0m 32s', created_at: '2024-07-30 09:45 AM' },
+  { interaction_id: 'int-3', debtor_id: 'd1', agent_id: 'u5', agent_name: 'John Okoro', rpc_status: true, wrap_matter: 'Call Back Requested', notes: 'Client asked to call back in the afternoon.', call_duration: '2m 15s', created_at: '2024-07-28 10:00 AM' },
+];
+
+export const mockDebtorNotes: DebtorNote[] = [
+    { note_id: 'note-1', debtor_id: 'd1', user_id: 'u3', user_name: 'Beatrice Njeri', note_text: 'This client is a high priority. Please follow up closely.', timestamp: '2024-07-25 08:00 AM' },
+    { note_id: 'note-2', debtor_id: 'd1', user_id: 'u4', user_name: 'Peris Wanyangi', note_text: 'Client mentioned potential job change. Might affect payment ability.', timestamp: '2024-08-01 11:32 AM' },
+];
+
+    
