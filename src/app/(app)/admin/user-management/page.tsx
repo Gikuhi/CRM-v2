@@ -1,29 +1,102 @@
 
+"use client";
+
+import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, MoreHorizontal } from "lucide-react";
+import { Search, PlusCircle, MoreHorizontal, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { useCollection } from "@/firebase/firestore/use-collection";
+import { collection, doc, serverTimestamp } from "firebase/firestore";
+import { useFirestore, useAuth, useMemoFirebase } from "@/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import type { UserProfile } from "@/lib/types";
 
-const supervisors = [
-    { id: 'sup1', name: 'Andrew Mayaka', team: 'Alpha Team', status: 'Active', agents: 5 },
-    { id: 'sup2', name: 'Beatrice Njeri', team: 'Bravo Team', status: 'Active', agents: 7 },
-];
+const newUserSchema = z.object({
+    fullName: z.string().min(2, "Full name must be at least 2 characters."),
+    email: z.string().email("Invalid email address."),
+    password: z.string().min(8, "Password must be at least 8 characters."),
+});
 
-const agents = [
-    { id: 'agent1', name: 'Peris Wanyangi', supervisor: 'Andrew Mayaka', status: 'Online' },
-    { id: 'agent2', name: 'John Okoro', supervisor: 'Andrew Mayaka', status: 'Offline' },
-    { id: 'agent3', name: 'Grace Akinyi', supervisor: 'Beatrice Njeri', status: 'On Call' },
-    { id: 'agent4', name: 'Samuel Mwangi', supervisor: 'Beatrice Njeri', status: 'Online' },
-    { id: 'agent5', name: 'Fatuma Ali', supervisor: 'Beatrice Njeri', status: 'Break' },
-];
-
+type NewUserFormValues = z.infer<typeof newUserSchema>;
+type UserRole = 'Agent' | 'Supervisor';
 
 export default function UserManagementMasterPage() {
+  const [isFormOpen, setIsFormOpen] = React.useState(false);
+  const [roleToAdd, setRoleToAdd] = React.useState<UserRole>('Agent');
+
+  const { toast } = useToast();
+  const firestore = useFirestore();
+  const auth = useAuth();
+
+  const usersRef = useMemoFirebase(() => collection(firestore, 'users'), [firestore]);
+  const { data: users, isLoading } = useCollection<UserProfile>(usersRef);
+  
+  const supervisors = users?.filter(u => u.role === 'Supervisor' || u.role === 'Admin') || [];
+  const agents = users?.filter(u => u.role === 'Agent') || [];
+
+  const form = useForm<NewUserFormValues>({
+    resolver: zodResolver(newUserSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    }
+  });
+  
+  const handleOpenForm = (role: UserRole) => {
+    setRoleToAdd(role);
+    form.reset();
+    setIsFormOpen(true);
+  };
+
+  const onSubmit = async (values: NewUserFormValues) => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const user = userCredential.user;
+
+        const newUserProfile: Omit<UserProfile, 'id' | 'createdAt'> & { createdAt: any } = {
+            fullName: values.fullName,
+            username: values.email.split('@')[0],
+            email: values.email,
+            role: roleToAdd,
+            languagePreference: 'en',
+            themeMode: 'light',
+            createdAt: serverTimestamp(),
+        };
+
+        const userDocRef = doc(firestore, "users", user.uid);
+        setDocumentNonBlocking(userDocRef, newUserProfile, {});
+
+        toast({
+            title: `${roleToAdd} Created Successfully`,
+            description: `${values.fullName} has been added to the system.`,
+        });
+
+        setIsFormOpen(false);
+    } catch (error: any) {
+        console.error(`Error creating ${roleToAdd}:`, error);
+        toast({
+            variant: "destructive",
+            title: `Failed to create ${roleToAdd}`,
+            description: error.message || "An unknown error occurred.",
+        });
+    }
+  };
+  
   return (
     <div className="space-y-6">
        <h1 className="text-3xl font-bold">User & Role Management</h1>
@@ -49,35 +122,36 @@ export default function UserManagementMasterPage() {
                             />
                         </div>
                         <div className="flex gap-2">
-                             <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Agent</Button>
+                             <Button onClick={() => handleOpenForm('Agent')}><PlusCircle className="mr-2 h-4 w-4"/> Add Agent</Button>
                         </div>
                     </div>
                      <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Supervisor</TableHead>
+                                <TableHead>Team</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {agents.map(agent => (
+                            {isLoading && <TableRow><TableCell colSpan={4} className="text-center">Loading agents...</TableCell></TableRow>}
+                            {!isLoading && agents.map(agent => (
                                 <TableRow key={agent.id}>
                                      <TableCell className="flex items-center gap-2">
                                         <Avatar>
-                                            <AvatarFallback>{agent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                            <AvatarFallback>{agent.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                         </Avatar>
-                                        <span className="font-medium">{agent.name}</span>
+                                        <span className="font-medium">{agent.fullName}</span>
                                      </TableCell>
-                                     <TableCell>{agent.supervisor}</TableCell>
-                                     <TableCell><Badge variant={agent.status === 'Online' ? 'default' : 'outline'}>{agent.status}</Badge></TableCell>
+                                     <TableCell>{agent.team_name || 'N/A'}</TableCell>
+                                     <TableCell><Badge variant={'outline'}>{'Offline'}</Badge></TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem>Assign to Supervisor</DropdownMenuItem>
+                                                <DropdownMenuItem>Assign to Team</DropdownMenuItem>
                                                 <DropdownMenuItem>Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
@@ -107,29 +181,28 @@ export default function UserManagementMasterPage() {
                             />
                         </div>
                         <div className="flex gap-2">
-                             <Button><PlusCircle className="mr-2 h-4 w-4"/> Add Supervisor</Button>
+                             <Button onClick={() => handleOpenForm('Supervisor')}><PlusCircle className="mr-2 h-4 w-4"/> Add Supervisor</Button>
                         </div>
                     </div>
                      <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Team</TableHead>
-                                <TableHead>Agents Managed</TableHead>
+                                <TableHead>Team(s) Managed</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {supervisors.map(supervisor => (
+                            {isLoading && <TableRow><TableCell colSpan={3} className="text-center">Loading supervisors...</TableCell></TableRow>}
+                            {!isLoading && supervisors.map(supervisor => (
                                 <TableRow key={supervisor.id}>
                                      <TableCell className="flex items-center gap-2">
                                         <Avatar>
-                                            <AvatarFallback>{supervisor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                            <AvatarFallback>{supervisor.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                         </Avatar>
-                                        <span className="font-medium">{supervisor.name}</span>
+                                        <span className="font-medium">{supervisor.fullName}</span>
                                      </TableCell>
-                                     <TableCell>{supervisor.team}</TableCell>
-                                     <TableCell>{supervisor.agents}</TableCell>
+                                     <TableCell>{supervisor.team_name || 'N/A'}</TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
@@ -148,6 +221,69 @@ export default function UserManagementMasterPage() {
                 </Card>
              </TabsContent>
        </Tabs>
+
+        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add New {roleToAdd}</DialogTitle>
+                    <DialogDescription>
+                        Enter the details below to create a new {roleToAdd} account.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+                        <FormField
+                            control={form.control}
+                            name="fullName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="e.g., Jane Doe" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email Address</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="e.g., jane.doe@example.com" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Create a secure password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <DialogFooter>
+                            <Button type="button" variant="ghost" onClick={() => setIsFormOpen(false)}>Cancel</Button>
+                            <Button type="submit" disabled={form.formState.isSubmitting}>
+                                {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                Create {roleToAdd}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
+
+    

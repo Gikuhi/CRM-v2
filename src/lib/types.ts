@@ -1,5 +1,4 @@
 
-
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -128,6 +127,7 @@ export type UserProfile = {
   themeMode: 'light' | 'dark';
   team_id?: string;
   team_name?: string;
+  createdAt: Timestamp;
 };
 
 export type NotificationPreferences = {
