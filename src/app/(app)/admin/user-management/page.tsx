@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -19,7 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useCollection } from "@/firebase/firestore/use-collection";
-import { collection, doc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useFirestore, useAuth, useMemoFirebase } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
@@ -64,11 +63,22 @@ export default function UserManagementMasterPage() {
   };
 
   const onSubmit = async (values: NewUserFormValues) => {
+    if (!auth || !firestore) {
+        toast({
+            variant: "destructive",
+            title: "Firebase not initialized",
+            description: "The Firebase services are not available.",
+        });
+        return;
+    }
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
 
-        const newUserProfile: Omit<UserProfile, 'id' | 'createdAt'> & { createdAt: any } = {
+        const userDocRef = doc(firestore, "users", user.uid);
+        
+        await setDoc(userDocRef, {
+            id: user.uid,
             fullName: values.fullName,
             username: values.email.split('@')[0],
             email: values.email,
@@ -76,10 +86,7 @@ export default function UserManagementMasterPage() {
             languagePreference: 'en',
             themeMode: 'light',
             createdAt: serverTimestamp(),
-        };
-
-        const userDocRef = doc(firestore, "users", user.uid);
-        setDocumentNonBlocking(userDocRef, newUserProfile, {});
+        });
 
         toast({
             title: `${roleToAdd} Created Successfully`,
