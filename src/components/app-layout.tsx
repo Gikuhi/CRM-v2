@@ -121,6 +121,7 @@ const superAdminNavItems = [
 const pageTitles: { [key: string]: string } = {
   "/dashboard": "Agent Dashboard",
   "/debtor-profile": "Lead Management",
+  "/debtor": "Debtor Information",
   "/dialer": "Dialer",
   "/incoming-call": "Incoming Call",
   "/ptp-capture": "Promise to Pay Capture",
@@ -199,6 +200,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     // Since we removed auth, logout just redirects to login page
     router.push("/login");
   };
+
+  const getPageTitle = (path: string): string => {
+    if (path.startsWith('/debtor/')) {
+        return 'Debtor Information';
+    }
+    return pageTitles[path] || "CollectPro";
+  }
 
   const renderSidebarMenu = () => {
     const allNavGroups = [
@@ -288,7 +296,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarTrigger />
           <div className="flex-1">
             <h1 className="text-lg font-semibold md:text-2xl">
-              {pageTitles[pathname] || "CollectPro"}
+              {getPageTitle(pathname)}
             </h1>
           </div>
           <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
