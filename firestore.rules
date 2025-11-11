@@ -49,7 +49,8 @@ service cloud.firestore {
      * @path /users/{userId}
      */
     match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
       allow create: if isOwner(userId) && request.resource.data.id == request.auth.uid;
       allow update: if isOwner(userId) || isAdmin();
       allow delete: if isAdmin();
