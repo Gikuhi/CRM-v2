@@ -95,27 +95,27 @@ export default function AdminBillingPage() {
                 <CardContent className="grid gap-4 md:grid-cols-3">
                     <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4 p-4 border rounded-lg bg-muted/50">
                         <div>
-                            <p className="text-sm text-muted-foreground">Organization Name</p>
-                            <p className="font-semibold">CollectPro Inc.</p>
+                            <div className="text-sm text-muted-foreground">Organization Name</div>
+                            <div className="font-semibold">CollectPro Inc.</div>
                         </div>
                         <div>
-                            <p className="text-sm text-muted-foreground">Current Plan</p>
-                            <p className="font-semibold text-primary">Professional</p>
+                            <div className="text-sm text-muted-foreground">Current Plan</div>
+                            <div className="font-semibold text-primary">Professional</div>
                         </div>
                         <div>
-                            <p className="text-sm text-muted-foreground">Billing Cycle</p>
-                            <p className="font-semibold">Monthly</p>
+                            <div className="text-sm text-muted-foreground">Billing Cycle</div>
+                            <div className="font-semibold">Monthly</div>
                         </div>
                          <div>
-                            <p className="text-sm text-muted-foreground">Next Payment</p>
-                            <p className="font-semibold">Dec 1, 2025</p>
+                            <div className="text-sm text-muted-foreground">Next Payment</div>
+                            <div className="font-semibold">Dec 1, 2025</div>
                         </div>
                         <div>
-                            <p className="text-sm text-muted-foreground">Total Cost</p>
-                            <p className="font-semibold">KES 25,000</p>
+                            <div className="text-sm text-muted-foreground">Total Cost</div>
+                            <div className="font-semibold">KES 25,000</div>
                         </div>
                         <div>
-                            <p className="text-sm text-muted-foreground">Status</p>
+                            <div className="text-sm text-muted-foreground">Status</div>
                             <Badge variant="default">Active</Badge>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ export default function AdminBillingPage() {
                             <div>
                                 <Label htmlFor={addon.id} className="font-semibold">{addon.title}</Label>
                                 <p className="text-sm text-muted-foreground">{addon.description}</p>
-                                <p className="text-sm font-medium text-primary mt-1">{addon.cost}</p>
+                                <div className="text-sm font-medium text-primary mt-1">{addon.cost}</div>
                             </div>
                             <Switch id={addon.id} />
                         </Card>
