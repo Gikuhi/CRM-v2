@@ -36,6 +36,9 @@ import {
   Settings2,
   Shield,
   UsersRound,
+  ShieldCheck,
+  LineChart,
+  ListTodo,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -89,7 +92,13 @@ const adminNavItems = [
     { href: "/admin/teams", icon: UsersRound, label: "Teams" },
     { href: "/admin/user-management", icon: BookUser, label: "Users" },
     { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
+    { href: "/admin/analytics", icon: LineChart, label: "Analytics" },
+    { href: "/admin/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
     { href: "/admin/reports", icon: FileBarChart, label: "Reports" },
+    { href: "/admin/compliance", icon: ShieldCheck, label: "Compliance & QA"},
+    { href: "/admin/queues", icon: ListTodo, label: "Queues & Routing"},
+    { href: "/admin/audit-logs", icon: FileSearch, label: "Audit Logs"},
+    { href: "/admin/roles", icon: Users, label: "Roles"},
     { href: "/admin/system-settings", icon: Settings2, label: "Org Settings" },
     { href: "/admin/billing", icon: Banknote, label: "Billing" },
 ]
@@ -344,5 +353,3 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
