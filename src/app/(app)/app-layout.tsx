@@ -84,6 +84,7 @@ const agentNavItems = [
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
   { href: "/analytics", icon: TrendingUp, label: "My Stats" },
   { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
+  { href: "/settings", icon: Settings, label: "Settings" },
   { href: "/help", icon: HelpCircle, label: "Help" },
 ];
 
@@ -101,6 +102,7 @@ const adminNavItems = [
     { href: "/admin/roles", icon: Users, label: "Roles"},
     { href: "/admin/system-settings", icon: Settings2, label: "Org Settings" },
     { href: "/admin/billing", icon: Banknote, label: "Billing" },
+    { href: "/settings", icon: Settings, label: "My Settings" },
 ]
 
 const teamManagerNavItems = [
@@ -111,6 +113,7 @@ const teamManagerNavItems = [
     { href: "/messaging", icon: MessageSquare, label: "Messages" },
     { href: "/tasks", icon: CalendarClock, label: "Schedule" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
+    { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 const superAdminNavItems = [
@@ -283,17 +286,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     >
                         <FileText />
                         <span>Pages List</span>
-                    </SidebarMenuButton>
-                    </Link>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <Link href="/settings">
-                    <SidebarMenuButton
-                        isActive={pathname === "/settings"}
-                        tooltip="Settings"
-                    >
-                        <Settings />
-                        <span>Settings</span>
                     </SidebarMenuButton>
                     </Link>
                 </SidebarMenuItem>
