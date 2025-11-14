@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import * as React from "react";
@@ -35,6 +36,9 @@ import {
   Settings2,
   Shield,
   UsersRound,
+  ShieldCheck,
+  LineChart,
+  ListTodo,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -70,6 +74,7 @@ import { doc } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase/provider";
 import type { UserProfile } from "@/lib/types";
 import { Skeleton } from "./ui/skeleton";
+import { NotificationBell } from "./notifications/notification-bell";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -80,6 +85,7 @@ const agentNavItems = [
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
   { href: "/analytics", icon: TrendingUp, label: "My Stats" },
   { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
+  { href: "/settings", icon: Settings, label: "Settings" },
   { href: "/help", icon: HelpCircle, label: "Help" },
 ];
 
@@ -88,9 +94,16 @@ const adminNavItems = [
     { href: "/admin/teams", icon: UsersRound, label: "Teams" },
     { href: "/admin/user-management", icon: BookUser, label: "Users" },
     { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
+    { href: "/admin/analytics", icon: LineChart, label: "Analytics" },
+    { href: "/admin/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
     { href: "/admin/reports", icon: FileBarChart, label: "Reports" },
+    { href: "/admin/compliance", icon: ShieldCheck, label: "Compliance & QA"},
+    { href: "/admin/queues", icon: ListTodo, label: "Queues & Routing"},
+    { href: "/admin/audit-logs", icon: FileSearch, label: "Audit Logs"},
+    { href: "/admin/roles", icon: Users, label: "Roles"},
     { href: "/admin/system-settings", icon: Settings2, label: "Org Settings" },
     { href: "/admin/billing", icon: Banknote, label: "Billing" },
+    { href: "/settings", icon: Settings, label: "My Settings" },
 ]
 
 const teamManagerNavItems = [
@@ -101,6 +114,7 @@ const teamManagerNavItems = [
     { href: "/messaging", icon: MessageSquare, label: "Messages" },
     { href: "/tasks", icon: CalendarClock, label: "Schedule" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
+    { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 const superAdminNavItems = [
@@ -276,17 +290,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                     </Link>
                 </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <Link href="/settings">
-                    <SidebarMenuButton
-                        isActive={pathname === "/settings"}
-                        tooltip="Settings"
-                    >
-                        <Settings />
-                        <span>Settings</span>
-                    </SidebarMenuButton>
-                    </Link>
-                </SidebarMenuItem>
               </SidebarMenu>
            </SidebarGroup>
         </SidebarContent>
@@ -312,10 +315,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </form>
             <AgentStatusMenu />
             <AgentInfoSheet />
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
+            <NotificationBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -343,5 +343,3 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    

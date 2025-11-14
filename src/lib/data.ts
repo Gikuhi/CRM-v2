@@ -1,6 +1,7 @@
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote } from './types';
+
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -308,4 +309,17 @@ export const mockDebtorNotes: DebtorNote[] = [
     { note_id: 'note-2', debtor_id: 'd1', user_id: 'u4', user_name: 'Peris Wanyangi', note_text: 'Client mentioned potential job change. Might affect payment ability.', timestamp: '2024-08-01 11:32 AM' },
 ];
 
+export const agentStats: AgentDashboardStats = {
+  nextDebtor: { name: "Mary Wanjiku", account: "ACC12345", balance: 34000 },
+  queueProgress: { completed: 12, total: 50 },
+  callOutcomes: { rpc: 4, noAnswer: 6, voicemail: 3, wrongNumber: 1 },
+  ptpToday: [{ debtor: "John Doe", time: "2:00 PM" }],
+};
+
+export const mockNotifications: Notification[] = [
+  { id: 1, text: "PTP with John due in 1 hour", time: "12m ago", read: false },
+  { id: 2, text: "New debtor assigned: Mary Wambui", time: "1h ago", read: true },
+  { id: 3, text: "Your call with Jane Smith was marked as successful.", time: "3h ago", read: true },
+  { id: 4, text: "System maintenance scheduled for 10 PM tonight.", time: "yesterday", read: true },
+];
     

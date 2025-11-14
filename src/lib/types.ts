@@ -1,4 +1,5 @@
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -275,4 +276,17 @@ export type DebtorNote = {
     timestamp: string;
 };
 
+export type AgentDashboardStats = {
+  nextDebtor: { name: string; account: string; balance: number };
+  queueProgress: { completed: number; total: number };
+  callOutcomes: { rpc: number; noAnswer: number; voicemail: number; wrongNumber: number };
+  ptpToday: { debtor: string; time: string }[];
+};
+
+export type Notification = {
+  id: number;
+  text: string;
+  time: string;
+  read: boolean;
+};
     
