@@ -39,6 +39,7 @@ import {
   ShieldCheck,
   LineChart,
   ListTodo,
+  ShieldQuestion,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -80,6 +81,10 @@ const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Leads" },
   { href: "/dialer", icon: Phone, label: "Dialer" },
+  { href: "/incoming-call", icon: Phone, label: "Incoming Call" },
+  { href: "/ptp-capture", icon: Banknote, label: "PTP Capture" },
+  { href: "/wrap-matter", icon: Save, label: "Wrap Matter" },
+  { href: "/matter-dashboard", icon: LayoutGrid, label: "Matter Dashboard" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/call-wraps", icon: Save, label: "Call Wraps" },
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
@@ -109,11 +114,9 @@ const adminNavItems = [
 const teamManagerNavItems = [
     { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
     { href: "/team-management", icon: Users2, label: "Agents" },
-    { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
-    { href: "/analytics", icon: BarChart3, label: "Reports" },
-    { href: "/messaging", icon: MessageSquare, label: "Messages" },
-    { href: "/tasks", icon: CalendarClock, label: "Schedule" },
     { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
+    { href: "/reports", icon: BarChart3, label: "Reports" },
+    { href: "/tasks", icon: CalendarClock, label: "Schedule" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
