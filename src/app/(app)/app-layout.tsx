@@ -66,14 +66,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AgentInfoSheet } from "./agent-info-sheet";
-import { AgentStatusMenu } from "./agent-status-menu";
+import { AgentInfoSheet } from "@/components/agent-info-sheet";
+import { AgentStatusMenu } from "@/components/agent-status-menu";
 import { useAuth, useUser } from "@/firebase";
 import { useDoc } from "@/firebase/firestore/use-doc";
 import { doc } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase/provider";
 import type { UserProfile } from "@/lib/types";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -314,10 +315,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </form>
             <AgentStatusMenu />
             <AgentInfoSheet />
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
+            <NotificationBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
