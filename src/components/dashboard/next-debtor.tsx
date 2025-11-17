@@ -1,5 +1,7 @@
 
 "use client";
+
+import * as React from "react";
 import {
   Card,
   CardContent,
@@ -9,11 +11,53 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, PhoneOff, Loader2 } from "lucide-react";
 import { agentStats } from "@/lib/data";
+import { cn } from "@/lib/utils";
+
+type CallStatus = "idle" | "dialing" | "active";
 
 export function NextDebtor() {
   const nextDebtor = agentStats.nextDebtor;
+  const [callStatus, setCallStatus] = React.useState<CallStatus>("idle");
+
+  const handleCallClick = () => {
+    if (callStatus === "idle") {
+      setCallStatus("dialing");
+      setTimeout(() => {
+        setCallStatus("active");
+      }, 1500); // Simulate dialing time
+    } else {
+      setCallStatus("idle");
+    }
+  };
+
+  const getButtonContent = () => {
+    switch (callStatus) {
+      case "dialing":
+        return (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Dialing...
+          </>
+        );
+      case "active":
+        return (
+          <>
+            <PhoneOff className="mr-2 h-4 w-4" />
+            End Call
+          </>
+        );
+      case "idle":
+      default:
+        return (
+          <>
+            <Phone className="mr-2 h-4 w-4" />
+            Call Now
+          </>
+        );
+    }
+  };
 
   return (
     <Card>
@@ -36,8 +80,15 @@ export function NextDebtor() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">
-          <Phone className="mr-2 h-4 w-4" /> Call Now
+        <Button
+          className={cn(
+            "w-full",
+            callStatus === "active" && "bg-destructive hover:bg-destructive/90"
+          )}
+          onClick={handleCallClick}
+          disabled={callStatus === "dialing"}
+        >
+          {getButtonContent()}
         </Button>
       </CardFooter>
     </Card>
