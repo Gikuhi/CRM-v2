@@ -40,6 +40,7 @@ import {
   LineChart,
   ListTodo,
   ShieldQuestion,
+  BellRing,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -90,6 +91,7 @@ const agentNavItems = [
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
   { href: "/analytics", icon: TrendingUp, label: "My Stats" },
   { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
+  { href: "/notifications", icon: BellRing, label: "Notifications" },
   { href: "/settings", icon: Settings, label: "Settings" },
   { href: "/help", icon: HelpCircle, label: "Help" },
 ];
@@ -157,6 +159,7 @@ const pageTitles: { [key: string]: string } = {
   "/settings": "Settings",
   "/admin-dashboard": "Supervisor Dashboard",
   "/pages-list": "Pages List",
+  "/notifications": "Notifications",
   "/admin/dashboard": "Admin Dashboard",
   "/admin/teams": "Teams Management",
   "/admin/user-management": "User & Role Management",

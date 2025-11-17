@@ -1,6 +1,7 @@
 
 
 
+
 import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
@@ -317,9 +318,10 @@ export const agentStats: AgentDashboardStats = {
 };
 
 export const mockNotifications: Notification[] = [
-  { id: 1, text: "PTP with John due in 1 hour", time: "12m ago", read: false },
-  { id: 2, text: "New debtor assigned: Mary Wambui", time: "1h ago", read: true },
-  { id: 3, text: "Your call with Jane Smith was marked as successful.", time: "3h ago", read: true },
-  { id: 4, text: "System maintenance scheduled for 10 PM tonight.", time: "yesterday", read: true },
+  { id: 1, text: "PTP with John due in 1 hour.", time: "12m ago", read: false, type: 'PTP' },
+  { id: 2, text: "New debtor assigned: Mary Wambui.", time: "1h ago", read: false, type: 'Assignment' },
+  { id: 3, text: "Your call with Jane Smith was successful.", time: "3h ago", read: true, type: 'Success' },
+  { id: 4, text: "System maintenance is scheduled for 10 PM.", time: "yesterday", read: true, type: 'System' },
+  { id: 5, text: "PTP from Mike Ross is now overdue.", time: "2 days ago", read: true, type: 'PTP' },
 ];
     

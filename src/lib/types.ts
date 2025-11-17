@@ -288,5 +288,6 @@ export type Notification = {
   text: string;
   time: string;
   read: boolean;
+  type: 'PTP' | 'Assignment' | 'System' | 'Success';
 };
     

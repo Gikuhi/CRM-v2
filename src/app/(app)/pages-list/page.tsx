@@ -1,4 +1,5 @@
 
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { List } from "lucide-react";
 
@@ -18,6 +19,7 @@ export default function PagesListPage() {
     { name: "My Stats", path: "/analytics" },
     { name: "Follow-up Tasks", path: "/tasks" },
     { name: "Messaging", path: "/messaging" },
+    { name: "Notifications", path: "/notifications" },
     { name: "Help & Support", path: "/help" },
   ];
 
