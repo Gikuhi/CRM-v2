@@ -2,7 +2,8 @@
 
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification } from './types';
+
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification, AuditLog } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -149,6 +150,15 @@ export const recentSuperAdminActivities: RecentActivity[] = [
     { id: "sa-2", user: "Super Admin", action: "Assigned 'Pro' plan to 'DebtSolve'", date: "2024-08-01 09:45 AM" },
     { id: "sa-3", user: "Super Admin", action: "Disabled user 'test@example.com'", date: "2024-07-31 04:30 PM" },
 ];
+
+export const mockAuditLogs: AuditLog[] = [
+    { id: "log-1", user: "Andrew Mayaka", action: "CREATE_TEAM", resourceId: "team-delta-03", date: "2024-08-01 10:05 AM", organization: "DebtSolve Inc." },
+    { id: "log-2", user: "Beatrice Njeri", action: "ASSIGN_LEAD", resourceId: "debtor-d1", date: "2024-08-01 09:55 AM", organization: "DebtSolve Inc." },
+    { id: "log-3", user: "Peris Wanyangi", action: "CREATE_PTP", resourceId: "ptp-2", date: "2024-08-01 09:40 AM", organization: "DebtSolve Inc." },
+    { id: "log-4", user: "Super Admin", action: "SUSPEND_ORGANIZATION", resourceId: "org-3", date: "2024-07-31 05:00 PM", organization: "Platform-wide" },
+    { id: "log-5", user: "Andrew Mayaka", action: "UPDATE_USER_ROLE", resourceId: "user-u7", date: "2024-07-31 03:15 PM", organization: "DebtSolve Inc." },
+];
+
 
 export const organizations: Organization[] = [
     { id: "org-1", name: "DebtSolve Inc.", admin: "Jane Doe", userCount: 12, status: "Active", plan: "Pro" },

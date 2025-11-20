@@ -1,11 +1,22 @@
 
+"use client";
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { recentSuperAdminActivities } from "@/lib/data";
+import { mockAuditLogs } from "@/lib/data";
+import { Badge } from "@/components/ui/badge";
 
 export default function SuperAdminAuditPage() {
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const filteredLogs = mockAuditLogs.filter(log => 
+    log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.resourceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (log.organization && log.organization.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Global Audit & Compliance</h1>
@@ -19,28 +30,34 @@ export default function SuperAdminAuditPage() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="Filter logs by user, action, organization, or date..."
+                    placeholder="Filter logs by user, action, organization, or resource..."
                     className="w-full rounded-lg bg-background pl-8 lg:w-[400px]"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Action</TableHead>
                   <TableHead>User</TableHead>
-                  <TableHead className="hidden md:table-cell">Organization</TableHead>
+                  <TableHead>Organization</TableHead>
+                  <TableHead>Action</TableHead>
+                  <TableHead>Resource ID</TableHead>
                   <TableHead className="text-right">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentSuperAdminActivities.map((activity) => (
-                  <TableRow key={activity.id}>
+                {filteredLogs.map((log) => (
+                  <TableRow key={log.id}>
+                    <TableCell className="font-medium">{log.user}</TableCell>
+                    <TableCell>{log.organization}</TableCell>
                     <TableCell>
-                      <div className="font-medium">{activity.action}</div>
+                      <Badge variant="secondary">{log.action}</Badge>
                     </TableCell>
-                    <TableCell>{activity.user}</TableCell>
-                    <TableCell className="hidden md:table-cell">FinCorp</TableCell>
-                    <TableCell className="text-right">{activity.date}</TableCell>
+                    <TableCell>
+                      <div className="font-mono text-xs">{log.resourceId}</div>
+                    </TableCell>
+                    <TableCell className="text-right">{log.date}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

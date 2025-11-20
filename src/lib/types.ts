@@ -1,5 +1,6 @@
 
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -289,5 +290,14 @@ export type Notification = {
   time: string;
   read: boolean;
   type: 'PTP' | 'Assignment' | 'System' | 'Success';
+};
+
+export type AuditLog = {
+    id: string;
+    user: string;
+    action: string;
+    resourceId: string;
+    date: string;
+    organization?: string;
 };
     
