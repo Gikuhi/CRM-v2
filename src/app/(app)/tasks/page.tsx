@@ -11,6 +11,8 @@ export default function TasksPage() {
   // In a real app, you'd manage selected date state here
   const today = new Date();
 
+  const filteredTasks = tasks.filter(task => task.status === 'To-Do' || task.status === 'Completed');
+
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <div className="lg:col-span-1">
@@ -42,7 +44,7 @@ export default function TasksPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {tasks.map((task) => (
+              {filteredTasks.map((task) => (
                 <div key={task.id} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                   <Checkbox id={`task-${task.id}`} className="mt-1" checked={task.status === 'Completed'}/>
                   <div className="grid gap-1">
@@ -55,10 +57,9 @@ export default function TasksPage() {
                   </div>
                    <Badge 
                     className={cn("ml-auto", {
-                      'bg-yellow-500/20 text-yellow-400 border-yellow-500/20': task.status === 'In Progress',
                       'bg-green-500/20 text-green-400 border-green-500/20': task.status === 'Completed',
                     })}
-                    variant="outline"
+                    variant={task.status === 'Completed' ? 'outline' : 'secondary'}
                   >
                     {task.status}
                   </Badge>
