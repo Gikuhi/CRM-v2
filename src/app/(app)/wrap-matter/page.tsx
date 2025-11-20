@@ -6,29 +6,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Save, CalendarIcon } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from "@/components/ui/form";
 import { wrapMatterDispositions } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestore, useUser } from "@/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
 
 const wrapMatterSchema = z.object({
     disposition: z.string({ required_error: "You must select a disposition." }),
-    notes: z.string().optional(),
-}).refine(data => {
-    if (data.disposition === 'Other' || data.disposition === 'Disputed Debt' || data.disposition === 'Requires Manager Call-Back') {
-        return data.notes && data.notes.length > 0;
-    }
-    return true;
-}, {
-    message: "Notes are required for this disposition.",
-    path: ["notes"],
+    notes: z.string().min(1, "Notes are required."),
+    nextActionDate: z.date({ required_error: "Next action date is required." }),
 });
 
 export default function WrapMatterPage() {
@@ -42,7 +40,6 @@ export default function WrapMatterPage() {
     });
 
     const { isSubmitting } = form.formState;
-    const selectedDisposition = form.watch("disposition");
 
     async function onSubmit(values: z.infer<typeof wrapMatterSchema>) {
         if (!user) {
@@ -56,8 +53,9 @@ export default function WrapMatterPage() {
                 agent_id: user.uid,
                 call_id: `call-${Date.now()}`, // Replace with actual call ID
                 wrap_matter: values.disposition,
-                notes: values.notes || "",
+                notes: values.notes,
                 call_duration: 185, // Mock duration in seconds
+                next_action_date: values.nextActionDate,
                 timestamp: serverTimestamp(),
                 created_at: serverTimestamp(),
             });
@@ -87,7 +85,7 @@ export default function WrapMatterPage() {
                     <Card>
                         <CardHeader>
                             <CardTitle>Wrap Matter / Call Disposition</CardTitle>
-                            <CardDescription>Select the outcome of the call to finalize the interaction.</CardDescription>
+                            <CardDescription>Select the outcome of the call and schedule the next action to finalize the interaction.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-8">
                              <FormField
@@ -123,23 +121,67 @@ export default function WrapMatterPage() {
                                 )}
                             />
                             
-                            <FormField
-                                control={form.control}
-                                name="notes"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <Label htmlFor="notes">Optional Notes</Label>
-                                        <FormControl>
-                                            <Textarea
-                                                id="notes"
-                                                placeholder="Add any relevant details about the call..."
-                                                {...field}
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <FormField
+                                    control={form.control}
+                                    name="notes"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Notes</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    id="notes"
+                                                    placeholder="Add any relevant details about the call..."
+                                                    {...field}
+                                                    className="h-32"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={form.control}
+                                    name="nextActionDate"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                        <FormLabel>Next Action Date</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                                >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                disabled={(date) =>
+                                                    date < new Date(new Date().setHours(0,0,0,0))
+                                                }
+                                                initialFocus
                                             />
-                                        </FormControl>
-                                         <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </CardContent>
                         <CardFooter className="flex justify-between">
                             <Button type="button" variant="outline" onClick={() => router.back()}>
