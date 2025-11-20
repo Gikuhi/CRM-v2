@@ -27,11 +27,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle, CalendarPlus, Loader2 } from "lucide-react";
+import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle, CalendarPlus, Loader2, Filter } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 const InfoItem = ({ label, value }: { label: string; value: string }) => (
   <div>
@@ -261,41 +262,61 @@ export default function MatterDashboardPage() {
       
       {/* Add to Queue Dialog */}
       <Dialog open={isQueueDialogOpen} onOpenChange={setIsQueueDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Debtor to Callback Queue</DialogTitle>
+            <DialogTitle>Create Campaign Queue</DialogTitle>
             <DialogDescription>
-              Schedule a specific time to call this debtor back. They will be added to the appropriate queue automatically.
+              Create a targeted queue for a campaign with specific start times and debtor filters.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div className="space-y-2">
-              <Label htmlFor="callback-date">Callback Date</Label>
-              <Input id="callback-date" type="date" defaultValue={new Date().toISOString().split("T")[0]}/>
+              <Label htmlFor="campaign-select">Target Campaign</Label>
+              <Select defaultValue="q3-financial-push">
+                <SelectTrigger id="campaign-select">
+                  <SelectValue placeholder="Select a campaign" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="q3-financial-push">Q3 Financial Push</SelectItem>
+                  <SelectItem value="new-leads-outreach">New Leads Outreach</SelectItem>
+                  <SelectItem value="past-due-follow-up">Past-Due Follow-up</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="callback-time">Callback Time</Label>
-              <Input id="callback-time" type="time" defaultValue="10:00" />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="queue-select">Queue</Label>
-                 <Select defaultValue="general-callback">
-                    <SelectTrigger id="queue-select">
-                        <SelectValue placeholder="Select a queue" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="general-callback">General Callback</SelectItem>
-                        <SelectItem value="high-priority-callback">High Priority Callback</SelectItem>
-                        <SelectItem value="supervisor-review">Supervisor Review</SelectItem>
-                    </SelectContent>
-                </Select>
+             <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="callback-date">Queue Start Date</Label>
+                    <Input id="callback-date" type="date" defaultValue={new Date().toISOString().split("T")[0]}/>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="callback-time">Queue Start Time</Label>
+                    <Input id="callback-time" type="time" defaultValue="09:00" />
+                </div>
+             </div>
+             <div className="space-y-4">
+                <Label className="flex items-center gap-2"><Filter className="h-4 w-4"/> Disposition Filters</Label>
+                <div className="p-4 border rounded-md space-y-4">
+                   <div className="flex items-center space-x-2">
+                        <Checkbox id="filter-broken-ptp" />
+                        <Label htmlFor="filter-broken-ptp">Broken PTPs</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="filter-rpc-no-ptp" />
+                        <Label htmlFor="filter-rpc-no-ptp">RPC without PTP</Label>
+                    </div>
+                     <div className="flex items-center space-x-2">
+                        <Checkbox id="filter-no-contact" />
+                        <Label htmlFor="filter-no-contact">No Contact in Last 7 Days</Label>
+                    </div>
+                </div>
+                 <Textarea placeholder="Add a description for this queue..."/>
             </div>
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsQueueDialogOpen(false)} disabled={isScheduling}>Cancel</Button>
             <Button onClick={handleAddToQueue} disabled={isScheduling}>
                 {isScheduling && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                Schedule Callback
+                Create Queue
             </Button>
           </DialogFooter>
         </DialogContent>
