@@ -51,7 +51,7 @@ const plans = [
             "Dedicated support",
             "API integrations",
             "Full Dialer + Recording",
-            "AI insights module"
+            "Advanced reporting"
         ],
         isCurrent: false,
         buttonText: "Contact Sales",
@@ -60,7 +60,6 @@ const plans = [
 ];
 
 const addOns = [
-    { id: "ai-insights", title: "AI Call Insights", description: "Automated call analysis and scoring.", cost: "KES 5,000/mo" },
     { id: "sms-reminders", title: "SMS/Email Reminders", description: "Automated debtor notifications.", cost: "KES 3,000/mo" },
     { id: "twilio-dialer", title: "Twilio Dialer Integration", description: "Enable click-to-call and auto-dialing.", cost: "KES 7,500/mo" },
     { id: "extra-storage", title: "Extra Storage (10GB)", description: "Additional storage for call recordings.", cost: "KES 1,000/mo" },

@@ -50,8 +50,8 @@ export default function SuperAdminSettingsPage() {
                 <Switch id="qa-module" defaultChecked />
               </div>
                <div className="flex items-center justify-between rounded-lg border p-4">
-                <Label htmlFor="ai-module">AI Dialer & Insights</Label>
-                <Switch id="ai-module" defaultChecked />
+                <Label htmlFor="reporting-module">Advanced Reporting</Label>
+                <Switch id="reporting-module" defaultChecked />
               </div>
                <div className="flex items-center justify-between rounded-lg border p-4">
                 <Label htmlFor="billing-module">Billing & Subscriptions</Label>
