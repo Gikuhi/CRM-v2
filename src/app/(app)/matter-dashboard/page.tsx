@@ -27,18 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle } from "lucide-react";
+import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle, CalendarPlus, Loader2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const InfoItem = ({ label, value }: { label: string; value: string }) => (
   <div>
@@ -49,6 +42,8 @@ const InfoItem = ({ label, value }: { label: string; value: string }) => (
 
 export default function MatterDashboardPage() {
   const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
+  const [isQueueDialogOpen, setIsQueueDialogOpen] = React.useState(false);
+  const [isScheduling, setIsScheduling] = React.useState(false);
   const { toast } = useToast();
   const debtorId = "mock-debtor-123"; // Mock debtorId for navigation
 
@@ -60,11 +55,25 @@ export default function MatterDashboardPage() {
     });
   };
 
+  const handleAddToQueue = async () => {
+    setIsScheduling(true);
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate async operation
+    setIsScheduling(false);
+    setIsQueueDialogOpen(false);
+    toast({
+        title: "Debtor Scheduled",
+        description: "Joyce Wanjohi Maina has been added to the callback queue.",
+    });
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">Matter Dashboard</h1>
         <div className="flex gap-2">
+           <Button variant="outline" onClick={() => setIsQueueDialogOpen(true)}>
+                <CalendarPlus className="mr-2 h-4 w-4" /> Add to Queue
+            </Button>
           <Button asChild>
             <Link href={`/debtor/${debtorId}/add-ptp`}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add PTP
@@ -249,6 +258,48 @@ export default function MatterDashboardPage() {
             </Card>
         </div>
       </div>
+      
+      {/* Add to Queue Dialog */}
+      <Dialog open={isQueueDialogOpen} onOpenChange={setIsQueueDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Debtor to Callback Queue</DialogTitle>
+            <DialogDescription>
+              Schedule a specific time to call this debtor back. They will be added to the appropriate queue automatically.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="callback-date">Callback Date</Label>
+              <Input id="callback-date" type="date" defaultValue={new Date().toISOString().split("T")[0]}/>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="callback-time">Callback Time</Label>
+              <Input id="callback-time" type="time" defaultValue="10:00" />
+            </div>
+             <div className="space-y-2">
+                <Label htmlFor="queue-select">Queue</Label>
+                 <Select defaultValue="general-callback">
+                    <SelectTrigger id="queue-select">
+                        <SelectValue placeholder="Select a queue" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="general-callback">General Callback</SelectItem>
+                        <SelectItem value="high-priority-callback">High Priority Callback</SelectItem>
+                        <SelectItem value="supervisor-review">Supervisor Review</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsQueueDialogOpen(false)} disabled={isScheduling}>Cancel</Button>
+            <Button onClick={handleAddToQueue} disabled={isScheduling}>
+                {isScheduling && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                Schedule Callback
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
