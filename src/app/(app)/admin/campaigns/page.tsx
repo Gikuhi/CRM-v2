@@ -1,4 +1,7 @@
 
+"use client";
+
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,16 +10,31 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
-const campaigns = [
-    { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65 },
-    { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500, progress: 40 },
-    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100 },
-    { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80 },
+const initialCampaigns = [
+    { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65, dialMode: 'Auto' as 'Auto' | 'Manual' },
+    { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500, progress: 40, dialMode: 'Auto' as 'Auto' | 'Manual' },
+    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100, dialMode: 'Manual' as 'Auto' | 'Manual' },
+    { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80, dialMode: 'Manual' as 'Auto' | 'Manual' },
 ];
 
 
 export default function CampaignManagementPage() {
+  const [campaigns, setCampaigns] = React.useState(initialCampaigns);
+  const { toast } = useToast();
+
+  const handleDialModeChange = (campaignId: number, newMode: 'Auto' | 'Manual') => {
+    setCampaigns(campaigns.map(c => c.id === campaignId ? { ...c, dialMode: newMode } : c));
+    const campaign = campaigns.find(c => c.id === campaignId);
+    toast({
+        title: `Campaign Updated`,
+        description: `${campaign?.name} dial mode set to ${newMode}.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
        <h1 className="text-3xl font-bold">Campaign Management</h1>
@@ -46,7 +64,7 @@ export default function CampaignManagementPage() {
                     <TableHead>Campaign Name</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Supervisor</TableHead>
+                    <TableHead>Dial Mode</TableHead>
                     <TableHead>Leads</TableHead>
                     <TableHead className="w-[20%]">Progress</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -58,7 +76,18 @@ export default function CampaignManagementPage() {
                         <TableCell className="font-medium">{campaign.name}</TableCell>
                         <TableCell>{campaign.type}</TableCell>
                         <TableCell><Badge variant={campaign.status === 'Active' ? 'default' : 'secondary'}>{campaign.status}</Badge></TableCell>
-                        <TableCell>{campaign.supervisor}</TableCell>
+                        <TableCell>
+                            <div className="flex items-center space-x-2">
+                                <Label htmlFor={`dial-mode-${campaign.id}`} className="text-xs text-muted-foreground">Manual</Label>
+                                <Switch
+                                    id={`dial-mode-${campaign.id}`}
+                                    checked={campaign.dialMode === 'Auto'}
+                                    onCheckedChange={(checked) => handleDialModeChange(campaign.id, checked ? 'Auto' : 'Manual')}
+                                    disabled={campaign.type === 'Inbound'}
+                                />
+                                <Label htmlFor={`dial-mode-${campaign.id}`} className="text-xs text-muted-foreground">Auto</Label>
+                            </div>
+                        </TableCell>
                         <TableCell>{campaign.leads?.toLocaleString() ?? 'N/A'}</TableCell>
                         <TableCell>
                            <div className="flex items-center gap-2">

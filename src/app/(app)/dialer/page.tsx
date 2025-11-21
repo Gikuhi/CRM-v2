@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 type CallStatus = "idle" | "dialing" | "active" | "wrap-up" | "ended";
+// Mock of the current campaign setting. In a real app, this would come from a context or a fetch.
+const currentCampaignDialMode: 'Auto' | 'Manual' = 'Auto'; 
 
 export default function DialerPage() {
   const [callStatus, setCallStatus] = React.useState<CallStatus>("idle");
@@ -31,6 +33,7 @@ export default function DialerPage() {
   const [disposition, setDisposition] = React.useState<string>("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
+  const [campaignMode, setCampaignMode] = React.useState<'Auto' | 'Manual'>(currentCampaignDialMode);
 
   const { toast } = useToast();
   const firestore = useFirestore();
@@ -152,12 +155,13 @@ export default function DialerPage() {
            <Button 
                 size="lg" 
                 onClick={handleStartAutoDialing} 
-                disabled={callStatus !== 'idle'}
+                disabled={callStatus !== 'idle' || campaignMode === 'Manual'}
                 className="w-full"
             >
              <Bot className="mr-2 h-5 w-5"/>
-            {callStatus === 'idle' ? 'Start Auto-Dialing' : 'Auto-Dialer Running...'}
+             {campaignMode === 'Manual' ? 'Auto-Dialing Disabled' : (callStatus === 'idle' ? 'Start Auto-Dialing' : 'Auto-Dialer Running...')}
           </Button>
+          {campaignMode === 'Manual' && <p className="text-xs text-muted-foreground text-center">The current campaign is in manual-only mode. Please select a lead from the list to start a call.</p>}
         </CardContent>
       </Card>
 
@@ -312,5 +316,3 @@ export default function DialerPage() {
     </div>
   );
 }
-
-    
