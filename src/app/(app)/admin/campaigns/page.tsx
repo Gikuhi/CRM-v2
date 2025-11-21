@@ -5,7 +5,7 @@ import * as React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, Upload, MoreHorizontal } from "lucide-react";
+import { Search, PlusCircle, Upload, MoreHorizontal, Loader2 } from "lucide-react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -13,17 +13,23 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const initialCampaigns = [
     { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65, dialMode: 'Auto' as 'Auto' | 'Manual' },
     { id: 2, name: 'New Leads Outreach', type: 'Outbound', status: 'Active', supervisor: 'Beatrice Njeri', leads: 7500, progress: 40, dialMode: 'Auto' as 'Auto' | 'Manual' },
-    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: null, progress: 100, dialMode: 'Manual' as 'Auto' | 'Manual' },
+    { id: 3, name: 'Inbound Customer Service', type: 'Inbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 0, progress: 100, dialMode: 'Manual' as 'Auto' | 'Manual' },
     { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80, dialMode: 'Manual' as 'Auto' | 'Manual' },
 ];
 
 
 export default function CampaignManagementPage() {
   const [campaigns, setCampaigns] = React.useState(initialCampaigns);
+  const [isUploadOpen, setIsUploadOpen] = React.useState(false);
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [selectedCampaign, setSelectedCampaign] = React.useState<string | undefined>(undefined);
   const { toast } = useToast();
 
   const handleDialModeChange = (campaignId: number, newMode: 'Auto' | 'Manual') => {
@@ -34,6 +40,26 @@ export default function CampaignManagementPage() {
         description: `${campaign?.name} dial mode set to ${newMode}.`,
     });
   };
+  
+  const handleUploadLeads = async () => {
+      if (!selectedCampaign) {
+          toast({ variant: 'destructive', title: 'Error', description: 'Please select a campaign.'});
+          return;
+      }
+      setIsUploading(true);
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate upload
+      
+      const newLeadsCount = Math.floor(Math.random() * 500) + 100;
+
+      setCampaigns(campaigns.map(c => c.id === parseInt(selectedCampaign) ? { ...c, leads: (c.leads || 0) + newLeadsCount } : c));
+
+      setIsUploading(false);
+      setIsUploadOpen(false);
+      toast({
+          title: "Leads Assigned Successfully",
+          description: `${newLeadsCount} new leads have been assigned to agents in the "${campaigns.find(c => c.id === parseInt(selectedCampaign))?.name}" campaign.`,
+      });
+  }
 
   return (
     <div className="space-y-6">
@@ -54,7 +80,7 @@ export default function CampaignManagementPage() {
                 />
             </div>
             <div className="flex gap-2">
-                <Button variant="outline"><Upload className="mr-2 h-4 w-4"/> Upload Lead List</Button>
+                <Button variant="outline" onClick={() => setIsUploadOpen(true)}><Upload className="mr-2 h-4 w-4"/> Upload Lead List</Button>
                 <Button><PlusCircle className="mr-2 h-4 w-4"/> New Campaign</Button>
             </div>
           </div>
@@ -112,6 +138,44 @@ export default function CampaignManagementPage() {
           </Table>
         </CardContent>
       </Card>
+      
+      {/* Upload Leads Dialog */}
+      <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upload Lead List</DialogTitle>
+            <DialogDescription>
+              Assign debtors to agents by uploading an Excel file. The file should contain primary keys for debtors and the assigned agent IDs.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="campaign-select">Select Campaign</Label>
+              <Select onValueChange={setSelectedCampaign}>
+                <SelectTrigger id="campaign-select">
+                  <SelectValue placeholder="Choose a campaign to add leads to" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campaigns.filter(c => c.type === 'Outbound').map(c => (
+                    <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lead-file">Lead File (Excel)</Label>
+              <Input id="lead-file" type="file" accept=".xls,.xlsx" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsUploadOpen(false)} disabled={isUploading}>Cancel</Button>
+            <Button onClick={handleUploadLeads} disabled={isUploading}>
+              {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Upload className="mr-2 h-4 w-4"/>}
+              Upload and Assign
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
