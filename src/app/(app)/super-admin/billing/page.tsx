@@ -1,19 +1,154 @@
 
+"use client";
+
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { organizations } from "@/lib/data";
+import { MoreHorizontal, PlusCircle, Loader2 } from "lucide-react";
+import { organizations as initialOrganizations } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { Organization } from "@/lib/types";
+
+type ActionType = "changePlan" | "viewInvoices" | "cancelSubscription" | null;
 
 export default function SuperAdminBillingPage() {
+  const [organizations, setOrganizations] = React.useState<Organization[]>(initialOrganizations);
+  const [selectedOrg, setSelectedOrg] = React.useState<Organization | null>(null);
+  const [actionType, setActionType] = React.useState<ActionType>(null);
+  const [newPlan, setNewPlan] = React.useState<Organization['plan'] | "">("");
+
+  const { toast } = useToast();
+
   const plans = [
     { name: "Basic", price: "$99/mo", features: "5 Users, 1 Campaign, Basic Reporting" },
     { name: "Pro", price: "$299/mo", features: "20 Users, 10 Campaigns, Advanced Reporting" },
     { name: "Enterprise", price: "Custom", features: "Unlimited Users, Unlimited Campaigns, Custom Features" },
   ];
+  
+  const handleActionClick = (org: Organization, type: ActionType) => {
+    setSelectedOrg(org);
+    setActionType(type);
+    if (type === 'changePlan') {
+        setNewPlan(org.plan);
+    }
+  };
+
+  const closeDialog = () => {
+    setSelectedOrg(null);
+    setActionType(null);
+    setNewPlan("");
+  };
+
+  const handleChangePlan = () => {
+    if (!selectedOrg || !newPlan) return;
+    setOrganizations(orgs => orgs.map(o => o.id === selectedOrg.id ? {...o, plan: newPlan as Organization['plan']} : o));
+    toast({ title: "Plan Changed", description: `${selectedOrg.name}'s plan has been updated to ${newPlan}.`});
+    closeDialog();
+  };
+
+  const handleCancelSubscription = () => {
+    if (!selectedOrg) return;
+    setOrganizations(orgs => orgs.map(o => o.id === selectedOrg.id ? {...o, status: 'Inactive'} : o));
+    toast({ title: "Subscription Cancelled", description: `The subscription for ${selectedOrg.name} has been cancelled.`});
+    closeDialog();
+  };
+
+  const renderDialogContent = () => {
+    if (!selectedOrg || !actionType) return null;
+
+    switch(actionType) {
+        case 'changePlan':
+            return (
+                 <>
+                    <DialogHeader>
+                        <DialogTitle>Change Plan for {selectedOrg.name}</DialogTitle>
+                        <DialogDescription>
+                            Current plan: <Badge variant="secondary">{selectedOrg.plan}</Badge>. Select a new plan below.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <Select value={newPlan} onValueChange={(value) => setNewPlan(value as Organization['plan'])}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a new plan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Basic">Basic - $99/mo</SelectItem>
+                                <SelectItem value="Pro">Pro - $299/mo</SelectItem>
+                                <SelectItem value="Enterprise">Enterprise - Custom</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={closeDialog}>Cancel</Button>
+                        <Button onClick={handleChangePlan}>Confirm Change</Button>
+                    </DialogFooter>
+                </>
+            );
+        case 'viewInvoices':
+            return (
+                <>
+                    <DialogHeader>
+                        <DialogTitle>Invoice History for {selectedOrg.name}</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Amount</TableHead>
+                                    <TableHead className="text-right">Status</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>2024-08-01</TableCell>
+                                    <TableCell>$299.00</TableCell>
+                                    <TableCell className="text-right"><Badge>Paid</Badge></TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>2024-07-01</TableCell>
+                                    <TableCell>$299.00</TableCell>
+                                    <TableCell className="text-right"><Badge>Paid</Badge></TableCell>
+                                </TableRow>
+                                 <TableRow>
+                                    <TableCell>2024-06-01</TableCell>
+                                    <TableCell>$299.00</TableCell>
+                                    <TableCell className="text-right"><Badge>Paid</Badge></TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+                    <DialogFooter>
+                        <Button onClick={closeDialog}>Close</Button>
+                    </DialogFooter>
+                </>
+            );
+        case 'cancelSubscription':
+             return (
+                <>
+                    <DialogHeader>
+                        <DialogTitle>Cancel Subscription for {selectedOrg.name}?</DialogTitle>
+                        <DialogDescription>
+                            This will mark the organization as inactive at the end of the current billing cycle. Are you sure?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={closeDialog}>Keep Subscription</Button>
+                        <Button variant="destructive" onClick={handleCancelSubscription}>Confirm Cancellation</Button>
+                    </DialogFooter>
+                </>
+             );
+        default:
+            return null;
+    }
+  }
+
 
   return (
     <div className="space-y-6">
@@ -50,7 +185,7 @@ export default function SuperAdminBillingPage() {
                                     <Badge variant={org.status === "Active" ? "default" : "destructive"}>{org.status}</Badge>
                                 </TableCell>
                                 <TableCell className="hidden sm:table-cell">2024-09-01</TableCell>
-                                <TableCell>
+                                <TableCell className="text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                     <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -60,9 +195,9 @@ export default function SuperAdminBillingPage() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem>Change Plan</DropdownMenuItem>
-                                    <DropdownMenuItem>View Invoices</DropdownMenuItem>
-                                    <DropdownMenuItem>Cancel Subscription</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleActionClick(org, 'changePlan')}>Change Plan</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleActionClick(org, 'viewInvoices')}>View Invoices</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleActionClick(org, 'cancelSubscription')} className="text-destructive">Cancel Subscription</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 </TableCell>
@@ -100,6 +235,12 @@ export default function SuperAdminBillingPage() {
                 </Card>
             </TabsContent>
         </Tabs>
+        
+        <Dialog open={!!actionType} onOpenChange={(open) => !open && closeDialog()}>
+            <DialogContent>
+                {renderDialogContent()}
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
