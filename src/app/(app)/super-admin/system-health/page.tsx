@@ -30,14 +30,14 @@ export default function SuperAdminSystemHealthPage() {
             {systemHealthStats.map(stat => (
               <div key={stat.metric} className="flex items-center justify-between p-3 border rounded-lg">
                 <div>
-                    <p className="font-medium flex items-center gap-2">
+                    <div className="font-medium flex items-center gap-2">
                         <div className={cn("w-3 h-3 rounded-full", {
                             "bg-green-500": stat.status === "Healthy",
                             "bg-yellow-500": stat.status === "Warning",
                             "bg-red-500": stat.status === "Critical",
                         })}></div>
                         {stat.metric}
-                    </p>
+                    </div>
                     <p className="text-sm text-muted-foreground ml-5">{stat.details}</p>
                 </div>
                 <Badge variant="outline">{stat.value}</Badge>
