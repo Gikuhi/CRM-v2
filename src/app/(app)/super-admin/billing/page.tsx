@@ -69,7 +69,11 @@ export default function SuperAdminBillingPage() {
                     <DialogHeader>
                         <DialogTitle>Change Plan for {selectedOrg.name}</DialogTitle>
                         <DialogDescription>
-                            Current plan: <Badge variant="secondary">{selectedOrg.plan}</Badge>. Select a new plan below.
+                            <div>
+                                <span>Current plan: </span>
+                                <Badge variant="secondary">{selectedOrg.plan}</Badge>
+                                <span>. Select a new plan below.</span>
+                            </div>
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
