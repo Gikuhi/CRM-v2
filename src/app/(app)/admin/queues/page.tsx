@@ -158,8 +158,8 @@ export default function QueueAndRoutingPage() {
                     </div>
                     <div className="space-y-4">
                         <Label className="flex items-center gap-2"><Filter className="h-4 w-4"/> Disposition Filters</Label>
-                        <div className="p-4 border rounded-md space-y-4">
-                        <div className="flex items-center space-x-2">
+                        <div className="p-4 border rounded-md grid grid-cols-2 gap-4">
+                            <div className="flex items-center space-x-2">
                                 <Checkbox id="filter-broken-ptp" name="filter-broken-ptp"/>
                                 <Label htmlFor="filter-broken-ptp">Broken PTPs</Label>
                             </div>
@@ -169,7 +169,27 @@ export default function QueueAndRoutingPage() {
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Checkbox id="filter-no-contact" name="filter-no-contact"/>
-                                <Label htmlFor="filter-no-contact">No Contact in Last 7 Days</Label>
+                                <Label htmlFor="filter-no-contact">No Contact (7+ days)</Label>
+                            </div>
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="filter-disputed" name="filter-disputed"/>
+                                <Label htmlFor="filter-disputed">Disputed Debt</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="filter-busy" name="filter-busy"/>
+                                <Label htmlFor="filter-busy">Line Busy</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="filter-invalid" name="filter-invalid"/>
+                                <Label htmlFor="filter-invalid">Invalid Number</Label>
+                            </div>
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="filter-pay-today" name="filter-pay-today"/>
+                                <Label htmlFor="filter-pay-today">Will Pay Today</Label>
+                            </div>
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="filter-awaiting-payment" name="filter-awaiting-payment"/>
+                                <Label htmlFor="filter-awaiting-payment">Awaiting Confirmation</Label>
                             </div>
                         </div>
                     </div>
