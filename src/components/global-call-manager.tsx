@@ -72,7 +72,7 @@ export function GlobalCallManager() {
           <DialogHeader>
             <DialogTitle>In Call with: {currentLead?.name}</DialogTitle>
             <DialogDescription>
-              Account Balance: ${currentLead?.amountDue.toFixed(2)} | Last Contact: {currentLead?.lastContact}
+              Account Balance: ${typeof currentLead?.amountDue === 'number' ? currentLead.amountDue.toFixed(2) : '0.00'} | Last Contact: {currentLead?.lastContact}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
