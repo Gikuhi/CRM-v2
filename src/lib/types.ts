@@ -1,6 +1,7 @@
 
 
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -64,6 +65,8 @@ export type DialerLead = {
   phone: string;
   amountDue: number;
   lastContact: string;
+  account?: string;
+  balance?: number;
 };
 
 export type AgentPerformance = {
@@ -278,7 +281,7 @@ export type DebtorNote = {
 };
 
 export type AgentDashboardStats = {
-  nextDebtor: { name: string; account: string; balance: number };
+  nextDebtor: { name: string; account: string; balance: number, id: string; phone: string; amountDue: number; lastContact: string; };
   queueProgress: { completed: number; total: number };
   callOutcomes: { rpc: number; noAnswer: number; voicemail: number; wrongNumber: number };
   ptpToday: { debtor: string; time: string }[];

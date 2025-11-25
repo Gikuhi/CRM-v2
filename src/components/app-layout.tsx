@@ -39,6 +39,8 @@ import {
   ShieldCheck,
   LineChart,
   ListTodo,
+  ShieldQuestion,
+  BellRing,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -75,16 +77,22 @@ import { useFirestore, useMemoFirebase } from "@/firebase/provider";
 import type { UserProfile } from "@/lib/types";
 import { Skeleton } from "./ui/skeleton";
 import { NotificationBell } from "./notifications/notification-bell";
+import { GlobalCallManager } from "@/components/global-call-manager";
 
 const agentNavItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/debtor-profile", icon: Users, label: "Leads" },
   { href: "/dialer", icon: Phone, label: "Dialer" },
+  { href: "/incoming-call", icon: Phone, label: "Incoming Call" },
+  { href: "/ptp-capture", icon: Banknote, label: "PTP Capture" },
+  { href: "/wrap-matter", icon: Save, label: "Wrap Matter" },
+  { href: "/matter-dashboard", icon: LayoutGrid, label: "Matter Dashboard" },
   { href: "/call-logs", icon: Phone, label: "Call Logs" },
   { href: "/call-wraps", icon: Save, label: "Call Wraps" },
   { href: "/messaging", icon: MessageSquare, label: "Messages" },
   { href: "/analytics", icon: TrendingUp, label: "My Stats" },
   { href: "/tasks", icon: ListChecks, label: "Follow-ups" },
+  { href: "/notifications", icon: BellRing, label: "Notifications" },
   { href: "/settings", icon: Settings, label: "Settings" },
   { href: "/help", icon: HelpCircle, label: "Help" },
 ];
@@ -100,7 +108,7 @@ const adminNavItems = [
     { href: "/admin/compliance", icon: ShieldCheck, label: "Compliance & QA"},
     { href: "/admin/queues", icon: ListTodo, label: "Queues & Routing"},
     { href: "/admin/audit-logs", icon: FileSearch, label: "Audit Logs"},
-    { href: "/admin/roles", icon: Users, label: "Roles"},
+    { href: "/admin/roles", icon: ShieldQuestion, label: "Roles"},
     { href: "/admin/system-settings", icon: Settings2, label: "Org Settings" },
     { href: "/admin/billing", icon: Banknote, label: "Billing" },
     { href: "/settings", icon: Settings, label: "My Settings" },
@@ -109,11 +117,10 @@ const adminNavItems = [
 const teamManagerNavItems = [
     { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
     { href: "/team-management", icon: Users2, label: "Agents" },
-    { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
-    { href: "/analytics", icon: BarChart3, label: "Reports" },
-    { href: "/messaging", icon: MessageSquare, label: "Messages" },
+    { href: "/admin/call-monitoring", icon: AudioLines, label: "Live Call Monitoring" },
+    { href: "/call-monitoring", icon: AudioLines, label: "Team Call Review" },
+    { href: "/reports", icon: BarChart3, label: "Reports" },
     { href: "/tasks", icon: CalendarClock, label: "Schedule" },
-    { href: "/call-monitoring", icon: AudioLines, label: "Call Monitoring" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
@@ -149,11 +156,12 @@ const pageTitles: { [key: string]: string } = {
   "/help": "Help & Support",
   "/team-management": "Agent Management",
   "/reports": "Reports & Analytics",
-  "/call-monitoring": "Call Monitoring",
+  "/call-monitoring": "Team Call Review",
   "/user-management": "User Management",
   "/settings": "Settings",
   "/admin-dashboard": "Supervisor Dashboard",
   "/pages-list": "Pages List",
+  "/notifications": "Notifications",
   "/admin/dashboard": "Admin Dashboard",
   "/admin/teams": "Teams Management",
   "/admin/user-management": "User & Role Management",
@@ -248,7 +256,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                       <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                           <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={pathname.startsWith(item.href) && (item.href !== '/admin/call-monitoring' || pathname === item.href)}
                             tooltip={item.label}
                           >
                             <item.icon />
@@ -266,6 +274,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
+    <>
+    <GlobalCallManager />
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
@@ -341,5 +351,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 p-4 md:p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
+    </>
   );
 }

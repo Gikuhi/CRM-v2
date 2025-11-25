@@ -14,21 +14,15 @@ import { Button } from "@/components/ui/button";
 import { Phone, PhoneOff, Loader2 } from "lucide-react";
 import { agentStats } from "@/lib/data";
 import { cn } from "@/lib/utils";
-
-type CallStatus = "idle" | "dialing" | "active";
+import { useCall } from "@/context/CallProvider";
 
 export function NextDebtor() {
   const nextDebtor = agentStats.nextDebtor;
-  const [callStatus, setCallStatus] = React.useState<CallStatus>("idle");
+  const { startCall, callStatus } = useCall();
 
   const handleCallClick = () => {
     if (callStatus === "idle") {
-      setCallStatus("dialing");
-      setTimeout(() => {
-        setCallStatus("active");
-      }, 1500); // Simulate dialing time
-    } else {
-      setCallStatus("idle");
+      startCall(nextDebtor);
     }
   };
 
@@ -86,7 +80,7 @@ export function NextDebtor() {
             callStatus === "active" && "bg-destructive hover:bg-destructive/90"
           )}
           onClick={handleCallClick}
-          disabled={callStatus === "dialing"}
+          disabled={callStatus === "dialing" || callStatus === "active"}
         >
           {getButtonContent()}
         </Button>

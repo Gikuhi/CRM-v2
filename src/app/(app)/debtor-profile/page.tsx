@@ -10,8 +10,10 @@ import { Eye, Phone } from "lucide-react";
 import { dialerLeads } from "@/lib/data";
 import React from "react";
 import Link from "next/link";
+import { useCall } from "@/context/CallProvider";
 
 export default function DebtorProfilePage() {
+  const { startCall } = useCall();
 
   return (
     <>
@@ -48,7 +50,7 @@ export default function DebtorProfilePage() {
                         View
                       </Button>
                     </Link>
-                     <Button size="sm">
+                     <Button size="sm" onClick={() => startCall(lead)}>
                       <Phone className="mr-2 h-4 w-4" />
                       Call
                     </Button>
