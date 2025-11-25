@@ -116,6 +116,7 @@ const adminNavItems = [
 const teamManagerNavItems = [
     { href: "/admin-dashboard", icon: LayoutGrid, label: "Dashboard" },
     { href: "/team-management", icon: Users2, label: "Agents" },
+    { href: "/admin/campaigns", icon: LifeBuoy, label: "Campaigns" },
     { href: "/admin/call-monitoring", icon: AudioLines, label: "Live Call Monitoring" },
     { href: "/call-monitoring", icon: AudioLines, label: "Team Call Review" },
     { href: "/reports", icon: BarChart3, label: "Reports" },
