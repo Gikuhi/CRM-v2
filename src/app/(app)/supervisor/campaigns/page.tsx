@@ -16,10 +16,10 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { initialCampaigns } from "@/lib/data";
+import { mockCampaigns } from "@/lib/data";
 
 export default function SupervisorCampaignManagementPage() {
-  const [campaigns, setCampaigns] = React.useState(initialCampaigns.filter(c => c.supervisor === 'Beatrice Njeri'));
+  const [campaigns, setCampaigns] = React.useState(mockCampaigns.filter(c => c.supervisor === 'Beatrice Njeri'));
   const { toast } = useToast();
 
   const handleDialModeChange = (campaignId: number, newMode: 'Auto' | 'Manual') => {
