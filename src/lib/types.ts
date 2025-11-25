@@ -2,6 +2,7 @@
 
 
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -302,5 +303,14 @@ export type AuditLog = {
     resourceId: string;
     date: string;
     organization?: string;
+};
+
+export type LiveCall = {
+  id: string;
+  agentName: string;
+  debtorName: string;
+  duration: string;
+  status: 'Ringing' | 'In Progress';
+  teamName: string;
 };
     

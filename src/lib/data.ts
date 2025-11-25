@@ -3,7 +3,7 @@
 
 
 
-import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification, AuditLog } from './types';
+import type { Stat, Debtor, PerformanceMetric, CallLog, Task, Conversation, Message, DialerLead, AgentPerformance, CollectionFunnelData, TeamMember, User, PtpOffer, AdminCallStats, AdminCollectionsStat, UserProfile, SuperAdminStat, SystemHealthStat, RecentActivity, Organization, CallDispositionLog, Team, DebtorProfile, PtpRecord, InteractionLog, DebtorNote, AgentDashboardStats, Notification, AuditLog, LiveCall } from './types';
 import { Phone, CheckCircle, Target, Banknote } from 'lucide-react';
 
 export const dashboardStats: Stat[] = [
@@ -321,7 +321,7 @@ export const mockDebtorNotes: DebtorNote[] = [
 ];
 
 export const agentStats: AgentDashboardStats = {
-  nextDebtor: { name: "Mary Wanjiku", account: "ACC12345", balance: 34000 },
+  nextDebtor: { name: "Mary Wanjiku", account: "ACC12345", balance: 34000, id: "d1", phone: "555-0101", amountDue: 750, lastContact: "2024-07-20" },
   queueProgress: { completed: 12, total: 50 },
   callOutcomes: { rpc: 4, noAnswer: 6, voicemail: 3, wrongNumber: 1 },
   ptpToday: [{ debtor: "John Doe", time: "2:00 PM" }],
@@ -333,5 +333,11 @@ export const mockNotifications: Notification[] = [
   { id: 3, text: "Your call with Jane Smith was successful.", time: "3h ago", read: true, type: 'Success' },
   { id: 4, text: "System maintenance is scheduled for 10 PM.", time: "yesterday", read: true, type: 'System' },
   { id: 5, text: "PTP from Mike Ross is now overdue.", time: "2 days ago", read: true, type: 'PTP' },
+];
+
+export const mockLiveCalls: LiveCall[] = [
+    { id: 'lc-1', agentName: 'Peris Wanyangi', debtorName: 'John Smith', duration: '01:23', status: 'In Progress', teamName: 'Team Alpha' },
+    { id: 'lc-2', agentName: 'Samuel Mwangi', debtorName: 'Jane Doe', duration: '00:15', status: 'Ringing', teamName: 'Team Bravo' },
+    { id: 'lc-3', agentName: 'Grace Akinyi', debtorName: 'Peter Jones', duration: '05:48', status: 'In Progress', teamName: 'Team Bravo' },
 ];
     
