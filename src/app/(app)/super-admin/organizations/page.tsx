@@ -24,6 +24,8 @@ import type { Organization } from "@/lib/types";
 const orgSchema = z.object({
   name: z.string().min(2, "Organization name must be at least 2 characters."),
   admin: z.string().min(2, "Admin name is required."),
+  adminEmail: z.string().email("A valid email for the admin is required."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
   plan: z.enum(["Basic", "Pro", "Enterprise"]),
 });
 
@@ -39,6 +41,8 @@ export default function SuperAdminOrganizationsPage() {
     defaultValues: {
       name: "",
       admin: "",
+      adminEmail: "",
+      password: "",
       plan: "Basic",
     },
   });
@@ -131,7 +135,7 @@ export default function SuperAdminOrganizationsPage() {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
             <FormField
               control={form.control}
               name="name"
@@ -145,7 +149,7 @@ export default function SuperAdminOrganizationsPage() {
                 </FormItem>
               )}
             />
-            <FormField
+             <FormField
               control={form.control}
               name="admin"
               render={({ field }) => (
@@ -153,6 +157,32 @@ export default function SuperAdminOrganizationsPage() {
                   <FormLabel>Admin Name</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., Jane Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="adminEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Admin Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="e.g., admin@acme.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Admin Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Create a strong password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
