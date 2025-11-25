@@ -2,6 +2,9 @@
 "use client";
 
 import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,9 +16,11 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { users as allUsers } from "@/lib/data";
 
 const initialCampaigns = [
     { id: 1, name: 'Q3 Financial Push', type: 'Outbound', status: 'Active', supervisor: 'Andrew Mayaka', leads: 5000, progress: 65, dialMode: 'Auto' as 'Auto' | 'Manual' },
@@ -24,13 +29,32 @@ const initialCampaigns = [
     { id: 4, name: 'Past-Due Follow-up', type: 'Outbound', status: 'Paused', supervisor: 'Beatrice Njeri', leads: 2500, progress: 80, dialMode: 'Manual' as 'Auto' | 'Manual' },
 ];
 
+const campaignSchema = z.object({
+  name: z.string().min(3, "Campaign name must be at least 3 characters."),
+  type: z.enum(["Inbound", "Outbound"]),
+  supervisor: z.string().min(1, "A supervisor is required."),
+});
+
+type CampaignFormValues = z.infer<typeof campaignSchema>;
 
 export default function CampaignManagementPage() {
   const [campaigns, setCampaigns] = React.useState(initialCampaigns);
   const [isUploadOpen, setIsUploadOpen] = React.useState(false);
+  const [isNewCampaignOpen, setIsNewCampaignOpen] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [selectedCampaign, setSelectedCampaign] = React.useState<string | undefined>(undefined);
   const { toast } = useToast();
+
+  const supervisors = allUsers.filter(u => u.role === 'Supervisor' || u.role === 'Admin');
+
+  const form = useForm<CampaignFormValues>({
+    resolver: zodResolver(campaignSchema),
+    defaultValues: {
+      name: "",
+      type: "Outbound",
+      supervisor: "",
+    },
+  });
 
   const handleDialModeChange = (campaignId: number, newMode: 'Auto' | 'Manual') => {
     setCampaigns(campaigns.map(c => c.id === campaignId ? { ...c, dialMode: newMode } : c));
@@ -59,7 +83,27 @@ export default function CampaignManagementPage() {
           title: "Leads Assigned Successfully",
           description: `${newLeadsCount} new leads have been assigned to agents in the "${campaigns.find(c => c.id === parseInt(selectedCampaign))?.name}" campaign.`,
       });
-  }
+  };
+
+  const onNewCampaignSubmit = (values: CampaignFormValues) => {
+    const newCampaign = {
+      id: campaigns.length + 1,
+      name: values.name,
+      type: values.type,
+      status: 'Active',
+      supervisor: values.supervisor,
+      leads: 0,
+      progress: 0,
+      dialMode: 'Manual' as 'Auto' | 'Manual',
+    };
+    setCampaigns([newCampaign, ...campaigns]);
+    toast({
+      title: "Campaign Created",
+      description: `The "${values.name}" campaign has been successfully created.`,
+    });
+    setIsNewCampaignOpen(false);
+    form.reset();
+  };
 
   return (
     <div className="space-y-6">
@@ -81,7 +125,7 @@ export default function CampaignManagementPage() {
             </div>
             <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setIsUploadOpen(true)}><Upload className="mr-2 h-4 w-4"/> Upload Lead List</Button>
-                <Button><PlusCircle className="mr-2 h-4 w-4"/> New Campaign</Button>
+                <Button onClick={() => setIsNewCampaignOpen(true)}><PlusCircle className="mr-2 h-4 w-4"/> New Campaign</Button>
             </div>
           </div>
           <Table>
@@ -174,6 +218,87 @@ export default function CampaignManagementPage() {
               Upload and Assign
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* New Campaign Dialog */}
+       <Dialog open={isNewCampaignOpen} onOpenChange={setIsNewCampaignOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Campaign</DialogTitle>
+            <DialogDescription>
+              Fill out the details below to create a new campaign.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onNewCampaignSubmit)} className="space-y-6 py-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Campaign Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Q4 Collections Drive" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Campaign Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Outbound">Outbound</SelectItem>
+                          <SelectItem value="Inbound">Inbound</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="supervisor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Assign Supervisor</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select supervisor" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {supervisors.map(s => (
+                            <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="ghost" onClick={() => setIsNewCampaignOpen(false)} disabled={form.formState.isSubmitting}>Cancel</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                  Create Campaign
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </div>
