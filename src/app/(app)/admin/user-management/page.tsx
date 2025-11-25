@@ -19,7 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useCollection } from "@/firebase/firestore/use-collection";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { useFirestore, useAuth, useMemoFirebase } from "@/firebase";
+import { useFirestore, useAuth, useMemoFirebase, useUser } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import type { UserProfile } from "@/lib/types";
@@ -40,8 +40,12 @@ export default function UserManagementMasterPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
   const auth = useAuth();
+  const { user: currentUser } = useUser();
 
-  const usersRef = useMemoFirebase(() => collection(firestore, 'users'), [firestore]);
+  const usersRef = useMemoFirebase(() => {
+    if (!currentUser) return null;
+    return collection(firestore, 'users');
+  }, [firestore, currentUser]);
   const { data: users, isLoading } = useCollection<UserProfile>(usersRef);
   
   const supervisors = users?.filter(u => u.role === 'Supervisor' || u.role === 'Admin') || [];
