@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle, CalendarPlus, Loader2, Filter } from "lucide-react";
+import { ChevronDown, FileText, Landmark, User, Workflow, CheckCircle, PlusCircle, CalendarPlus, Loader2, Filter, Phone, Mail, MapPin } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,18 @@ const InfoItem = ({ label, value }: { label: string; value: string }) => (
     <p className="font-semibold">{value}</p>
   </div>
 );
+
+const DetailRow = ({ icon, label, value }: { icon: React.ElementType, label: string, value: string }) => {
+    const Icon = icon;
+    return (
+        <div className="flex items-center gap-3">
+            <Icon className="h-4 w-4 text-muted-foreground" />
+            <div className="text-sm">
+                <span className="font-medium">{label}:</span> {value}
+            </div>
+        </div>
+    )
+};
 
 export default function MatterDashboardPage() {
   const [isRpcConfirmed, setIsRpcConfirmed] = React.useState(false);
@@ -226,32 +238,28 @@ export default function MatterDashboardPage() {
                             <AccordionTrigger>
                                 <User className="mr-2 h-4 w-4"/> Debtor Information
                             </AccordionTrigger>
-                            <AccordionContent>
-                                More debtor details can be displayed here.
+                            <AccordionContent className="space-y-3 pt-2">
+                                <DetailRow icon={Phone} label="Phone" value="0712 345 678" />
+                                <DetailRow icon={Mail} label="Email" value="joyce.maina@example.com" />
+                                <DetailRow icon={MapPin} label="Address" value="123 Nairobi, Kenya" />
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-2">
                             <AccordionTrigger>
                                 <Landmark className="mr-2 h-4 w-4" /> Payment History
                             </AccordionTrigger>
-                            <AccordionContent>
-                                A table or list of past payments can go here.
+                            <AccordionContent className="space-y-3 pt-2">
+                                <p className="text-sm">Last Payment: <strong>KES 1,000</strong> on <strong>15 May 2024</strong></p>
+                                <p className="text-sm">Total Paid: <strong>KES 5,500</strong></p>
+                                <p className="text-sm">PTPs Kept: <strong>2 / 5</strong></p>
                             </AccordionContent>
                         </AccordionItem>
                          <AccordionItem value="item-3">
                             <AccordionTrigger>
                                 <Workflow className="mr-2 h-4 w-4" /> Linked Matters
                             </AccordionTrigger>
-                            <AccordionContent>
-                                Information about linked accounts.
-                            </AccordionContent>
-                        </AccordionItem>
-                         <AccordionItem value="item-4">
-                            <AccordionTrigger>
-                                <FileText className="mr-2 h-4 w-4" /> Document Upload
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                Interface for uploading documents related to the matter.
+                            <AccordionContent className="pt-2">
+                                <p className="text-sm text-muted-foreground">No linked matters for this debtor.</p>
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
@@ -324,3 +332,5 @@ export default function MatterDashboardPage() {
     </div>
   );
 }
+
+    
