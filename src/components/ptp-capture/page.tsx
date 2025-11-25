@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -9,8 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ptpOffers, type PtpOffer } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
 
 const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => void }) => {
+  const router = useRouter();
   const headers = [
     "Discount Offer",
     "Once Off Matter Level Settlement",
@@ -53,8 +56,12 @@ const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => 
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Promise to Pay Offer</CardTitle>
+        <Button variant="outline" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -71,11 +78,11 @@ const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => 
             <tbody>
               {labels.map(label => (
                 <tr key={label.key}>
-                  <td className="p-2 font-semibold border border-border bg-muted">{label.name}</td>
+                  <td className="p-2 font-semibold border border-border bg-accent/30">{label.name}</td>
                   {ptpOffers.map(offer => (
-                    <td key={offer.id} className={cn("p-2 border border-border text-center", (offer[label.key as keyof PtpOffer] === 0 || (typeof offer[label.key as keyof PtpOffer] === 'number' && offer[label.key as keyof PtpOffer] > 900)) && 'text-accent-danger')}>
+                    <td key={offer.id} className={cn("p-2 border border-border text-center", (offer[label.key as keyof PtpOffer] === 0 || (typeof offer[label.key as keyof PtpOffer] === 'number' && offer[label.key as keyof PtpOffer] > 900)) && 'text-red-500')}>
                       {label.key === 'capitalDiscount' || label.key === 'interestDiscount' || label.key === 'feeDiscount' ? 
-                       (offer[label.key as keyof PtpOffer] ? `${offer[label.key as keyof PtpOffer]}%` : '0%') :
+                       (offer[label.key as keyof PtpOffer] ? `${"''" + offer[label.key as keyof PtpOffer]}%` : '0%') :
                        offer[label.key as keyof PtpOffer]?.toLocaleString()
                       }
                     </td>
@@ -83,7 +90,7 @@ const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => 
                 </tr>
               ))}
               <tr>
-                <td className="p-0 font-semibold border border-border bg-muted"><Button variant="ghost" className="w-full rounded-none justify-start p-2">View Payment Methods</Button></td>
+                <td className="p-0 font-semibold border border-border bg-accent/30"><Button variant="ghost" className="w-full rounded-none justify-start p-2">View Payment Methods</Button></td>
                 {ptpOffers.map(offer => (
                   <td key={offer.id} className="p-0 border border-border">
                     {getAction(offer.action, offer)}
@@ -107,7 +114,7 @@ const PtpConfirmation = ({ onBack, onConclude }: { onBack: () => void; onConclud
             <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4 p-4 border rounded-lg">
-                         <h3 className="font-semibold text-lg text-primary">Payment Details</h3>
+                         <h3 className="font-semibold text-lg text-accent">Payment Details</h3>
                          <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor="payment-method">Payment Method</Label>
@@ -152,7 +159,7 @@ const PtpConfirmation = ({ onBack, onConclude }: { onBack: () => void; onConclud
                          </div>
                     </div>
                     <div className="space-y-4 p-4 border rounded-lg">
-                        <h3 className="font-semibold text-lg text-primary">Debtor Details</h3>
+                        <h3 className="font-semibold text-lg text-accent">Debtor Details</h3>
                         <div>
                             <Label htmlFor="debtor-name">Debtor Name</Label>
                             <Input id="debtor-name" defaultValue="RICHARD MUSYOKA" readOnly/>
@@ -169,7 +176,7 @@ const PtpConfirmation = ({ onBack, onConclude }: { onBack: () => void; onConclud
                 </div>
             </CardContent>
              <CardFooter className="flex justify-end gap-4">
-                <Button variant="outline" onClick={onBack}>Decline PTP</Button>
+                <Button variant="outline" onClick={onBack}>Back</Button>
                 <Button onClick={onConclude}>Conclude PTP</Button>
             </CardFooter>
         </Card>
