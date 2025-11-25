@@ -1,3 +1,6 @@
+
+"use client";
+
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -6,10 +9,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { conversations, messages, templates } from "@/lib/data";
+import { conversations as initialConversations, messages as initialMessages, templates } from "@/lib/data";
+import type { Conversation, Message } from "@/lib/types";
 import { SendHorizonal, Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const conversationMessages: { [key: string]: Message[] } = {
+    'c1': initialMessages,
+    'c2': [
+        { id: 'm4', sender: 'System', content: 'Reminder: System maintenance this Friday at 10 PM.', timestamp: 'Yesterday', isCurrentUser: false },
+    ],
+    'c3': [
+        { id: 'm5', sender: 'Grace Akinyi', content: 'Can you help me with the Jones account?', timestamp: '11:00 AM', isCurrentUser: false },
+        { id: 'm6', sender: 'You', content: 'Sure, what do you need?', timestamp: '11:01 AM', isCurrentUser: true },
+    ]
+};
+
 
 export default function MessagingPage() {
+  const [selectedConvo, setSelectedConvo] = React.useState<Conversation>(initialConversations[0]);
+  const [messages, setMessages] = React.useState<Message[]>(conversationMessages[initialConversations[0].id]);
+  const [newMessage, setNewMessage] = React.useState("");
+
+  const handleSelectConvo = (convo: Conversation) => {
+    setSelectedConvo(convo);
+    setMessages(conversationMessages[convo.id] || []);
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newMessage.trim() === "") return;
+
+    const newMsg: Message = {
+      id: `m${Date.now()}`,
+      sender: "You",
+      content: newMessage,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isCurrentUser: true,
+    };
+
+    setMessages([...messages, newMsg]);
+    setNewMessage("");
+  };
+
   return (
     <Tabs defaultValue="chat" className="h-full">
       <TabsList className="grid w-full grid-cols-2">
@@ -25,9 +67,16 @@ export default function MessagingPage() {
             <CardContent className="p-0">
                 <ScrollArea className="h-[calc(100vh-18rem)]">
                     <div className="flex flex-col gap-1 p-2">
-                    {conversations.map((convo, index) => (
+                    {initialConversations.map((convo, index) => (
                         <React.Fragment key={convo.id}>
-                        <Button variant="ghost" className="w-full justify-start h-auto p-2">
+                        <Button 
+                            variant="ghost" 
+                            className={cn(
+                                "w-full justify-start h-auto p-2",
+                                selectedConvo?.id === convo.id && "bg-muted"
+                            )}
+                            onClick={() => handleSelectConvo(convo)}
+                        >
                             <Avatar className="h-10 w-10 mr-3">
                                 <AvatarFallback>{convo.avatar}</AvatarFallback>
                             </Avatar>
@@ -36,7 +85,7 @@ export default function MessagingPage() {
                                 <p className="text-xs text-muted-foreground truncate max-w-40">{convo.lastMessage}</p>
                             </div>
                         </Button>
-                         {index < conversations.length - 1 && <Separator />}
+                         {index < initialConversations.length - 1 && <Separator />}
                         </React.Fragment>
                     ))}
                     </div>
@@ -44,48 +93,64 @@ export default function MessagingPage() {
             </CardContent>
           </Card>
           <Card className="flex flex-col">
-            <CardHeader className="flex-shrink-0">
-                <CardTitle>Alice Johnson</CardTitle>
-                <CardDescription>Discussing the Smith account.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow p-0 overflow-hidden">
-                <ScrollArea className="h-full">
-                <div className="p-4 space-y-4">
-                    {messages.map((msg) => (
-                    <div
-                        key={msg.id}
-                        className={`flex items-end gap-2 ${
-                        msg.isCurrentUser ? "justify-end" : "justify-start"
-                        }`}
-                    >
-                        {!msg.isCurrentUser && (
-                            <Avatar className="h-8 w-8">
-                                <AvatarFallback>AJ</AvatarFallback>
-                            </Avatar>
-                        )}
-                        <div
-                        className={`max-w-xs rounded-lg p-3 ${
-                            msg.isCurrentUser
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-secondary"
-                        }`}
-                        >
-                        <p className="text-sm">{msg.content}</p>
-                        <p className="text-xs mt-1 text-right opacity-70">{msg.timestamp}</p>
+            {selectedConvo ? (
+                <>
+                    <CardHeader className="flex-shrink-0">
+                        <CardTitle>{selectedConvo.name}</CardTitle>
+                        <CardDescription>
+                            {selectedConvo.id === 'c1' ? 'Discussing the Q3 campaign.' : selectedConvo.id === 'c2' ? 'Platform wide announcements.' : 'Discussing the Jones account.'}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow p-0 overflow-hidden">
+                        <ScrollArea className="h-full">
+                        <div className="p-4 space-y-4">
+                            {messages.map((msg) => (
+                            <div
+                                key={msg.id}
+                                className={`flex items-end gap-2 ${
+                                msg.isCurrentUser ? "justify-end" : "justify-start"
+                                }`}
+                            >
+                                {!msg.isCurrentUser && (
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarFallback>{selectedConvo.avatar}</AvatarFallback>
+                                    </Avatar>
+                                )}
+                                <div
+                                className={`max-w-xs rounded-lg p-3 ${
+                                    msg.isCurrentUser
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-secondary"
+                                }`}
+                                >
+                                <p className="text-sm">{msg.content}</p>
+                                <p className="text-xs mt-1 text-right opacity-70">{msg.timestamp}</p>
+                                </div>
+                            </div>
+                            ))}
                         </div>
+                        </ScrollArea>
+                    </CardContent>
+                    <div className="p-4 border-t flex-shrink-0">
+                        <form onSubmit={handleSendMessage} className="relative">
+                            <Input 
+                                placeholder="Type a message..." 
+                                className="pr-12"
+                                value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                            />
+                            <Button type="submit" size="icon" variant="ghost" className="absolute top-1/2 right-1 -translate-y-1/2">
+                                <SendHorizonal className="h-5 w-5"/>
+                            </Button>
+                        </form>
                     </div>
-                    ))}
+                </>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                    <MessageSquare className="h-12 w-12 mb-4" />
+                    <p>Select a conversation to start chatting.</p>
                 </div>
-                </ScrollArea>
-            </CardContent>
-            <div className="p-4 border-t flex-shrink-0">
-                <div className="relative">
-                    <Input placeholder="Type a message..." className="pr-12"/>
-                    <Button size="icon" variant="ghost" className="absolute top-1/2 right-1 -translate-y-1/2">
-                        <SendHorizonal className="h-5 w-5"/>
-                    </Button>
-                </div>
-            </div>
+            )}
           </Card>
         </div>
       </TabsContent>
