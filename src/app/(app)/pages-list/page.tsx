@@ -24,8 +24,9 @@ export default function PagesListPage() {
   ];
 
   const teamManagerPages = [
-    { name: "Supervisor Dashboard", path: "/admin-dashboard" },
-    { name: "Agent Management", path: "/team-management" },
+    { name: "Supervisor Dashboard", path: "/supervisor/dashboard" },
+    { name: "Agent Management", path: "/supervisor/team-management" },
+    { name: "Campaign Management", path: "/supervisor/campaigns" },
     { name: "Call Monitoring", path: "/call-monitoring" },
     { name: "Reports & Analytics", path: "/reports" },
     { name: "Schedule Management", path: "/tasks" },
