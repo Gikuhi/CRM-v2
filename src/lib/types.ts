@@ -3,6 +3,7 @@
 
 
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Stat = {
@@ -134,6 +135,7 @@ export type UserProfile = {
   team_id?: string;
   team_name?: string;
   createdAt: Timestamp;
+  status?: 'Active' | 'Inactive';
 };
 
 export type NotificationPreferences = {
