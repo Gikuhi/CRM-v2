@@ -10,7 +10,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, PlusCircle, MoreHorizontal, Loader2, Edit, Repeat, KeyRound, UserX, UserCog } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -48,7 +47,7 @@ const assignTeamFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 type AssignTeamFormValues = z.infer<typeof assignTeamFormSchema>;
-type ActionType = "edit" | "assignTeam" | "resetPassword" | "deactivate";
+type ActionType = "edit" | "assignTeam" | "resetPassword" | "deactivate" | "permissions";
 
 export default function UserManagementMasterPage() {
   const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
@@ -142,7 +141,7 @@ export default function UserManagementMasterPage() {
   }
 
   const renderDialog = () => {
-    if (!dialogOpen || !actionType) return null;
+    if (!actionType) return null;
 
     if (actionType === 'createUser' || actionType === 'edit') {
         const isEdit = actionType === 'edit';
@@ -244,6 +243,37 @@ export default function UserManagementMasterPage() {
             </DialogContent>
         )
     }
+    
+    if (actionType === 'permissions') {
+        return (
+             <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Manage Permissions for {selectedUser?.fullName}</DialogTitle>
+                    <DialogDescription>
+                       Adjust permissions for this supervisor.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div className="flex items-center justify-between rounded-lg border p-4">
+                        <Label htmlFor="perm-campaigns">Create Campaigns</Label>
+                        <Switch id="perm-campaigns" defaultChecked/>
+                    </div>
+                     <div className="flex items-center justify-between rounded-lg border p-4">
+                        <Label htmlFor="perm-billing">Manage Billing</Label>
+                        <Switch id="perm-billing" />
+                    </div>
+                     <div className="flex items-center justify-between rounded-lg border p-4">
+                        <Label htmlFor="perm-reports">Access Global Reports</Label>
+                        <Switch id="perm-reports" defaultChecked/>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="ghost" onClick={closeDialog}>Cancel</Button>
+                    <Button onClick={closeDialog}>Save Permissions</Button>
+                </DialogFooter>
+            </DialogContent>
+        )
+    }
 
     return null;
   }
@@ -254,7 +284,7 @@ export default function UserManagementMasterPage() {
        <Tabs defaultValue="agents">
             <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="agents">Agents</TabsTrigger>
-                <TabsTrigger value="supervisors">Supervisors</TabsTrigger>
+                <TabsTrigger value="supervisors">Supervisors & Admins</TabsTrigger>
             </TabsList>
              <TabsContent value="agents" className="mt-4">
                 <Card>
@@ -300,7 +330,7 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', agent)}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', agent)}><Edit className="mr-2 h-4 w-4" />Edit Agent</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('assignTeam', agent)}><Repeat className="mr-2 h-4 w-4" />Assign to Team</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
@@ -317,8 +347,8 @@ export default function UserManagementMasterPage() {
               <TabsContent value="supervisors" className="mt-4">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Supervisor Directory</CardTitle>
-                        <CardDescription>Manage all supervisors in your organization.</CardDescription>
+                        <CardTitle>Supervisor & Admin Directory</CardTitle>
+                        <CardDescription>Manage all supervisors and administrators in your organization.</CardDescription>
                     </CardHeader>
                     <CardContent>
                     <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -326,18 +356,19 @@ export default function UserManagementMasterPage() {
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
-                                placeholder="Search supervisors..."
+                                placeholder="Search users..."
                                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                             />
                         </div>
                         <div className="flex gap-2">
-                             <Button onClick={() => handleOpenDialog('createUser')}><PlusCircle className="mr-2 h-4 w-4"/> Add Supervisor</Button>
+                             <Button onClick={() => handleOpenDialog('createUser')}><PlusCircle className="mr-2 h-4 w-4"/> Add User</Button>
                         </div>
                     </div>
                      <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Role</TableHead>
                                 <TableHead>Team(s) Managed</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
@@ -351,13 +382,14 @@ export default function UserManagementMasterPage() {
                                         </Avatar>
                                         <span className="font-medium">{supervisor.fullName}</span>
                                      </TableCell>
+                                     <TableCell><Badge variant="secondary">{supervisor.role}</Badge></TableCell>
                                      <TableCell>{mockTeams.filter(t => t.leader_name === supervisor.fullName).map(t => t.team_name).join(', ') || 'N/A'}</TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', supervisor)}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
-                                                <DropdownMenuItem><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', supervisor)}><Edit className="mr-2 h-4 w-4" />Edit User</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -376,5 +408,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
-    
