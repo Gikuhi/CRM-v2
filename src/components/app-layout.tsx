@@ -68,15 +68,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AgentInfoSheet } from "./agent-info-sheet";
-import { AgentStatusMenu } from "./agent-status-menu";
+import { AgentInfoSheet } from "@/components/agent-info-sheet";
+import { AgentStatusMenu } from "@/components/agent-status-menu";
 import { useAuth, useUser } from "@/firebase";
 import { useDoc } from "@/firebase/firestore/use-doc";
 import { doc } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase/provider";
 import type { UserProfile } from "@/lib/types";
-import { Skeleton } from "./ui/skeleton";
-import { NotificationBell } from "./notifications/notification-bell";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { GlobalCallManager } from "@/components/global-call-manager";
 
 const agentNavItems = [
