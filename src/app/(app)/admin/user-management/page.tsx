@@ -28,8 +28,8 @@ const sampleUsers: UserProfile[] = [
     { id: 'user-2', fullName: 'John Okoro', username: 'john.o', email: 'john.o@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now(), status: 'Active' },
     { id: 'user-3', fullName: 'Grace Akinyi', username: 'grace.a', email: 'grace.a@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now(), status: 'Active' },
     { id: 'user-4', fullName: 'Samuel Mwangi', username: 'samuel.m', email: 'samuel.m@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now(), status: 'Inactive' },
-    { id: 'user-5', fullName: 'Andrew Mayaka', username: 'andrew.m', email: 'andrew.m@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-6', fullName: 'Beatrice Njeri', username: 'beatrice.n', email: 'beatrice.n@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now(), status: 'Active' },
+    { id: 'user-5', fullName: 'Andrew Mayaka', username: 'andrew.m', email: 'andrew.m@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
+    { id: 'user-6', fullName: 'Beatrice Njeri', username: 'beatrice.n', email: 'beatrice.n@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
     { id: 'user-7', fullName: 'Admin User', username: 'admin.user', email: 'admin@example.com', role: 'Admin', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
 ];
 
@@ -124,8 +124,6 @@ export default function UserManagementMasterPage() {
   }
 
   const renderDialog = () => {
-    if (!dialogOpen) return null;
-
     if (actionType === 'createUser' || actionType === 'edit') {
         const isEdit = actionType === 'edit';
         return (
@@ -333,7 +331,7 @@ export default function UserManagementMasterPage() {
                                         </Avatar>
                                         <span className="font-medium">{supervisor.fullName}</span>
                                      </TableCell>
-                                     <TableCell>{supervisor.team_name || 'N/A'}</TableCell>
+                                     <TableCell>{mockTeams.filter(t => t.leader_name === supervisor.fullName).map(t => t.team_name).join(', ') || 'N/A'}</TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
@@ -352,7 +350,9 @@ export default function UserManagementMasterPage() {
                 </Card>
              </TabsContent>
        </Tabs>
-       {renderDialog()}
+       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        {renderDialog()}
+       </Dialog>
     </div>
   );
 }
