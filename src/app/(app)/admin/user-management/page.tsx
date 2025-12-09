@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -150,7 +151,7 @@ export default function UserManagementMasterPage() {
         return (
              <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{isEdit ? 'Edit User' : `Add New ${form.getValues('role') || 'User'}`}</DialogTitle>
+                    <DialogTitle>{isEdit ? `Edit ${selectedUser?.role}` : `Add New ${form.getValues('role') || 'User'}`}</DialogTitle>
                     <DialogDescription>
                         {isEdit ? `Update details for ${selectedUser?.fullName}.` : `Enter details for the new user.`}
                     </DialogDescription>
@@ -394,7 +395,7 @@ export default function UserManagementMasterPage() {
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('edit', supervisor)}><Edit className="mr-2 h-4 w-4" />Edit User</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                      </TableCell>
@@ -412,3 +413,5 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
+
+    
