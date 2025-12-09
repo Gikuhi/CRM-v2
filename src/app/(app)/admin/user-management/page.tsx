@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, MoreHorizontal, Loader2, Edit, Repeat, KeyRound, UserX, UserCog } from "lucide-react";
+import { Search, PlusCircle, MoreHorizontal, Loader2, Repeat, KeyRound, UserX, UserCog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,7 +39,7 @@ const sampleUsers: UserProfile[] = [
 const userFormSchema = z.object({
     fullName: z.string().min(2, "Full name must be at least 2 characters."),
     email: z.string().email("Invalid email address."),
-    password: z.string().min(8, "Password must be at least 8 characters.").optional(),
+    password: z.string().min(8, "Password must be at least 8 characters."),
     role: z.enum(['Agent', 'Supervisor', 'Admin']),
 });
 
@@ -50,21 +50,27 @@ const assignTeamFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 type AssignTeamFormValues = z.infer<typeof assignTeamFormSchema>;
-type ActionType = "edit" | "assignTeam" | "resetPassword" | "deactivate" | "permissions";
+type ActionType = "assignTeam" | "resetPassword" | "deactivate" | "permissions" | "createUser";
 
 export default function UserManagementMasterPage() {
   const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
   const [selectedUser, setSelectedUser] = React.useState<UserProfile | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [actionType, setActionType] = React.useState<ActionType | "createUser" | null>(null);
+  const [actionType, setActionType] = React.useState<ActionType | null>(null);
 
   const { toast } = useToast();
   
   const supervisors = users?.filter(u => u.role === 'Supervisor' || u.role === 'Admin') || [];
   const agents = users?.filter(u => u.role === 'Agent') || [];
 
-  const form = useForm<UserFormValues>({
+  const userForm = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
+    defaultValues: {
+        fullName: "",
+        email: "",
+        password: "",
+        role: "Agent",
+    }
   });
 
   const assignTeamForm = useForm<AssignTeamFormValues>({
@@ -72,26 +78,16 @@ export default function UserManagementMasterPage() {
     defaultValues: { team: '' }
   });
   
-  React.useEffect(() => {
-    if (actionType === 'assignTeam' && selectedUser) {
-        assignTeamForm.reset({
-            team: selectedUser.team_name || ''
-        });
-    }
-  }, [actionType, selectedUser, assignTeamForm]);
-
-  const handleOpenDialog = (type: ActionType | "createUser", user: UserProfile | null = null) => {
+  const handleOpenDialog = (type: ActionType, user: UserProfile | null = null) => {
     setActionType(type);
     setSelectedUser(user);
-
-    if (type === 'createUser' || type === 'edit') {
-        const defaultRole = user ? user.role : (type === 'createUser' ? 'Agent' : undefined);
-        form.reset({
-            fullName: user?.fullName || "",
-            email: user?.email || "",
-            password: "",
-            role: defaultRole as 'Agent' | 'Supervisor' | 'Admin',
-        });
+    
+    if (type === 'createUser') {
+        userForm.reset();
+    }
+    
+    if (type === 'assignTeam' && user) {
+        assignTeamForm.reset({ team: user.team_name || '' });
     }
 
     setDialogOpen(true);
@@ -104,23 +100,17 @@ export default function UserManagementMasterPage() {
   }
 
   const onUserFormSubmit = async (values: UserFormValues) => {
-    // This is mock logic for frontend state update
-    if (actionType === 'edit' && selectedUser) {
-        setUsers(users.map(u => u.id === selectedUser.id ? { ...u, ...values } : u));
-        toast({ title: "User Updated", description: `${values.fullName} has been updated.` });
-    } else {
-        const newUser: UserProfile = {
-            id: `user-${Date.now()}`,
-            createdAt: Timestamp.now(),
-            status: 'Active',
-            languagePreference: 'en',
-            themeMode: 'light',
-            ...values,
-            username: values.email.split('@')[0],
-        };
-        setUsers([newUser, ...users]);
-        toast({ title: `${values.role} Created`, description: `${values.fullName} has been added.` });
-    }
+    const newUser: UserProfile = {
+        id: `user-${Date.now()}`,
+        createdAt: Timestamp.now(),
+        status: 'Active',
+        languagePreference: 'en',
+        themeMode: 'light',
+        ...values,
+        username: values.email.split('@')[0],
+    };
+    setUsers([newUser, ...users]);
+    toast({ title: `${values.role} Created`, description: `${values.fullName} has been added.` });
     closeDialog();
   };
 
@@ -147,28 +137,25 @@ export default function UserManagementMasterPage() {
   const renderDialog = () => {
     if (!actionType) return null;
 
-    if (actionType === 'createUser' || actionType === 'edit') {
-        const isEdit = actionType === 'edit';
+    if (actionType === 'createUser') {
         return (
              <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{isEdit ? `Edit ${selectedUser?.role}` : `Add New ${form.getValues('role') || 'User'}`}</DialogTitle>
-                    <DialogDescription>
-                        {isEdit ? `Update details for ${selectedUser?.fullName}.` : `Enter details for the new user.`}
-                    </DialogDescription>
+                    <DialogTitle>Add New User</DialogTitle>
+                    <DialogDescription>Enter details for the new user.</DialogDescription>
                 </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onUserFormSubmit)} className="space-y-4 py-4">
-                        <FormField control={form.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                        <FormField control={form.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} readOnly={isEdit}/> </FormControl> {isEdit && <FormDescription>Email cannot be changed.</FormDescription>} <FormMessage /> </FormItem> )} />
-                        {!isEdit && ( <FormField control={form.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} /> )}
+                <Form {...userForm}>
+                    <form onSubmit={userForm.handleSubmit(onUserFormSubmit)} className="space-y-4 py-4">
+                        <FormField control={userForm.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                        <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                        <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField
-                          control={form.control}
+                          control={userForm.control}
                           name="role"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Role</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Select a role" />
@@ -186,9 +173,9 @@ export default function UserManagementMasterPage() {
                         />
                         <DialogFooter>
                             <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
-                            <Button type="submit" disabled={form.formState.isSubmitting}>
-                                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                {isEdit ? 'Save Changes' : 'Create User'}
+                            <Button type="submit" disabled={userForm.formState.isSubmitting}>
+                                {userForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Create User
                             </Button>
                         </DialogFooter>
                     </form>
@@ -357,7 +344,6 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', agent)}><Edit className="mr-2 h-4 w-4" />Edit Agent</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('assignTeam', agent)}><Repeat className="mr-2 h-4 w-4" />Assign to Team</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
@@ -415,7 +401,6 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('edit', supervisor)}><Edit className="mr-2 h-4 w-4" />Edit User</DropdownMenuItem>
                                                 {supervisor.role === 'Supervisor' && (
                                                   <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
                                                 )}
