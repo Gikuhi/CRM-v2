@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -21,6 +20,9 @@ import type { UserProfile } from "@/lib/types";
 import { Timestamp } from "firebase/firestore";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { mockTeams } from "@/lib/data";
+import { Switch } from "@/components/ui/switch";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 
 const sampleUsers: UserProfile[] = [
     { id: 'user-1', fullName: 'Peris Wanyangi', username: 'peris.w', email: 'peris.w@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now(), status: 'Active' },
@@ -186,12 +188,14 @@ export default function UserManagementMasterPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Team</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                       <FormControl>
-                                        <SelectTrigger><SelectValue placeholder="Select a team" /></SelectTrigger>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select a team" />
+                                        </SelectTrigger>
                                       </FormControl>
                                       <SelectContent>
-                                          {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
+                                        {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
                                       </SelectContent>
                                     </Select>
                                     <FormMessage />
