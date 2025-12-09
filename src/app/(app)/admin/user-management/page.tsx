@@ -177,42 +177,42 @@ export default function UserManagementMasterPage() {
     }
     
     if (actionType === 'assignTeam') {
-      return (
+        return (
           <DialogContent>
-              <DialogHeader>
-                  <DialogTitle>Assign {selectedUser?.fullName} to a Team</DialogTitle>
-              </DialogHeader>
-              <Form {...assignTeamForm}>
-                  <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
-                       <FormField
-                          control={assignTeamForm.control}
-                          name="team"
-                          render={({ field }) => (
-                              <FormItem>
-                                  <FormLabel>Team</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select a team" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                              </FormItem>
-                          )}
-                       />
-                      <DialogFooter>
-                          <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
-                          <Button type="submit">Assign Team</Button>
-                      </DialogFooter>
-                  </form>
-              </Form>
+            <DialogHeader>
+              <DialogTitle>Assign {selectedUser?.fullName} to a Team</DialogTitle>
+            </DialogHeader>
+            <Form {...assignTeamForm}>
+              <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
+                <FormField
+                  control={assignTeamForm.control}
+                  name="team"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Team</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a team" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
+                  <Button type="submit">Assign Team</Button>
+                </DialogFooter>
+              </form>
+            </Form>
           </DialogContent>
-      );
-  }
+        );
+      }
 
     if (actionType === 'resetPassword') {
         return (
