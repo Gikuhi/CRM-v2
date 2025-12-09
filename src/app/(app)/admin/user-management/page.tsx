@@ -150,26 +150,26 @@ export default function UserManagementMasterPage() {
                         <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField
-                          control={userForm.control}
-                          name="role"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Role</FormLabel>
-                               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a role" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="Agent">Agent</SelectItem>
-                                  <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                  <SelectItem value="Admin">Admin</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                            control={userForm.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Role</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a role" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                    <SelectItem value="Agent">Agent</SelectItem>
+                                    <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                    <SelectItem value="Admin">Admin</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                                </FormItem>
+                            )}
                         />
                         <DialogFooter>
                             <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
@@ -192,26 +192,30 @@ export default function UserManagementMasterPage() {
           </DialogHeader>
           <Form {...assignTeamForm}>
             <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
-              <FormField
-                control={assignTeamForm.control}
-                name="team"
-                render={({ field }) => (
+               <FormField
+                  control={assignTeamForm.control}
+                  name="team"
+                  render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Team</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a team" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
+                      <FormLabel>Team</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a team" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {mockTeams.map((team) => (
+                            <SelectItem key={team.team_id} value={team.team_name}>
+                              {team.team_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
-                )}
-              />
+                  )}
+                />
               <DialogFooter>
                 <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
                 <Button type="submit">Assign Team</Button>
@@ -422,5 +426,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
-    
