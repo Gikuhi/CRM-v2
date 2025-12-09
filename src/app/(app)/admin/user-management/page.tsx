@@ -43,13 +43,8 @@ const userFormSchema = z.object({
     role: z.enum(['Agent', 'Supervisor', 'Admin']),
 });
 
-const assignTeamFormSchema = z.object({
-  team: z.string().min(1, "Please select a team."),
-});
-
 
 type UserFormValues = z.infer<typeof userFormSchema>;
-type AssignTeamFormValues = z.infer<typeof assignTeamFormSchema>;
 type ActionType = "assignTeam" | "resetPassword" | "deactivate" | "permissions" | "createUser";
 
 export default function UserManagementMasterPage() {
@@ -73,10 +68,6 @@ export default function UserManagementMasterPage() {
     }
   });
 
-  const assignTeamForm = useForm<AssignTeamFormValues>({
-    resolver: zodResolver(assignTeamFormSchema),
-    defaultValues: { team: '' }
-  });
   
   const handleOpenDialog = (type: ActionType, user: UserProfile | null = null) => {
     setActionType(type);
@@ -86,10 +77,6 @@ export default function UserManagementMasterPage() {
         userForm.reset();
     }
     
-    if (type === 'assignTeam' && user) {
-        assignTeamForm.reset({ team: user.team_name || '' });
-    }
-
     setDialogOpen(true);
   };
   
@@ -126,13 +113,6 @@ export default function UserManagementMasterPage() {
     toast({ title: "Password Reset Link Sent", description: `A password reset link has been sent to ${selectedUser.email}.` });
     closeDialog();
   }
-  
-  const handleAssignTeam = (data: AssignTeamFormValues) => {
-    if (!selectedUser) return;
-    setUsers(users.map(u => u.id === selectedUser.id ? { ...u, team_name: data.team } : u));
-    toast({ title: "Team Assigned", description: `${selectedUser.fullName} has been assigned to ${data.team}.` });
-    closeDialog();
-  }
 
   const renderDialog = () => {
     if (!actionType) return null;
@@ -154,20 +134,20 @@ export default function UserManagementMasterPage() {
                             name="role"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Role</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormLabel>Role</FormLabel>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a role" />
-                                        </SelectTrigger>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select a role" />
+                                      </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                    <SelectItem value="Agent">Agent</SelectItem>
-                                    <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                    <SelectItem value="Admin">Admin</SelectItem>
+                                      <SelectItem value="Agent">Agent</SelectItem>
+                                      <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                      <SelectItem value="Admin">Admin</SelectItem>
                                     </SelectContent>
-                                </Select>
-                                <FormMessage />
+                                  </Select>
+                                  <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -184,48 +164,6 @@ export default function UserManagementMasterPage() {
         );
     }
     
-    if (actionType === 'assignTeam') {
-      return (
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Assign {selectedUser?.fullName} to a Team</DialogTitle>
-          </DialogHeader>
-          <Form {...assignTeamForm}>
-            <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
-               <FormField
-                  control={assignTeamForm.control}
-                  name="team"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Team</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a team" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {mockTeams.map((team) => (
-                            <SelectItem key={team.team_id} value={team.team_name}>
-                              {team.team_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              <DialogFooter>
-                <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
-                <Button type="submit">Assign Team</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      );
-    }
-
     if (actionType === 'resetPassword') {
         return (
             <DialogContent>
@@ -348,7 +286,6 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('assignTeam', agent)}><Repeat className="mr-2 h-4 w-4" />Assign to Team</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
