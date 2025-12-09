@@ -124,6 +124,8 @@ export default function UserManagementMasterPage() {
   }
 
   const renderDialog = () => {
+    if (!dialogOpen) return null;
+
     if (actionType === 'createUser' || actionType === 'edit') {
         const isEdit = actionType === 'edit';
         return (
