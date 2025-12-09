@@ -41,7 +41,13 @@ const userFormSchema = z.object({
     role: z.enum(['Agent', 'Supervisor', 'Admin']),
 });
 
+const assignTeamFormSchema = z.object({
+  team: z.string().min(1, "Please select a team."),
+});
+
+
 type UserFormValues = z.infer<typeof userFormSchema>;
+type AssignTeamFormValues = z.infer<typeof assignTeamFormSchema>;
 type ActionType = "edit" | "assignTeam" | "resetPassword" | "deactivate";
 
 export default function UserManagementMasterPage() {
@@ -58,6 +64,13 @@ export default function UserManagementMasterPage() {
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
   });
+
+  const assignTeamForm = useForm<AssignTeamFormValues>({
+    resolver: zodResolver(assignTeamFormSchema),
+    defaultValues: {
+      team: '',
+    },
+  });
   
   const handleOpenDialog = (type: ActionType | "createUser", user: UserProfile | null = null) => {
     setActionType(type);
@@ -70,6 +83,12 @@ export default function UserManagementMasterPage() {
             email: user?.email || "",
             password: "",
             role: defaultRole as 'Agent' | 'Supervisor' | 'Admin',
+        });
+    }
+
+    if (type === 'assignTeam') {
+        assignTeamForm.reset({
+            team: user?.team_name || ''
         });
     }
 
@@ -116,7 +135,7 @@ export default function UserManagementMasterPage() {
     closeDialog();
   }
   
-  const handleAssignTeam = (data: { team: string }) => {
+  const handleAssignTeam = (data: AssignTeamFormValues) => {
     if (!selectedUser) return;
     setUsers(users.map(u => u.id === selectedUser.id ? { ...u, team_name: data.team } : u));
     toast({ title: "Team Assigned", description: `${selectedUser.fullName} has been assigned to ${data.team}.` });
@@ -156,7 +175,6 @@ export default function UserManagementMasterPage() {
     }
     
     if (actionType === 'assignTeam') {
-        const assignTeamForm = useForm({ defaultValues: { team: selectedUser?.team_name || '' } });
         return (
             <DialogContent>
                 <DialogHeader>
@@ -358,3 +376,5 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
+
+    
