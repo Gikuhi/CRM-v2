@@ -162,7 +162,28 @@ export default function UserManagementMasterPage() {
                         <FormField control={form.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField control={form.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} readOnly={isEdit}/> </FormControl> {isEdit && <FormDescription>Email cannot be changed.</FormDescription>} <FormMessage /> </FormItem> )} />
                         {!isEdit && ( <FormField control={form.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} /> )}
-                        <FormField control={form.control} name="role" render={({ field }) => ( <FormItem> <FormLabel>Role</FormLabel> <Select onValueChange={field.onChange} defaultValue={field.value}> <FormControl> <SelectTrigger> <SelectValue placeholder="Select a role" /> </SelectTrigger> </FormControl> <SelectContent> <SelectItem value="Agent">Agent</SelectItem> <SelectItem value="Supervisor">Supervisor</SelectItem> <SelectItem value="Admin">Admin</SelectItem> </SelectContent> </Select> <FormMessage /> </FormItem> )} />
+                        <FormField
+                          control={form.control}
+                          name="role"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Role</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a role" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="Agent">Agent</SelectItem>
+                                  <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                  <SelectItem value="Admin">Admin</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                         <DialogFooter>
                             <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
                             <Button type="submit" disabled={form.formState.isSubmitting}>
@@ -395,7 +416,9 @@ export default function UserManagementMasterPage() {
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('edit', supervisor)}><Edit className="mr-2 h-4 w-4" />Edit User</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
+                                                {supervisor.role === 'Supervisor' && (
+                                                  <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
+                                                )}
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
