@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -17,12 +18,23 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { useCollection } from "@/firebase/firestore/use-collection";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useFirestore, useAuth, useMemoFirebase, useUser } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import type { UserProfile } from "@/lib/types";
+import { Timestamp } from "firebase/firestore";
+
+const sampleUsers: UserProfile[] = [
+    { id: 'user-1', fullName: 'Peris Wanyangi', username: 'peris.w', email: 'peris.w@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now() },
+    { id: 'user-2', fullName: 'John Okoro', username: 'john.o', email: 'john.o@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now() },
+    { id: 'user-3', fullName: 'Grace Akinyi', username: 'grace.a', email: 'grace.a@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now() },
+    { id: 'user-4', fullName: 'Samuel Mwangi', username: 'samuel.m', email: 'samuel.m@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now() },
+    { id: 'user-5', fullName: 'Andrew Mayaka', username: 'andrew.m', email: 'andrew.m@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now() },
+    { id: 'user-6', fullName: 'Beatrice Njeri', username: 'beatrice.n', email: 'beatrice.n@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now() },
+    { id: 'user-7', fullName: 'Admin User', username: 'admin.user', email: 'admin@example.com', role: 'Admin', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now() },
+];
+
 
 const newUserSchema = z.object({
     fullName: z.string().min(2, "Full name must be at least 2 characters."),
@@ -40,13 +52,9 @@ export default function UserManagementMasterPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
   const auth = useAuth();
-  const { user: currentUser } = useUser();
-
-  const usersRef = useMemoFirebase(() => {
-    if (!currentUser) return null;
-    return collection(firestore, 'users');
-  }, [firestore, currentUser]);
-  const { data: users, isLoading } = useCollection<UserProfile>(usersRef);
+  
+  const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
+  const isLoading = false; // Since we are using mock data
   
   const supervisors = users?.filter(u => u.role === 'Supervisor' || u.role === 'Admin') || [];
   const agents = users?.filter(u => u.role === 'Agent') || [];
@@ -81,7 +89,7 @@ export default function UserManagementMasterPage() {
 
         const userDocRef = doc(firestore, "users", user.uid);
         
-        await setDoc(userDocRef, {
+        const newUserProfile: UserProfile = {
             id: user.uid,
             fullName: values.fullName,
             username: values.email.split('@')[0],
@@ -89,8 +97,13 @@ export default function UserManagementMasterPage() {
             role: roleToAdd,
             languagePreference: 'en',
             themeMode: 'light',
-            createdAt: serverTimestamp(),
-        });
+            createdAt: serverTimestamp() as Timestamp,
+        };
+
+        await setDoc(userDocRef, newUserProfile);
+        
+        // Add to local state for instant UI update
+        setUsers(currentUsers => [newUserProfile, ...currentUsers]);
 
         toast({
             title: `${roleToAdd} Created Successfully`,
@@ -296,5 +309,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
-    
