@@ -211,16 +211,16 @@ export default function UserManagementMasterPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Team</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a team" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a team" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -437,5 +437,7 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
+
+    
 
     
