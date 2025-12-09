@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import * as React from "react";
@@ -22,7 +23,7 @@ import { Timestamp } from "firebase/firestore";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { mockTeams } from "@/lib/data";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 
 const sampleUsers: UserProfile[] = [
@@ -176,42 +177,42 @@ export default function UserManagementMasterPage() {
     }
     
     if (actionType === 'assignTeam') {
-        return (
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Assign {selectedUser?.fullName} to a Team</DialogTitle>
-                </DialogHeader>
-                <Form {...assignTeamForm}>
-                    <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
-                         <FormField
-                            control={assignTeamForm.control}
-                            name="team"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Team</FormLabel>
-                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                      <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Select a team" />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                         />
-                        <DialogFooter>
-                            <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
-                            <Button type="submit">Assign Team</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        );
-    }
+      return (
+          <DialogContent>
+              <DialogHeader>
+                  <DialogTitle>Assign {selectedUser?.fullName} to a Team</DialogTitle>
+              </DialogHeader>
+              <Form {...assignTeamForm}>
+                  <form onSubmit={assignTeamForm.handleSubmit(handleAssignTeam)} className="py-4 space-y-4">
+                       <FormField
+                          control={assignTeamForm.control}
+                          name="team"
+                          render={({ field }) => (
+                              <FormItem>
+                                  <FormLabel>Team</FormLabel>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select a team" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                       />
+                      <DialogFooter>
+                          <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
+                          <Button type="submit">Assign Team</Button>
+                      </DialogFooter>
+                  </form>
+              </Form>
+          </DialogContent>
+      );
+  }
 
     if (actionType === 'resetPassword') {
         return (
@@ -413,5 +414,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
-    
