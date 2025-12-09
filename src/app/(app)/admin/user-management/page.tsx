@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, MoreHorizontal, Loader2, Repeat, KeyRound, UserX, UserCog } from "lucide-react";
+import { Search, PlusCircle, MoreHorizontal, Loader2, UserX, KeyRound, UserCog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +21,6 @@ import type { UserProfile } from "@/lib/types";
 import { Timestamp } from "firebase/firestore";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { mockTeams } from "@/lib/data";
-import { Switch } from "@/components/ui/switch";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 
@@ -45,7 +44,7 @@ const userFormSchema = z.object({
 
 
 type UserFormValues = z.infer<typeof userFormSchema>;
-type ActionType = "assignTeam" | "resetPassword" | "deactivate" | "permissions" | "createUser";
+type ActionType = "resetPassword" | "deactivate" | "permissions" | "createUser";
 
 export default function UserManagementMasterPage() {
   const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
@@ -130,26 +129,26 @@ export default function UserManagementMasterPage() {
                         <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField
-                            control={userForm.control}
-                            name="role"
-                            render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Role</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select a role" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      <SelectItem value="Agent">Agent</SelectItem>
-                                      <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                      <SelectItem value="Admin">Admin</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                            )}
+                          control={userForm.control}
+                          name="role"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Role</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a role" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="Agent">Agent</SelectItem>
+                                  <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                  <SelectItem value="Admin">Admin</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                         <DialogFooter>
                             <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
@@ -210,17 +209,9 @@ export default function UserManagementMasterPage() {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
-                    <div className="flex items-center justify-between rounded-lg border p-4">
-                        <Label htmlFor="perm-campaigns">Create Campaigns</Label>
-                        <Switch id="perm-campaigns" defaultChecked/>
-                    </div>
                      <div className="flex items-center justify-between rounded-lg border p-4">
                         <Label htmlFor="perm-billing">Manage Billing</Label>
-                        <Switch id="perm-billing" />
-                    </div>
-                     <div className="flex items-center justify-between rounded-lg border p-4">
-                        <Label htmlFor="perm-reports">Access Global Reports</Label>
-                        <Switch id="perm-reports" defaultChecked/>
+                        <Input type="checkbox" id="perm-billing" />
                     </div>
                 </div>
                 <DialogFooter>
@@ -363,3 +354,5 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
+
+    
