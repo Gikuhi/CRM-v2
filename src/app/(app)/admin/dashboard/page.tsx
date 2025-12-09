@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
                               <TableCell>{campaign.agents}</TableCell>
                               <TableCell>
                                   <div className="flex items-center gap-2">
-                                      <Progress value={campaign.progress} aria-label={`${campaign.progress}% complete`}/>
+                                      <Progress value={campaign.progress} aria-label={`${campaign.progress}% complete`} className="[&>div]:bg-chart-3"/>
                                       <span className="text-sm text-muted-foreground">{campaign.progress}%</span>
                                   </div>
                               </TableCell>

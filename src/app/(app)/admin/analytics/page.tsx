@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -11,6 +12,14 @@ const teamPerformanceData = [
   { name: 'Charlie Team', collections: 38000, csat: 88, aht: 350, color: "hsl(var(--chart-3))" },
   { name: 'Delta Team', collections: 48000, csat: 90, aht: 300, color: "hsl(var(--chart-4))" },
 ];
+
+const chartColors = [
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))"
+]
 
 export default function CrossTeamAnalyticsPage() {
   const [metric, setMetric] = React.useState('collections');
@@ -58,7 +67,11 @@ export default function CrossTeamAnalyticsPage() {
                          formatter={(value) => [metricConfig[metric as keyof typeof metricConfig].formatter(value as number), metricConfig[metric as keyof typeof metricConfig].label]}
                     />
                     <Legend />
-                    <Bar dataKey={metric} name={metricConfig[metric as keyof typeof metricConfig].label} fill="hsl(var(--primary))" />
+                    <Bar dataKey={metric} name={metricConfig[metric as keyof typeof metricConfig].label}>
+                        {teamPerformanceData.map((entry, index) => (
+                            <div key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                        ))}
+                    </Bar>
                 </BarChart>
             </ResponsiveContainer>
         </CardContent>

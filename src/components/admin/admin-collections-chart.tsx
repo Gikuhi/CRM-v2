@@ -30,7 +30,7 @@ export function AdminCollectionsChart() {
                 formatter={(value: number) => [`$${new Intl.NumberFormat('en-US').format(value)}`, 'Collections']}
             />
             <Legend wrapperStyle={{fontSize: "14px"}}/>
-            <Bar dataKey="amount" fill="hsl(var(--chart-1))" name="Collections" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="amount" fill="hsl(var(--chart-2))" name="Collections" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

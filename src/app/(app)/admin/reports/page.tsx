@@ -51,8 +51,8 @@ export default function ComprehensiveReportingCenterPage() {
                 <BarChart data={teamPerformanceData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" tickFormatter={(value) => `$${value/1000}k`} />
-                    <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
+                    <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-4))" tickFormatter={(value) => `$${value/1000}k`} />
+                    <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-5))" />
                     <Tooltip 
                          contentStyle={{
                             backgroundColor: 'hsl(var(--card))',
@@ -60,8 +60,8 @@ export default function ComprehensiveReportingCenterPage() {
                         }}
                     />
                     <Legend />
-                    <Bar yAxisId="left" dataKey="collections" fill="hsl(var(--chart-1))" name="Collections ($)" />
-                    <Bar yAxisId="right" dataKey="calls" fill="hsl(var(--chart-2))" name="Calls Made" />
+                    <Bar yAxisId="left" dataKey="collections" fill="hsl(var(--chart-4))" name="Collections ($)" />
+                    <Bar yAxisId="right" dataKey="calls" fill="hsl(var(--chart-5))" name="Calls Made" />
                 </BarChart>
             </ResponsiveContainer>
         </CardContent>
