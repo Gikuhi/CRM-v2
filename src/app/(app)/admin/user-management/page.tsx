@@ -67,11 +67,16 @@ export default function UserManagementMasterPage() {
 
   const assignTeamForm = useForm<AssignTeamFormValues>({
     resolver: zodResolver(assignTeamFormSchema),
-    defaultValues: {
-      team: '',
-    },
   });
   
+  React.useEffect(() => {
+    if (actionType === 'assignTeam' && selectedUser) {
+        assignTeamForm.reset({
+            team: selectedUser.team_name || ''
+        });
+    }
+  }, [actionType, selectedUser, assignTeamForm]);
+
   const handleOpenDialog = (type: ActionType | "createUser", user: UserProfile | null = null) => {
     setActionType(type);
     setSelectedUser(user);
@@ -83,12 +88,6 @@ export default function UserManagementMasterPage() {
             email: user?.email || "",
             password: "",
             role: defaultRole as 'Agent' | 'Supervisor' | 'Admin',
-        });
-    }
-
-    if (type === 'assignTeam') {
-        assignTeamForm.reset({
-            team: user?.team_name || ''
         });
     }
 
@@ -196,6 +195,7 @@ export default function UserManagementMasterPage() {
                                             {mockTeams.map(team => <SelectItem key={team.team_id} value={team.team_name}>{team.team_name}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                          />
