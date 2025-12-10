@@ -208,7 +208,9 @@ export default function UserManagementMasterPage() {
                                      <TableCell><Badge variant={agent.status === 'Active' ? 'default' : 'destructive'}>{agent.status || 'Active'}</Badge></TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
-                                            <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button size="icon" variant="ghost"><MoreHorizontal /></Button>
+                                            </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem onClick={() => handleOpenActionDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenActionDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
@@ -264,7 +266,9 @@ export default function UserManagementMasterPage() {
                                      <TableCell>{mockTeams.filter(t => t.leader_name === supervisor.fullName).map(t => t.team_name).join(', ') || 'N/A'}</TableCell>
                                      <TableCell className="text-right">
                                         <DropdownMenu>
-                                            <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button size="icon" variant="ghost"><MoreHorizontal /></Button>
+                                            </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                  <DropdownMenuItem onClick={() => handleOpenActionDialog('resetPassword', supervisor)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleOpenActionDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
@@ -316,6 +320,7 @@ export default function UserManagementMasterPage() {
                           </FormItem>
                         )}
                       />
+
                       <DialogFooter>
                           <Button type="button" variant="ghost" onClick={closeDialogs}>Cancel</Button>
                           <Button type="submit" disabled={userForm.formState.isSubmitting}>
