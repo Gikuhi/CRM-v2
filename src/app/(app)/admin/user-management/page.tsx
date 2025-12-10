@@ -20,19 +20,22 @@ import { useToast } from "@/hooks/use-toast";
 import type { UserProfile } from "@/lib/types";
 import { Timestamp } from "firebase/firestore";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockTeams } from "@/lib/data";
+import { mockTeams, users as initialUsersData } from "@/lib/data";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 
-const sampleUsers: UserProfile[] = [
-    { id: 'user-1', fullName: 'Peris Wanyangi', username: 'peris.w', email: 'peris.w@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-2', fullName: 'John Okoro', username: 'john.o', email: 'john.o@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Alpha', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-3', fullName: 'Grace Akinyi', username: 'grace.a', email: 'grace.a@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-4', fullName: 'Samuel Mwangi', username: 'samuel.m', email: 'samuel.m@example.com', role: 'Agent', languagePreference: 'en', themeMode: 'light', team_name: 'Team Bravo', createdAt: Timestamp.now(), status: 'Inactive' },
-    { id: 'user-5', fullName: 'Andrew Mayaka', username: 'andrew.m', email: 'andrew.m@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-6', fullName: 'Beatrice Njeri', username: 'beatrice.n', email: 'beatrice.n@example.com', role: 'Supervisor', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
-    { id: 'user-7', fullName: 'Admin User', username: 'admin.user', email: 'admin@example.com', role: 'Admin', languagePreference: 'en', themeMode: 'light', team_name: 'N/A', createdAt: Timestamp.now(), status: 'Active' },
-];
+const sampleUsers: UserProfile[] = initialUsersData.map(user => ({
+    id: user.id,
+    fullName: user.name,
+    username: user.name.toLowerCase().replace(' ', '.'),
+    email: `${user.name.toLowerCase().replace(' ', '.')}@example.com`,
+    role: user.role,
+    languagePreference: 'en',
+    themeMode: 'light',
+    team_name: user.role === 'Agent' ? (Math.random() > 0.5 ? 'Team Alpha' : 'Team Bravo') : 'N/A',
+    createdAt: Timestamp.now(),
+    status: 'Active'
+}));
 
 
 const userFormSchema = z.object({
@@ -328,4 +331,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
