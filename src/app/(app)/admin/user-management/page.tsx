@@ -198,11 +198,13 @@ export default function UserManagementMasterPage() {
                         <TableBody>
                             {agents.map(agent => (
                                 <TableRow key={agent.id}>
-                                     <TableCell className="flex items-center gap-2">
-                                        <Avatar>
-                                            <AvatarFallback>{agent.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                        </Avatar>
-                                        <span className="font-medium">{agent.fullName}</span>
+                                     <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            <Avatar>
+                                                <AvatarFallback>{agent.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                            </Avatar>
+                                            <span className="font-medium">{agent.fullName}</span>
+                                        </div>
                                      </TableCell>
                                      <TableCell>{agent.team_name || 'N/A'}</TableCell>
                                      <TableCell><Badge variant={agent.status === 'Active' ? 'default' : 'destructive'}>{agent.status || 'Active'}</Badge></TableCell>
@@ -256,11 +258,13 @@ export default function UserManagementMasterPage() {
                         <TableBody>
                             {supervisors.map(supervisor => (
                                 <TableRow key={supervisor.id}>
-                                     <TableCell className="flex items-center gap-2">
-                                        <Avatar>
-                                            <AvatarFallback>{supervisor.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                        </Avatar>
-                                        <span className="font-medium">{supervisor.fullName}</span>
+                                     <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            <Avatar>
+                                                <AvatarFallback>{supervisor.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                            </Avatar>
+                                            <span className="font-medium">{supervisor.fullName}</span>
+                                        </div>
                                      </TableCell>
                                      <TableCell><Badge variant="secondary">{supervisor.role}</Badge></TableCell>
                                      <TableCell>{mockTeams.filter(t => t.leader_name === supervisor.fullName).map(t => t.team_name).join(', ') || 'N/A'}</TableCell>
@@ -302,22 +306,22 @@ export default function UserManagementMasterPage() {
                         control={userForm.control}
                         name="role"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Role</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a role" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="Agent">Agent</SelectItem>
-                                        <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                        <SelectItem value="Admin">Admin</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
+                          <FormItem>
+                            <FormLabel>Role</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a role" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="Agent">Agent</SelectItem>
+                                <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                <SelectItem value="Admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
                         )}
                         />
 
