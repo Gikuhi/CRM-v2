@@ -70,7 +70,7 @@ const PtpOfferTable = ({ onSelectOffer }: { onSelectOffer: (offer: PtpOffer) => 
               <tr className="bg-primary/80 text-primary-foreground">
                 {headers.map((header, i) => (
                   <th key={i} className={cn("p-2 font-semibold border border-border", i === 0 && "bg-primary text-center")}>
-                    {header === "Discount Offer" ? <>2538 Off<br/>Discount Offer<br/><a href="#" className="underline">View Terms</a></> : header}
+                    {header === "Discount Offer" ? <div>2538 Off<br/>Discount Offer<br/><a href="#" className="underline">View Terms</a></div> : header}
                   </th>
                 ))}
               </tr>

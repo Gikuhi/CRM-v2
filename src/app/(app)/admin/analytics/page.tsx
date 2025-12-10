@@ -69,7 +69,7 @@ export default function CrossTeamAnalyticsPage() {
                     <Legend />
                     <Bar dataKey={metric} name={metricConfig[metric as keyof typeof metricConfig].label}>
                         {teamPerformanceData.map((entry, index) => (
-                            <div key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                            <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                         ))}
                     </Bar>
                 </BarChart>
