@@ -39,9 +39,9 @@ const sampleUsers: UserProfile[] = initialUsersData.map(user => ({
 
 
 const userFormSchema = z.object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters."),
+    firstName: z.string().min(2, "First name must be at least 2 characters."),
+    lastName: z.string().min(2, "Last name must be at least 2 characters."),
     email: z.string().email("Invalid email address."),
-    password: z.string().min(8, "Password must be at least 8 characters."),
     role: z.enum(['Agent', 'Supervisor', 'Admin']),
 });
 
@@ -64,9 +64,9 @@ export default function UserManagementMasterPage() {
   const userForm = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
-        fullName: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        password: "",
         role: "Agent",
     }
   });
@@ -83,6 +83,7 @@ export default function UserManagementMasterPage() {
     setIsNewUserDialogOpen(false);
     setSelectedUser(null);
     setActionType(null);
+    userForm.reset();
   }
 
   const onUserFormSubmit = async (values: UserFormValues) => {
@@ -92,11 +93,13 @@ export default function UserManagementMasterPage() {
         status: 'Active',
         languagePreference: 'en',
         themeMode: 'light',
-        ...values,
+        fullName: `${values.firstName} ${values.lastName}`,
+        email: values.email,
+        role: values.role,
         username: values.email.split('@')[0],
     };
     setUsers(prevUsers => [newUser, ...prevUsers]);
-    toast({ title: `${values.role} Created`, description: `${values.fullName} has been added.` });
+    toast({ title: `${values.role} Created`, description: `${newUser.fullName} has been added.` });
     closeDialogs();
   };
 
@@ -279,16 +282,18 @@ export default function UserManagementMasterPage() {
        
        {/* New User Dialog */}
        <Dialog open={isNewUserDialogOpen} onOpenChange={setIsNewUserDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-md">
               <DialogHeader>
                   <DialogTitle>Add New User</DialogTitle>
                   <DialogDescription>Enter details for the new user.</DialogDescription>
               </DialogHeader>
               <Form {...userForm}>
                   <form onSubmit={userForm.handleSubmit(onUserFormSubmit)} className="space-y-4 py-4">
-                      <FormField control={userForm.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                      <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                      <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField control={userForm.control} name="firstName" render={({ field }) => ( <FormItem> <FormLabel>First Name</FormLabel> <FormControl> <Input placeholder="John" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                        <FormField control={userForm.control} name="lastName" render={({ field }) => ( <FormItem> <FormLabel>Last Name</FormLabel> <FormControl> <Input placeholder="Doe" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                      </div>
+                      <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" placeholder="john.doe@example.com" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                       <FormField
                         control={userForm.control}
                         name="role"
@@ -330,3 +335,5 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
+
+    
