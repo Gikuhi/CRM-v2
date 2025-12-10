@@ -47,12 +47,13 @@ const userFormSchema = z.object({
 
 
 type UserFormValues = z.infer<typeof userFormSchema>;
-type ActionType = "resetPassword" | "deactivate" | "createUser";
+type ActionType = "deactivate" | "resetPassword";
 
 export default function UserManagementMasterPage() {
   const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
   const [selectedUser, setSelectedUser] = React.useState<UserProfile | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [isNewUserDialogOpen, setIsNewUserDialogOpen] = React.useState(false);
   const [actionType, setActionType] = React.useState<ActionType | null>(null);
 
   const { toast } = useToast();
@@ -71,19 +72,15 @@ export default function UserManagementMasterPage() {
   });
 
   
-  const handleOpenDialog = (type: ActionType, user: UserProfile | null = null) => {
+  const handleOpenActionDialog = (type: ActionType, user: UserProfile) => {
     setActionType(type);
     setSelectedUser(user);
-    
-    if (type === 'createUser') {
-        userForm.reset();
-    }
-    
     setDialogOpen(true);
   };
   
-  const closeDialog = () => {
+  const closeDialogs = () => {
     setDialogOpen(false);
+    setIsNewUserDialogOpen(false);
     setSelectedUser(null);
     setActionType(null);
   }
@@ -98,73 +95,26 @@ export default function UserManagementMasterPage() {
         ...values,
         username: values.email.split('@')[0],
     };
-    setUsers([newUser, ...users]);
+    setUsers(prevUsers => [newUser, ...prevUsers]);
     toast({ title: `${values.role} Created`, description: `${values.fullName} has been added.` });
-    closeDialog();
+    closeDialogs();
   };
 
   const handleDeactivate = () => {
     if (!selectedUser) return;
     setUsers(users.map(u => u.id === selectedUser.id ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' } : u));
     toast({ title: "User Status Updated", description: `${selectedUser.fullName}'s status has been changed.` });
-    closeDialog();
+    closeDialogs();
   }
 
   const handleResetPassword = () => {
     if (!selectedUser) return;
     toast({ title: "Password Reset Link Sent", description: `A password reset link has been sent to ${selectedUser.email}.` });
-    closeDialog();
+    closeDialogs();
   }
 
-  const renderDialog = () => {
-    if (!actionType) return null;
-
-    if (actionType === 'createUser') {
-        return (
-             <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Add New User</DialogTitle>
-                    <DialogDescription>Enter details for the new user.</DialogDescription>
-                </DialogHeader>
-                <Form {...userForm}>
-                    <form onSubmit={userForm.handleSubmit(onUserFormSubmit)} className="space-y-4 py-4">
-                        <FormField control={userForm.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                        <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                        <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                        <FormField
-                          control={userForm.control}
-                          name="role"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Role</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a role" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="Agent">Agent</SelectItem>
-                                  <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                  <SelectItem value="Admin">Admin</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <DialogFooter>
-                            <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
-                            <Button type="submit" disabled={userForm.formState.isSubmitting}>
-                                {userForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Create User
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        );
-    }
+  const renderActionDialog = () => {
+    if (!actionType || !selectedUser) return null;
     
     if (actionType === 'resetPassword') {
         return (
@@ -176,7 +126,7 @@ export default function UserManagementMasterPage() {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant="ghost" onClick={closeDialog}>Cancel</Button>
+                    <Button variant="ghost" onClick={closeDialogs}>Cancel</Button>
                     <Button onClick={handleResetPassword}>Send Link</Button>
                 </DialogFooter>
             </DialogContent>
@@ -193,7 +143,7 @@ export default function UserManagementMasterPage() {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant="ghost" onClick={closeDialog}>Cancel</Button>
+                    <Button variant="ghost" onClick={closeDialogs}>Cancel</Button>
                     <Button variant={selectedUser?.status === 'Active' ? 'destructive' : 'default'} onClick={handleDeactivate}>
                          {selectedUser?.status === 'Active' ? 'Deactivate' : 'Activate'}
                     </Button>
@@ -230,7 +180,7 @@ export default function UserManagementMasterPage() {
                             />
                         </div>
                         <div className="flex gap-2">
-                             <Button onClick={() => handleOpenDialog('createUser')}><PlusCircle className="mr-2 h-4 w-4"/> Add Agent</Button>
+                             <Button onClick={() => { userForm.reset({ role: 'Agent' }); setIsNewUserDialogOpen(true); }}><PlusCircle className="mr-2 h-4 w-4"/> Add Agent</Button>
                         </div>
                     </div>
                      <Table>
@@ -257,8 +207,8 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenActionDialog('resetPassword', agent)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenActionDialog('deactivate', agent)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{agent.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                      </TableCell>
@@ -286,7 +236,7 @@ export default function UserManagementMasterPage() {
                             />
                         </div>
                         <div className="flex gap-2">
-                             <Button onClick={() => handleOpenDialog('createUser')}><PlusCircle className="mr-2 h-4 w-4"/> Add User</Button>
+                             <Button onClick={() => { userForm.reset({ role: 'Supervisor' }); setIsNewUserDialogOpen(true); }}><PlusCircle className="mr-2 h-4 w-4"/> Add User</Button>
                         </div>
                     </div>
                      <Table>
@@ -313,7 +263,8 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                 <DropdownMenuItem onClick={() => handleOpenActionDialog('resetPassword', supervisor)}><KeyRound className="mr-2 h-4 w-4" />Reset Password</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleOpenActionDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                      </TableCell>
@@ -325,8 +276,56 @@ export default function UserManagementMasterPage() {
                 </Card>
              </TabsContent>
        </Tabs>
+       
+       {/* New User Dialog */}
+       <Dialog open={isNewUserDialogOpen} onOpenChange={setIsNewUserDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                  <DialogTitle>Add New User</DialogTitle>
+                  <DialogDescription>Enter details for the new user.</DialogDescription>
+              </DialogHeader>
+              <Form {...userForm}>
+                  <form onSubmit={userForm.handleSubmit(onUserFormSubmit)} className="space-y-4 py-4">
+                      <FormField control={userForm.control} name="fullName" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl> <Input {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                      <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                      <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                      <FormField
+                        control={userForm.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Role</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a role" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="Agent">Agent</SelectItem>
+                                <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                <SelectItem value="Admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <DialogFooter>
+                          <Button type="button" variant="ghost" onClick={closeDialogs}>Cancel</Button>
+                          <Button type="submit" disabled={userForm.formState.isSubmitting}>
+                              {userForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                              Create User
+                          </Button>
+                      </DialogFooter>
+                  </form>
+              </Form>
+          </DialogContent>
+       </Dialog>
+
+       {/* Action Dialog for Deactivate/Reset Password */}
        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        {renderDialog()}
+        {renderActionDialog()}
        </Dialog>
     </div>
   );
