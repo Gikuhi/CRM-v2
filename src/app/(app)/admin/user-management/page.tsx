@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, MoreHorizontal, Loader2, UserX, KeyRound, UserCog } from "lucide-react";
+import { Search, PlusCircle, MoreHorizontal, Loader2, UserX, KeyRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,7 +44,7 @@ const userFormSchema = z.object({
 
 
 type UserFormValues = z.infer<typeof userFormSchema>;
-type ActionType = "resetPassword" | "deactivate" | "permissions" | "createUser";
+type ActionType = "resetPassword" | "deactivate" | "createUser";
 
 export default function UserManagementMasterPage() {
   const [users, setUsers] = React.useState<UserProfile[]>(sampleUsers);
@@ -129,26 +129,26 @@ export default function UserManagementMasterPage() {
                         <FormField control={userForm.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField control={userForm.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Password</FormLabel> <FormControl> <Input type="password" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
                         <FormField
-                          control={userForm.control}
-                          name="role"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Role</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a role" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="Agent">Agent</SelectItem>
-                                  <SelectItem value="Supervisor">Supervisor</SelectItem>
-                                  <SelectItem value="Admin">Admin</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                            control={userForm.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Role</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a role" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="Agent">Agent</SelectItem>
+                                            <SelectItem value="Supervisor">Supervisor</SelectItem>
+                                            <SelectItem value="Admin">Admin</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
                         <DialogFooter>
                             <Button type="button" variant="ghost" onClick={closeDialog}>Cancel</Button>
@@ -194,29 +194,6 @@ export default function UserManagementMasterPage() {
                     <Button variant={selectedUser?.status === 'Active' ? 'destructive' : 'default'} onClick={handleDeactivate}>
                          {selectedUser?.status === 'Active' ? 'Deactivate' : 'Activate'}
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        )
-    }
-    
-    if (actionType === 'permissions') {
-        return (
-             <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Manage Permissions for {selectedUser?.fullName}</DialogTitle>
-                    <DialogDescription>
-                       Adjust permissions for this supervisor.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="py-4 space-y-4">
-                     <div className="flex items-center justify-between rounded-lg border p-4">
-                        <Label htmlFor="perm-billing">Manage Billing</Label>
-                        <Input type="checkbox" id="perm-billing" />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="ghost" onClick={closeDialog}>Cancel</Button>
-                    <Button onClick={closeDialog}>Save Permissions</Button>
                 </DialogFooter>
             </DialogContent>
         )
@@ -333,9 +310,6 @@ export default function UserManagementMasterPage() {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild><Button size="icon" variant="ghost"><MoreHorizontal /></Button></DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                {supervisor.role === 'Supervisor' && (
-                                                  <DropdownMenuItem onClick={() => handleOpenDialog('permissions', supervisor)}><UserCog className="mr-2 h-4 w-4" />Manage Permissions</DropdownMenuItem>
-                                                )}
                                                 <DropdownMenuItem onClick={() => handleOpenDialog('deactivate', supervisor)} className="text-destructive"><UserX className="mr-2 h-4 w-4" />{supervisor.status === 'Active' ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -354,5 +328,3 @@ export default function UserManagementMasterPage() {
     </div>
   );
 }
-
-    
